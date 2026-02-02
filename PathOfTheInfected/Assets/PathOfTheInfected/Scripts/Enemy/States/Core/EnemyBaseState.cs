@@ -1,38 +1,47 @@
-﻿namespace PathOfTheInfected.Enemy
-{
-    public class EnemyBaseState
-    {
-        protected Enemy _enemy;
-        protected EnemyStateMachine _stateMachine;
+﻿using UnityEngine;
 
-        public EnemyBaseState(Enemy enemy, EnemyStateMachine stateMachine)
+namespace PathOfTheInfected.Enemy
+{
+    [CreateAssetMenu(fileName =  "EnemyStateBase", menuName = "Enemy/States/Core/EnemyStateBase")]
+    public class EnemyBaseState : ScriptableObject
+    {
+       #region protected Fields
+       protected Enemy _enemy;
+       protected EnemyStateMachine _stateMachine;
+       #endregion
+
+        #region Virtual Methods
+        public virtual void StateInit(Enemy enemy, EnemyStateMachine stateMachine)
         {
             _enemy = enemy;
             _stateMachine = stateMachine;
         }
 
-
-        #region Virtual Methods
-
-        virtual public void StateEnter()
+        public virtual void StateEnter()
         {
 
         }
 
-        virtual public void StateExit()
+        public virtual void StateExit()
         {
 
         }
 
-        virtual public void StateUpdate()
+        public virtual void StateUpdate()
+        {
+            TransitionChecks();
+        }
+
+        public virtual void StateFixedUpdate()
         {
 
         }
 
-        virtual public void StateFixedUpdate()
+        public virtual void TransitionChecks()
         {
 
         }
+
         #endregion
     }
 }
