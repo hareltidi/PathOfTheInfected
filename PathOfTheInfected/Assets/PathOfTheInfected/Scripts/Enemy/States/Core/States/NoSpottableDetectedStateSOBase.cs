@@ -11,6 +11,11 @@ namespace PathOfTheInfected.Enemy
             {
                 _stateMachine?.RequestStateChange(_enemy.spottableDetectedState);
             }
+
+            if (_enemy.spottableInAttackRangeState)
+            {
+                _stateMachine?.RequestStateChange(_enemy.spottableInAttackRangeState);
+            }
         }
     }
 }

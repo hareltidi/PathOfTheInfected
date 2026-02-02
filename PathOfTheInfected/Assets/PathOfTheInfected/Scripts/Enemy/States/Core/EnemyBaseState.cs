@@ -42,6 +42,11 @@ namespace PathOfTheInfected.Enemy
 
         }
 
+        public virtual void DrawGizmosOnSelected(Enemy en)
+        {
+
+        }
+
         #endregion
     }
 }

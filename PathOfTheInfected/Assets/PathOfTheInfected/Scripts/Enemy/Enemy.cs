@@ -1,14 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace PathOfTheInfected.Enemy
 {
-    public enum InitialFacingDirection
-    {
-        Left = 0,
-        Right = 1
-    }
 
 
     public class Enemy : MonoBehaviour, IDamageable, IEnemyMoveable
@@ -25,7 +21,7 @@ namespace PathOfTheInfected.Enemy
         #region IEnemyMoveable
 
         public Rigidbody2D RB { get; set; }
-        public bool IsFacingRight { get; set; } = true;
+        [field: SerializeField] public bool IsFacingRight { get; set; } = true;
 
         #endregion
         #endregion
@@ -45,27 +41,155 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region Plug-In States
-        public EnemyStateMachine stateMachine;
+        public EnemyStateMachine StateMachine;
         public EnemyBaseState noSpottableDetectedState;
         public EnemyBaseState spottableDetectedState;
         public EnemyBaseState spottableInAttackRangeState;
         #endregion
 
-        #region EnemyMovement
+        #region Serialized Members
 
+        [Header("Box cast")]
+        public Transform max;
+        public Transform min;
+        [SerializeField] private LayerMask spottableMask;
+
+
+        [Header("State switch conditions")]
+        public bool isSpottableDetected = false;
+        public bool isSpottableInAttackRange = false;
+
+        [Header("Debugging - track ranges")]
+        public bool trackSpotRange = false;
+        public bool trackAttackRange = false;
+
+        [Header("Spottable Detection")]
+        public float maxSpotRange = 10f;
+        #endregion
+
+        #region Private and non-serialized members
+        private readonly List<ISpottable> _visibleSpottables = new();
+        public List<ISpottable> VisibleSpottables => _visibleSpottables;
+        #endregion
+
+        private void Awake()
+        {
+            RB = GetComponent<Rigidbody2D>();
+            StateMachine = new EnemyStateMachine();
+            noSpottableDetectedState = Instantiate(noSpottableDetectedState);
+            spottableDetectedState = Instantiate(spottableDetectedState);
+            spottableInAttackRangeState = Instantiate(spottableInAttackRangeState);
+        }
+
+        private void Start()
+        {
+            noSpottableDetectedState.StateInit(this, StateMachine);
+            spottableDetectedState.StateInit(this, StateMachine);
+            spottableInAttackRangeState.StateInit(this, StateMachine);
+
+            StateMachine?.InitializeDefaultState(noSpottableDetectedState);
+        }
+
+        private void Update()
+        {
+            StateMachine?.CurrentState.StateUpdate();
+            DetectVisibleSpottables();
+        }
+
+        private void FixedUpdate()
+        {
+            StateMachine?.CurrentState.StateFixedUpdate();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            DrawStatesGizmos();
+            DrawingSpottingRange();
+
+        }
+
+        protected virtual void DetectVisibleSpottables()
+        {
+            _visibleSpottables.Clear();
+            Vector2 baseCenter = (min.position + max.position) * 0.5f;
+            Vector2 baseSize = new Vector2(
+                Mathf.Abs(max.position.x - min.position.x),
+                Mathf.Abs(max.position.y - min.position.y)
+            );
+
+            float range = maxSpotRange;
+            int facingDirection = IsFacingRight ? 1 : -1;
+            float forwardOffset = range * 0.5f * facingDirection;
+
+            Vector2 center = baseCenter + Vector2.right * forwardOffset;
+            Vector2 size = new Vector2(baseSize.x + range, baseSize.y);
+
+
+            Collider2D[] hits = Physics2D.OverlapBoxAll(
+                center,
+                size,
+                0f,
+                spottableMask
+            );
+
+            foreach (Collider2D hit in hits)
+            {
+                if (hit.TryGetComponent(out ISpottable spottable))
+                {
+                    _visibleSpottables.Add(spottable);
+                }
+            }
+            isSpottableDetected = _visibleSpottables.Count > 0;
+        }
+
+        protected virtual void DrawingSpottingRange()
+        {
+            if (!trackSpotRange) return;
+            Vector2 baseCenter = (min.position + max.position) * 0.5f;
+            Vector2 baseSize = new Vector2(
+                Mathf.Abs(max.position.x - min.position.x),
+                Mathf.Abs(max.position.y - min.position.y)
+            );
+
+            float range = maxSpotRange;
+            int facingDirection = IsFacingRight ? 1 : -1;
+            float forwardOffset = range * 0.5f * facingDirection;
+
+            Vector2 center = baseCenter + Vector2.right * forwardOffset;
+            Vector2 size = new Vector2(baseSize.x + range, baseSize.y);
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireCube(center, size);
+        }
+
+        protected virtual void AttackCheck()
+        {
+        }
+
+        private void DrawStatesGizmos()
+        {
+            noSpottableDetectedState?.DrawGizmosOnSelected(this);
+            spottableDetectedState?.DrawGizmosOnSelected(this);
+            spottableInAttackRangeState?.DrawGizmosOnSelected(this);
+        }
+
+        #region EnemyMovement
         public float moveSpeed = 1f;
         public float acceleration = 1f;
-        public InitialFacingDirection initialFacingDirection = InitialFacingDirection.Right;
-
 
         public void MoveEnemy(Vector2 velocity)
         {
-           var b = Mathf.Sign(velocity.x) * moveSpeed;
-           var t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
-           velocity.x = Mathf.Lerp(velocity.x, b, t);
-           CheckForLeftOrRightFacing(velocity);
-           if (Mathf.Abs(velocity.x - b) > 0.0099999997764825821) return;
-           velocity.x = b;
+            if (!RB) return;
+            var b = Mathf.Sign(velocity.x) * moveSpeed;
+            var t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
+            velocity.x = Mathf.Lerp(velocity.x, b, t);
+            CheckForLeftOrRightFacing(velocity);
+            if (Mathf.Abs(velocity.x - b) > 0.0099999997764825821)
+            {
+                return;
+            }
+            velocity.x = b;
+            RB.linearVelocity = velocity;
         }
 
         public void CheckForLeftOrRightFacing(Vector2 velocity)
@@ -85,46 +209,5 @@ namespace PathOfTheInfected.Enemy
         }
 
         #endregion
-
-        #region Members
-        public bool isSpottableDetected = false;
-        public bool isSpottableInAttackRange = false;
-        #endregion
-
-        private void Awake()
-        {
-            stateMachine = new EnemyStateMachine();
-            noSpottableDetectedState = Instantiate(noSpottableDetectedState);
-            spottableDetectedState = Instantiate(spottableDetectedState);
-            spottableInAttackRangeState = Instantiate(spottableInAttackRangeState);
-        }
-
-        private void Start()
-        {
-            noSpottableDetectedState.StateInit(this, stateMachine);
-            spottableDetectedState.StateInit(this, stateMachine);
-            spottableInAttackRangeState.StateInit(this, stateMachine);
-
-            stateMachine?.InitializeDefaultState(noSpottableDetectedState);
-        }
-
-        private void Update()
-        {
-            stateMachine?.CurrentState.StateUpdate();
-        }
-
-        private void FixedUpdate()
-        {
-            stateMachine?.CurrentState.StateFixedUpdate();
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            EnemyWanderSO test = (EnemyWanderSO)noSpottableDetectedState;
-            if (test)
-            {
-                Vector2 maxPos =
-            }
-        }
     }
 }

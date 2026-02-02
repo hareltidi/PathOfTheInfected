@@ -12,5 +12,10 @@ namespace PathOfTheInfected.Enemy
                 _stateMachine?.RequestStateChange(_enemy.spottableInAttackRangeState);
             }
         }
+
+        public override void DrawGizmosOnSelected(Enemy en)
+        {
+            base.DrawGizmosOnSelected(en);
+        }
     }
 }
