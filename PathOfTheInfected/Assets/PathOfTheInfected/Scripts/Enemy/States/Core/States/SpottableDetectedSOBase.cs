@@ -11,6 +11,11 @@ namespace PathOfTheInfected.Enemy
             {
                 _stateMachine?.RequestStateChange(_enemy.spottableInAttackRangeState);
             }
+
+            if (!_enemy.isSpottableDetected)
+            {
+                _stateMachine?.RequestStateChange(_enemy.noSpottableDetectedState);
+            }
         }
 
         public override void DrawGizmosOnSelected(Enemy en)

@@ -5,6 +5,11 @@ namespace PathOfTheInfected.Enemy
     [CreateAssetMenu(fileName = "NoSpottableDetected", menuName = "Enemy/States/Core/BaseStates", order = 0)]
     public class NoSpottableDetectedStateSOBase : EnemyBaseState
     {
+        public override void StateEnter()
+        {
+            Debug.Log("Entering State");
+        }
+
         public override void TransitionChecks()
         {
             if (_enemy.isSpottableDetected)

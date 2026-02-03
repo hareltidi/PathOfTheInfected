@@ -4,6 +4,6 @@ namespace PathOfTheInfected.Enemy
 {
     public interface ISpottable
     {
-        Transform transform { get; set; }
+        Transform Transform { get; }
     }
 }

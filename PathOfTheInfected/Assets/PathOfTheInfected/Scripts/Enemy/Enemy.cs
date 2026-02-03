@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace PathOfTheInfected.Enemy
 {
@@ -92,12 +90,13 @@ namespace PathOfTheInfected.Enemy
 
         private void Update()
         {
-            StateMachine?.CurrentState.StateUpdate();
             DetectVisibleSpottables();
+            StateMachine?.CurrentState.StateUpdate();
         }
 
         private void FixedUpdate()
         {
+            StateMachine?.ApplyQueuedStateChange();
             StateMachine?.CurrentState.StateFixedUpdate();
         }
 
@@ -174,6 +173,7 @@ namespace PathOfTheInfected.Enemy
         }
 
         #region EnemyMovement
+        [Header("Movement")]
         public float moveSpeed = 1f;
         public float acceleration = 1f;
 
@@ -191,6 +191,29 @@ namespace PathOfTheInfected.Enemy
             velocity.x = b;
             RB.linearVelocity = velocity;
         }
+
+        public void MoveTo(Transform target)
+        {
+            if (!target) return;
+            MoveTo(target.position);
+        }
+
+        public void MoveTo(GameObject target)
+        {
+            if (!target) return;
+            MoveTo(target.transform.position);
+        }
+
+        public void MoveTo(Vector2 target)
+        {
+            Vector2 dir = (target - (Vector2)transform.position).normalized;
+            Vector2 velocity = RB.linearVelocity;
+            velocity.x =  dir.x;
+
+            MoveEnemy(velocity);
+        }
+
+
 
         public void CheckForLeftOrRightFacing(Vector2 velocity)
         {
