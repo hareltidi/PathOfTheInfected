@@ -7,7 +7,7 @@ namespace PathOfTheInfected.Enemy
     {
         public override void TransitionChecks()
         {
-            if (_enemy.spottableDetectedState && !_enemy.isSpottableInAttackRange)
+            if (_enemy.isSpottableDetected && !_enemy.isSpottableInAttackRange)
             {
                 _stateMachine?.RequestStateChange(_enemy.spottableDetectedState);
             }

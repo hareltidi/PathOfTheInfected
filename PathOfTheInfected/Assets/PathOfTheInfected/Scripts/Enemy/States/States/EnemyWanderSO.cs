@@ -3,7 +3,7 @@
 namespace PathOfTheInfected.Enemy
 {
     [CreateAssetMenu(fileName = "EnemyWanderState", menuName = "Enemy/States/EnemyWanderState", order = 0)]
-    public class EnemyWanderSo : NoSpottableDetectedStateSOBase
+    public class EnemyWanderSo : EnemyBaseState
     {
         [field: SerializeField] public float WanderRange { get; protected set; } = 15f;
         public Vector2 WanderDirection { get; protected set; }
@@ -15,7 +15,7 @@ namespace PathOfTheInfected.Enemy
 
         public override void StateEnter()
         {
-            Vector2 origin = _enemy.transform.position;
+            Vector2 origin = _enemy.InitialPosition;
 
             WanderDirection = _enemy.IsFacingRight ? Vector2.right : Vector2.left;
             WanderMaxPosition = origin + WanderDirection * WanderRange;
@@ -54,6 +54,21 @@ namespace PathOfTheInfected.Enemy
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(min, max);
+        }
+
+        public override void TransitionChecks()
+        {
+            base.TransitionChecks();
+            if (_enemy.isSpottableDetected)
+            {
+                _stateMachine.RequestStateChange(_enemy.spottableDetectedState);
+
+            }
+
+            if (_enemy.isSpottableInAttackRange)
+            {
+                _stateMachine.RequestStateChange(_enemy.spottableInAttackRangeState);
+            }
         }
     }
 }

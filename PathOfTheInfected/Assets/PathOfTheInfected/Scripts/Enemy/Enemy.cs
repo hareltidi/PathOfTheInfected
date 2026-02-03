@@ -11,7 +11,7 @@ namespace PathOfTheInfected.Enemy
         #region IDamageable
 
         public bool IsDead { get; set; }
-       [field: SerializeField] public int CurrentHealth { get; set; }
+        [field: SerializeField] public int CurrentHealth { get; set; }
 
         public int MaxHealth { get; set; }
         #endregion
@@ -43,6 +43,9 @@ namespace PathOfTheInfected.Enemy
         public EnemyBaseState noSpottableDetectedState;
         public EnemyBaseState spottableDetectedState;
         public EnemyBaseState spottableInAttackRangeState;
+
+        [Header("State Debugging")]
+        public EnemyBaseState CurrentState;
         #endregion
 
         #region Serialized Members
@@ -68,6 +71,8 @@ namespace PathOfTheInfected.Enemy
         #region Private and non-serialized members
         private readonly List<ISpottable> _visibleSpottables = new();
         public List<ISpottable> VisibleSpottables => _visibleSpottables;
+
+        public Vector3 InitialPosition { get; private set; }
         #endregion
 
         private void Awake()
@@ -85,18 +90,21 @@ namespace PathOfTheInfected.Enemy
             spottableDetectedState.StateInit(this, StateMachine);
             spottableInAttackRangeState.StateInit(this, StateMachine);
 
+            InitialPosition = transform.position;
             StateMachine?.InitializeDefaultState(noSpottableDetectedState);
+
         }
 
         private void Update()
         {
             DetectVisibleSpottables();
+            StateMachine?.ApplyQueuedStateChange();
+            CurrentState = StateMachine?.CurrentState;
             StateMachine?.CurrentState.StateUpdate();
         }
 
         private void FixedUpdate()
         {
-            StateMachine?.ApplyQueuedStateChange();
             StateMachine?.CurrentState.StateFixedUpdate();
         }
 
@@ -104,7 +112,6 @@ namespace PathOfTheInfected.Enemy
         {
             DrawStatesGizmos();
             DrawingSpottingRange();
-
         }
 
         protected virtual void DetectVisibleSpottables()
@@ -180,16 +187,16 @@ namespace PathOfTheInfected.Enemy
         public void MoveEnemy(Vector2 velocity)
         {
             if (!RB) return;
-            var b = Mathf.Sign(velocity.x) * moveSpeed;
-            var t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
-            velocity.x = Mathf.Lerp(velocity.x, b, t);
-            CheckForLeftOrRightFacing(velocity);
-            if (Mathf.Abs(velocity.x - b) > 0.0099999997764825821)
-            {
-                return;
-            }
-            velocity.x = b;
-            RB.linearVelocity = velocity;
+
+            float targetVx = Mathf.Sign(velocity.x) * moveSpeed;
+            float t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
+
+            float newVx = Mathf.Lerp(RB.linearVelocity.x, targetVx, t);
+
+            Vector2 finalVelocity = new Vector2(newVx, RB.linearVelocity.y);
+
+            CheckForLeftOrRightFacing(finalVelocity);
+            RB.linearVelocity = finalVelocity;
         }
 
         public void MoveTo(Transform target)
@@ -206,11 +213,16 @@ namespace PathOfTheInfected.Enemy
 
         public void MoveTo(Vector2 target)
         {
-            Vector2 dir = (target - (Vector2)transform.position).normalized;
-            Vector2 velocity = RB.linearVelocity;
-            velocity.x =  dir.x;
+            float dx = target.x - transform.position.x;
 
-            MoveEnemy(velocity);
+            if (Mathf.Abs(dx) < 0.05f)
+            {
+                MoveEnemy(Vector2.zero);
+                return;
+            }
+
+            float dir = dx > 0 ? 1f : -1f;
+            MoveEnemy(new Vector2(dir, 0f));
         }
 
 

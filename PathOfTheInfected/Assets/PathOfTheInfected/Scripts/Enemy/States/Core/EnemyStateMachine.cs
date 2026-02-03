@@ -1,4 +1,6 @@
-﻿namespace PathOfTheInfected.Enemy
+﻿using UnityEngine;
+
+namespace PathOfTheInfected.Enemy
 {
     public class EnemyStateMachine
     {
@@ -14,7 +16,7 @@
 
         public void RequestStateChange(EnemyBaseState newState)
         {
-            if (NextState == null)
+            if (!NextState)
             {
                 NextState = newState;
             }
@@ -22,7 +24,7 @@
 
         public void ApplyQueuedStateChange()
         {
-            if (NextState != null)
+            if (NextState)
             {
                 CurrentState?.StateExit();
                 PreviousState = CurrentState;

@@ -77,3 +77,4 @@ crashlytics-build.properties
 /PathOfTheInfected/.vscode
 /PathOfTheInfected/Packages/com.merry-yellow.code-assist
 /PathOfTheInfected/AGENTS.md
+*.slnx
