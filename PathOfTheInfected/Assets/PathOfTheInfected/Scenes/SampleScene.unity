@@ -559,6 +559,14 @@ PrefabInstance:
       propertyPath: trackAttackRange
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5582546731179945518, guid: 72dcc7d13ded1f6459e359c4e0abf16f, type: 3}
+      propertyPath: attackDatas.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5582546731179945518, guid: 72dcc7d13ded1f6459e359c4e0abf16f, type: 3}
+      propertyPath: 'attackDatas.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 00f443869c12cee4b8b84635d093305e, type: 2}
     - target: {fileID: 6209501577205635293, guid: 72dcc7d13ded1f6459e359c4e0abf16f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -29.6

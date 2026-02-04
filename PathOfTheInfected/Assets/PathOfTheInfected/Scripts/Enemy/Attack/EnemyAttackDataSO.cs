@@ -9,6 +9,5 @@ namespace PathOfTheInfected.Enemy
         public float poiseConsumed = 1.5f;
         public float hitStopTime = 0.5f;
         public float maxAttackRange = 5f;
-
     }
 }

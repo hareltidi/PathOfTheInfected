@@ -7,9 +7,9 @@ namespace PathOfTheInfected.Enemy
 
     public class Enemy : MonoBehaviour, IDamageable, IEnemyMoveable
     {
-        #region Interface Variables
-        #region IDamageable
+        #region Interface Varibles
 
+        #region IDamageble
         public bool IsDead { get; set; }
         [field: SerializeField] public int CurrentHealth { get; set; }
 
@@ -22,6 +22,7 @@ namespace PathOfTheInfected.Enemy
         [field: SerializeField] public bool IsFacingRight { get; set; } = true;
 
         #endregion
+
         #endregion
 
         #region Damage
@@ -69,7 +70,7 @@ namespace PathOfTheInfected.Enemy
         public float maxSpotRange = 10f;
 
         [Header("Attack")]
-        public EnemyAttackDataSO attackData;
+        public List<EnemyAttackDataSO> attackDatas = new();
         #endregion
 
         #region Private and non-serialized members
@@ -78,6 +79,8 @@ namespace PathOfTheInfected.Enemy
         public Vector3 InitialPosition { get; private set; }
 
         private ISpottable _attackTarget;
+
+        private int _currentAttackIndex = 0;
         #endregion
 
         private void Awake()
@@ -103,7 +106,7 @@ namespace PathOfTheInfected.Enemy
         private void Update()
         {
             DetectVisibleSpottables();
-            AttackCheck();
+            //AttackCheck();
             StateMachine?.ApplyQueuedStateChange();
             CurrentState = StateMachine?.CurrentState;
             StateMachine?.CurrentState.StateUpdate();
@@ -152,7 +155,7 @@ namespace PathOfTheInfected.Enemy
                     VisibleSpottables.Add(spottable);
                 }
             }
-            isSpottableDetected = VisibleSpottables.Count > 0;
+            isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange;
         }
 
         protected virtual void DrawingSpottingRange()
@@ -184,7 +187,7 @@ namespace PathOfTheInfected.Enemy
                 Mathf.Abs(max.position.y - min.position.y)
             );
 
-            float range = attackData.maxAttackRange;
+            float range = attackDatas[_currentAttackIndex].maxAttackRange;
             int facingDirection = IsFacingRight ? 1 : -1;
             float forwardOffset = range * 0.5f * facingDirection;
 
@@ -203,7 +206,7 @@ namespace PathOfTheInfected.Enemy
                 Mathf.Abs(max.position.y - min.position.y)
             );
 
-            float range = attackData.maxAttackRange;
+            float range = attackDatas[_currentAttackIndex].maxAttackRange;
             int facingDirection = IsFacingRight ? 1 : -1;
             float forwardOffset = range * 0.5f * facingDirection;
 
