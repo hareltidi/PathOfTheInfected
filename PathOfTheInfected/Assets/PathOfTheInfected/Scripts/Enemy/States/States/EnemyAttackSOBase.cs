@@ -19,11 +19,13 @@ namespace PathOfTheInfected.Enemy
             if (!_enemy.isSpottableInAttackRange && _enemy.isSpottableDetected)
             {
                 _stateMachine.RequestStateChange(_enemy.spottableDetectedState);
+                Debug.Log("Transitioning to spottable detected state");
             }
 
             if (!_enemy.isSpottableInAttackRange && !_enemy.isSpottableDetected)
             {
                 _stateMachine.RequestStateChange(_enemy.noSpottableDetectedState);
+                Debug.Log("Transitioning to no spottable detected state");
             }
         }
     }
