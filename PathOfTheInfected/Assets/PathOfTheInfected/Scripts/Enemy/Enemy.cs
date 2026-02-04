@@ -50,10 +50,11 @@ namespace PathOfTheInfected.Enemy
 
         #region Serialized Members
 
-        [Header("Box cast")]
+        [Header("Box cast - general")]
+        [SerializeField] private LayerMask spottableMask;
         public Transform max;
         public Transform min;
-        [SerializeField] private LayerMask spottableMask;
+
 
 
         [Header("State switch conditions")]
@@ -66,12 +67,17 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Spottable Detection")]
         public float maxSpotRange = 10f;
+
+        [Header("Attack")]
+        public EnemyAttackDataSO attackData;
         #endregion
 
         #region Private and non-serialized members
         public List<ISpottable> VisibleSpottables { get; private set; } = new();
 
         public Vector3 InitialPosition { get; private set; }
+
+        private ISpottable _attackTarget;
         #endregion
 
         private void Awake()
@@ -97,6 +103,7 @@ namespace PathOfTheInfected.Enemy
         private void Update()
         {
             DetectVisibleSpottables();
+            AttackCheck();
             StateMachine?.ApplyQueuedStateChange();
             CurrentState = StateMachine?.CurrentState;
             StateMachine?.CurrentState.StateUpdate();
@@ -111,6 +118,7 @@ namespace PathOfTheInfected.Enemy
         {
             DrawStatesGizmos();
             DrawingSpottingRange();
+            DrawAttackRange();
         }
 
         protected virtual void DetectVisibleSpottables()
@@ -167,8 +175,58 @@ namespace PathOfTheInfected.Enemy
             Gizmos.DrawWireCube(center, size);
         }
 
+        protected virtual void DrawAttackRange()
+        {
+            if (!trackAttackRange) return;
+            Vector2 baseCenter = (min.position + max.position) * 0.5f;
+            Vector2 baseSize = new Vector2(
+                Mathf.Abs(max.position.x - min.position.x),
+                Mathf.Abs(max.position.y - min.position.y)
+            );
+
+            float range = attackData.maxAttackRange;
+            int facingDirection = IsFacingRight ? 1 : -1;
+            float forwardOffset = range * 0.5f * facingDirection;
+
+            Vector2 center = baseCenter + Vector2.right * forwardOffset;
+            Vector2 size = new Vector2(baseSize.x + range, baseSize.y);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(center, size);
+        }
+
         protected virtual void AttackCheck()
         {
+            Vector2 baseCenter = (min.position + max.position) * 0.5f;
+            Vector2 baseSize = new Vector2(
+                Mathf.Abs(max.position.x - min.position.x),
+                Mathf.Abs(max.position.y - min.position.y)
+            );
+
+            float range = attackData.maxAttackRange;
+            int facingDirection = IsFacingRight ? 1 : -1;
+            float forwardOffset = range * 0.5f * facingDirection;
+
+            Vector2 center = baseCenter + Vector2.right * forwardOffset;
+            Vector2 size = new Vector2(baseSize.x + range, baseSize.y);
+
+
+            Collider2D[] hits = Physics2D.OverlapBoxAll(
+                center,
+                size,
+                0f,
+                spottableMask
+            );
+
+            foreach (Collider2D hit in hits)
+            {
+                if (hit.TryGetComponent(out ISpottable spottable))
+                {
+                    _attackTarget = spottable;
+                    isSpottableInAttackRange = (VisibleSpottables.Contains(spottable));
+                    return;
+                }
+            }
         }
 
         private void DrawStatesGizmos()
@@ -219,7 +277,6 @@ namespace PathOfTheInfected.Enemy
             float dx = target.x - transform.position.x;
             float dir = dx > 0 ? 1f : -1f;
             MoveEnemy(new Vector2(dir, 0f));
-            Debug.Log("Moving" + dir);
         }
 
 

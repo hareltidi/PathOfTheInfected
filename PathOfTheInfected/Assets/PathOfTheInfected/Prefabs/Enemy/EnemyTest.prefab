@@ -187,16 +187,17 @@ MonoBehaviour:
   spottableDetectedState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
   spottableInAttackRangeState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
   CurrentState: {fileID: 0}
-  max: {fileID: 1097756811225222640}
-  min: {fileID: 7565596375646536435}
   spottableMask:
     serializedVersion: 2
     m_Bits: 8
+  max: {fileID: 1097756811225222640}
+  min: {fileID: 7565596375646536435}
   isSpottableDetected: 0
   isSpottableInAttackRange: 0
   trackSpotRange: 1
   trackAttackRange: 0
   maxSpotRange: 18
+  attackData: {fileID: 11400000, guid: 00f443869c12cee4b8b84635d093305e, type: 2}
   moveSpeed: 15
   acceleration: 1
 --- !u!1 &2896338765570997556
