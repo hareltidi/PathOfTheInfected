@@ -69,8 +69,7 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region Private and non-serialized members
-        private readonly List<ISpottable> _visibleSpottables = new();
-        public List<ISpottable> VisibleSpottables => _visibleSpottables;
+        public List<ISpottable> VisibleSpottables { get; private set; } = new();
 
         public Vector3 InitialPosition { get; private set; }
         #endregion
@@ -116,7 +115,7 @@ namespace PathOfTheInfected.Enemy
 
         protected virtual void DetectVisibleSpottables()
         {
-            _visibleSpottables.Clear();
+            VisibleSpottables.Clear();
             Vector2 baseCenter = (min.position + max.position) * 0.5f;
             Vector2 baseSize = new Vector2(
                 Mathf.Abs(max.position.x - min.position.x),
@@ -142,10 +141,10 @@ namespace PathOfTheInfected.Enemy
             {
                 if (hit.TryGetComponent(out ISpottable spottable))
                 {
-                    _visibleSpottables.Add(spottable);
+                    VisibleSpottables.Add(spottable);
                 }
             }
-            isSpottableDetected = _visibleSpottables.Count > 0;
+            isSpottableDetected = VisibleSpottables.Count > 0;
         }
 
         protected virtual void DrawingSpottingRange()
@@ -201,7 +200,11 @@ namespace PathOfTheInfected.Enemy
 
         public void MoveTo(Transform target)
         {
-            if (!target) return;
+            if (!target)
+            {
+                Debug.Log("target null");
+                return;
+            }
             MoveTo(target.position);
         }
 
@@ -214,15 +217,9 @@ namespace PathOfTheInfected.Enemy
         public void MoveTo(Vector2 target)
         {
             float dx = target.x - transform.position.x;
-
-            if (Mathf.Abs(dx) < 0.05f)
-            {
-                MoveEnemy(Vector2.zero);
-                return;
-            }
-
             float dir = dx > 0 ? 1f : -1f;
             MoveEnemy(new Vector2(dir, 0f));
+            Debug.Log("Moving" + dir);
         }
 
 

@@ -551,22 +551,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyTest
       objectReference: {fileID: 0}
-    - target: {fileID: 5582546731179945518, guid: 72dcc7d13ded1f6459e359c4e0abf16f, type: 3}
-      propertyPath: maxSpotRange
-      value: 7.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 5582546731179945518, guid: 72dcc7d13ded1f6459e359c4e0abf16f, type: 3}
-      propertyPath: spottableDetectedState
-      value: 
-      objectReference: {fileID: 11400000, guid: 273a64afb16438b438c3602cca977b61, type: 2}
-    - target: {fileID: 5582546731179945518, guid: 72dcc7d13ded1f6459e359c4e0abf16f, type: 3}
-      propertyPath: spottableInAttackRangeState
-      value: 
-      objectReference: {fileID: 11400000, guid: 273a64afb16438b438c3602cca977b61, type: 2}
-    - target: {fileID: 5582546731179945518, guid: 72dcc7d13ded1f6459e359c4e0abf16f, type: 3}
-      propertyPath: <IsFacingRight>k__BackingField
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6209501577205635293, guid: 72dcc7d13ded1f6459e359c4e0abf16f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -29.6

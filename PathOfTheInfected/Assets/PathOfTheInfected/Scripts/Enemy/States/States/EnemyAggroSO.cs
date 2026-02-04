@@ -6,18 +6,18 @@ namespace PathOfTheInfected.Enemy
     public class EnemyAggroSO : EnemyBaseState
     {
         public Transform target;
-        private float _bestDistSq = float.MaxValue;
+        private float _bestDistSq = 0;
         private Vector2 _enemyPos = Vector2.zero;
 
         public override void StateEnter()
         {
             base.StateEnter();
-            target = null;
+            _bestDistSq = float.MaxValue;
+            _enemyPos = Vector2.zero;
         }
 
         public override void StateFixedUpdate()
         {
-            if (!target) return;
             _enemy.MoveTo(FindClosestTarget());
         }
 
