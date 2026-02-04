@@ -147,7 +147,9 @@ namespace TidiMovementComponent2D.States
                                          player.DashDirection.y == 0.0 && Mathf.Sign(player.DashDirection.x) !=
                                          (double)Mathf.Sign(player.Controller.State.SlopeNormal.x);
                 if (_isPerformingSlopeDash)
+                {
                     _slopeDashAngle = player.Controller.State.SlopeAngle;
+                }
             }
 
             _dashTimer += Time.fixedDeltaTime;

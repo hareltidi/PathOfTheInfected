@@ -70,7 +70,9 @@ namespace PathOfTheInfected.Enemy
         public float maxSpotRange = 10f;
 
         [Header("Attack")]
-        public List<EnemyAttackDataSO> attackDatas = new();
+        public AttackSOBase attack;
+        public float maxPoise = 10f;
+
         #endregion
 
         #region Private and non-serialized members
@@ -78,9 +80,9 @@ namespace PathOfTheInfected.Enemy
 
         public Vector3 InitialPosition { get; private set; }
 
-        private ISpottable _attackTarget;
+        public ISpottable AttackTarget { get; protected set; }
 
-        private int _currentAttackIndex = 0;
+        protected float CurrentPoise = 0f;
         #endregion
 
         private void Awake()
@@ -97,7 +99,7 @@ namespace PathOfTheInfected.Enemy
             noSpottableDetectedState.StateInit(this, StateMachine);
             spottableDetectedState.StateInit(this, StateMachine);
             spottableInAttackRangeState.StateInit(this, StateMachine);
-
+            CurrentPoise = maxPoise;
             InitialPosition = transform.position;
             StateMachine?.InitializeDefaultState(noSpottableDetectedState);
 
@@ -106,7 +108,7 @@ namespace PathOfTheInfected.Enemy
         private void Update()
         {
             DetectVisibleSpottables();
-            //AttackCheck();
+            AttackCheck();
             StateMachine?.ApplyQueuedStateChange();
             CurrentState = StateMachine?.CurrentState;
             StateMachine?.CurrentState.StateUpdate();
@@ -187,7 +189,7 @@ namespace PathOfTheInfected.Enemy
                 Mathf.Abs(max.position.y - min.position.y)
             );
 
-            float range = attackDatas[_currentAttackIndex].maxAttackRange;
+            float range = attack.MaxAttackRange;
             int facingDirection = IsFacingRight ? 1 : -1;
             float forwardOffset = range * 0.5f * facingDirection;
 
@@ -206,7 +208,7 @@ namespace PathOfTheInfected.Enemy
                 Mathf.Abs(max.position.y - min.position.y)
             );
 
-            float range = attackDatas[_currentAttackIndex].maxAttackRange;
+            float range = attack.MaxAttackRange;
             int facingDirection = IsFacingRight ? 1 : -1;
             float forwardOffset = range * 0.5f * facingDirection;
 
@@ -225,10 +227,12 @@ namespace PathOfTheInfected.Enemy
             {
                 if (hit.TryGetComponent(out ISpottable spottable))
                 {
-                    _attackTarget = spottable;
-                    isSpottableInAttackRange = (VisibleSpottables.Contains(spottable));
+                    AttackTarget = spottable;
+                    isSpottableInAttackRange = true;
                     return;
                 }
+
+                isSpottableDetected = false;
             }
         }
 
