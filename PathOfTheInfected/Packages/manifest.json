@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.anchorpoint.sourcecontrol": "https://github.com/Anchorpoint-Software/ap-unity.git",
     "com.maligan.unity-zed": "https://github.com/SuperJura/unity-zed-windows.git",
     "com.unity.2d.animation": "13.0.4",
     "com.unity.2d.aseprite": "3.0.1",
