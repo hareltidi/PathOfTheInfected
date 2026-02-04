@@ -15,7 +15,6 @@ namespace PathOfTheInfected.Enemy
         /// <param name="ctx">The attack context we have on this specific attack</param>
         public virtual void AttackLogic(AttackContext ctx)
         {
-            Debug.Log("Attacking");
         }
 
         /// <summary>
