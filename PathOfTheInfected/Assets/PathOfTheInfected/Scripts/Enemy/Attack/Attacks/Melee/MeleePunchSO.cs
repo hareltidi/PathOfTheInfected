@@ -17,7 +17,7 @@ namespace PathOfTheInfected.Enemy
                 Mathf.Abs(enemy.max.position.y - enemy.min.position.y)
             );
 
-            float range = enemy.maxSpotRange;
+            float range = MaxAttackRange;
             int facingDirection = enemy.IsFacingRight ? 1 : -1;
             float forwardOffset = range * 0.5f * facingDirection;
 
@@ -36,7 +36,14 @@ namespace PathOfTheInfected.Enemy
             {
                 if (t.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    damageable?.TakeDamage(damage);
+                    if (damageable != null && !damageable.IsDead)
+                    {
+                        DamageData data = new DamageData();
+                        data.damage = damage;
+                        data.hitStopTime = hitStopTime;
+                        damageable.TakeDamage(data);
+                    }
+
                 }
             }
         }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MeleePunchSO
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.MeleePunchSO
   damage: 1
-  hitStopTime: 0.5
+  hitStopTime: 0.1
   <MaxAttackRange>k__BackingField: 2
   <PoiseConsumed>k__BackingField: 0.5
   windupDuration: 0.5

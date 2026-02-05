@@ -28,9 +28,9 @@ namespace PathOfTheInfected.Enemy
 
         #region Damage
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(DamageData damageaData)
         {
-            CurrentHealth -= damage;
+            CurrentHealth -= damageaData.damage;
         }
 
         public void Die()

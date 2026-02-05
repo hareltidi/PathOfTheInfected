@@ -1,10 +1,12 @@
 ﻿using System;
+using PathOfTheInfected.Enemy;
+using TidiMovementComponent2D.Core;
 using TidiTweening;
 using UnityEngine;
 
 namespace PathOfTheInfected.Damagable
 {
-    public class PlayerHealth : MonoBehaviour, IDamageable
+    public class PlayerHealth : MonoBehaviour, IDamageable, IHitStoppable
     {
         #region IDamageable members
         [field: SerializeField] public bool IsDead { get; set; }
@@ -13,8 +15,11 @@ namespace PathOfTheInfected.Damagable
         #endregion
 
         #region Script members
-        SpriteRenderer[] _spriteRenderers;
-        Material[] _materials;
+        private SpriteRenderer[] _spriteRenderers;
+        private Material[] _materials;
+        private bool _isHitStopped = false;
+        private Rigidbody2D RB => GetComponent<Rigidbody2D>();
+        private float _hitStopTimer;
         [SerializeField] private float flashTime;
         [ColorUsage(true, true)]
         [SerializeField] private Color flashColor;
@@ -34,7 +39,9 @@ namespace PathOfTheInfected.Damagable
             _materials = new Material[_spriteRenderers.Length];
             for (int i = 0; i < _spriteRenderers.Length; i++)
             {
-                _materials[i] = _spriteRenderers[i].material;
+                Material instance = Instantiate(_spriteRenderers[i].sharedMaterial);
+                _spriteRenderers[i].material = instance;
+                _materials[i] = instance;
             }
         }
 
@@ -43,15 +50,29 @@ namespace PathOfTheInfected.Damagable
             CurrentHealth = MaxHealth;
         }
 
+        private void Update()
+        {
+            if (_isHitStopped)
+            {
+                _hitStopTimer -= Time.unscaledDeltaTime;
 
-        public void TakeDamage(int damage)
+                if (_hitStopTimer <= 0f)
+                {
+                    _isHitStopped = false;
+                    RB.simulated = true;
+                }
+            }
+        }
+
+
+        public void TakeDamage(DamageData damageData)
         {
 
             if (CurrentHealth > 0)
             {
-                CurrentHealth -= damage;
+                CurrentHealth -= damageData.damage;
                 FlashDamage();
-                Debug.Log("ouch");
+                HitStop(damageData.hitStopTime);
             }
             else if (!IsDead)
             {
@@ -63,28 +84,40 @@ namespace PathOfTheInfected.Damagable
         public void Die()
         {
             IsDead = true;
-            Debug.Log("death");
         }
 
         private void FlashDamage()
         {
-            SetFlashColor();
+            SetFlashColor(flashColor);
+            int i = 0;
             foreach (var t in _materials)
             {
-                float currentAmount = t.GetFloat("_FlashAmount");
-                TidiTweenManager.TweenFloat(this, currentAmount, 1, flashTime, (value) =>
+                Material localMat = t;
+                localMat.name += $"Hit Flash Material_{i}";
+                float currentAmount = localMat.GetFloat("_FlashAmount");
+                TidiTweenManager.TweenFloat(localMat, currentAmount, 1, flashTime, (value) =>
                 {
-                    t.SetFloat("_FlashAmount", value);
+                    localMat.SetFloat("_FlashAmount", value);
                 }).SetPingPong(2).SetEase(damageFlashEaseType);
+                i++;
             }
         }
 
-        private void SetFlashColor()
+        private void SetFlashColor(Color color)
         {
             for (int i = 0; i < _materials.Length; i++)
             {
-                _materials[i].SetColor("_FlashColor",  flashColor);
+                _materials[i].SetColor("_FlashColor", color);
             }
+        }
+
+        public void HitStop(float duration)
+        {
+            if (!HitStopManager.Instance)
+            {
+                new GameObject("HitStopManager").AddComponent<HitStopManager>();
+            }
+            HitStopManager.Instance?.HitStop(duration);
         }
     }
 }
