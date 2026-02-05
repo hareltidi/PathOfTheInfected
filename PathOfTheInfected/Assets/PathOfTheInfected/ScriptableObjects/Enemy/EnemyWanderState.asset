@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6219d4f719da46cf934eb39ff655918b, type: 3}
   m_Name: EnemyWanderState
   m_EditorClassIdentifier: Assembly-CSharp::PathOfTheInfected.Enemy.EnemyWanderSO
-  <WanderRange>k__BackingField: 7
+  <WanderRange>k__BackingField: 10
   threshold: 0.5
   trackWanderPath: 1

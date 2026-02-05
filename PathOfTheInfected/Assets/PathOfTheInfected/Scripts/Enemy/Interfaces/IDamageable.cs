@@ -1,4 +1,5 @@
-﻿namespace PathOfTheInfected.Enemy
+﻿namespace PathOfTheInfected.Damagable
+
 {
     public interface IDamageable
     {

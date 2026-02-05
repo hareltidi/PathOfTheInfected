@@ -63,7 +63,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 1d5e48be17b4f9f48a93828d65c10305, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -185,7 +185,7 @@ MonoBehaviour:
   <IsFacingRight>k__BackingField: 0
   noSpottableDetectedState: {fileID: 11400000, guid: d14407899ba6b074bb80a17f98ab1d17, type: 2}
   spottableDetectedState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
-  spottableInAttackRangeState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
+  spottableInAttackRangeState: {fileID: 11400000, guid: fd0825611c5cee6499d38a53e749d3f8, type: 2}
   CurrentState: {fileID: 0}
   spottableMask:
     serializedVersion: 2
@@ -195,9 +195,11 @@ MonoBehaviour:
   isSpottableDetected: 0
   isSpottableInAttackRange: 0
   trackSpotRange: 1
-  trackAttackRange: 0
-  maxSpotRange: 18
-  attackData: {fileID: 11400000, guid: 00f443869c12cee4b8b84635d093305e, type: 2}
+  trackAttackRange: 1
+  maxSpotRange: 8
+  attack: {fileID: 11400000, guid: d7046a92ff3ad5244b526d8af2e4f355, type: 2}
+  maxPoise: 10
+  <CurrentPoise>k__BackingField: 0
   moveSpeed: 15
   acceleration: 1
 --- !u!1 &2896338765570997556

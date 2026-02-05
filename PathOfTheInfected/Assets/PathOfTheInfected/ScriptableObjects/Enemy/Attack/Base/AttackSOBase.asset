@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ade0418e3d467c843d47c54a80b122, type: 3}
   m_Name: AttackSOBase
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.AttackSOBase
-  <MaxAttackRange>k__BackingField: 5
+  damage: 1
+  hitStopTime: 0.5
+  <MaxAttackRange>k__BackingField: 3
+  <PoiseConsumed>k__BackingField: 2
+  windupDuration: 0.5
+  recoveryTime: 0.7

@@ -46,7 +46,7 @@ namespace PathOfTheInfected.Enemy
         {
             if (en == null || !trackWanderPath) return;
 
-            Vector3 origin = en.transform.position;
+            Vector3 origin = en.InitialPosition;
             Vector3 dir = en.IsFacingRight ? Vector3.right : Vector3.left;
 
             Vector3 max = origin + dir * WanderRange;

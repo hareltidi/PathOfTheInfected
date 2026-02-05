@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PathOfTheInfected.Damagable;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
@@ -46,13 +47,13 @@ namespace PathOfTheInfected.Enemy
         public EnemyBaseState spottableInAttackRangeState;
 
         [Header("State Debugging")]
-        public EnemyBaseState CurrentState;
+       [field: SerializeField] public EnemyBaseState CurrentState { get; protected set; }
         #endregion
 
         #region Serialized Members
 
         [Header("Box cast - general")]
-        [SerializeField] private LayerMask spottableMask;
+        [field:SerializeField] public LayerMask SpottableMask { get; protected set;}
         public Transform max;
         public Transform min;
 
@@ -82,7 +83,7 @@ namespace PathOfTheInfected.Enemy
 
         public ISpottable AttackTarget { get; protected set; }
 
-        protected float CurrentPoise = 0f;
+        [field: SerializeField]public float CurrentPoise { get; set; } = 0f;
         #endregion
 
         private void Awake()
@@ -107,8 +108,8 @@ namespace PathOfTheInfected.Enemy
 
         private void Update()
         {
-            DetectVisibleSpottables();
             AttackCheck();
+            DetectVisibleSpottables();
             StateMachine?.ApplyQueuedStateChange();
             CurrentState = StateMachine?.CurrentState;
             StateMachine?.CurrentState.StateUpdate();
@@ -147,7 +148,7 @@ namespace PathOfTheInfected.Enemy
                 center,
                 size,
                 0f,
-                spottableMask
+                SpottableMask
             );
 
             foreach (Collider2D hit in hits)
@@ -220,20 +221,25 @@ namespace PathOfTheInfected.Enemy
                 center,
                 size,
                 0f,
-                spottableMask
+                SpottableMask
             );
 
+            bool test = false;
+            ISpottable testTarget = null;
             foreach (Collider2D hit in hits)
             {
-                if (hit.TryGetComponent(out ISpottable spottable))
+                if (hit.TryGetComponent<ISpottable>(out var spottable) && hit.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    AttackTarget = spottable;
-                    isSpottableInAttackRange = true;
-                    return;
+                    if (VisibleSpottables.Contains(spottable) &&  damageable != null)
+                    {
+                        testTarget = spottable;
+                        test = true;
+                        break;
+                    }
                 }
-
-                isSpottableDetected = false;
             }
+            isSpottableInAttackRange = test;
+            AttackTarget = testTarget;
         }
 
         private void DrawStatesGizmos()

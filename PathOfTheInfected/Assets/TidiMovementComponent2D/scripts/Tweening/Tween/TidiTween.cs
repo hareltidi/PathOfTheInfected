@@ -26,6 +26,7 @@ namespace TidiTweening
         private int _loopsCompleted = 0;
         private bool _reverse = false;
         private bool _pingPong = false;
+        private bool _constantSpeed = false;
         private int _loopCount = 1;
         private float _percentThreshold = -1f;
         private Action _onUpdate;
@@ -92,11 +93,11 @@ namespace TidiTweening
             T currentValue;
             if (_reverse)
             {
-                currentValue = Interpolate(_endValue, _startValue, easedT);
+                currentValue = Interpolate(_endValue, _startValue, easedT, _constantSpeed);
             }
             else
             {
-                currentValue = Interpolate(_startValue, _endValue, easedT);
+                currentValue = Interpolate(_startValue, _endValue, easedT, _constantSpeed);
             }
             _onUpdate?.Invoke();
             _onTweenUpdate?.Invoke(currentValue);
@@ -126,21 +127,35 @@ namespace TidiTweening
             }
         }
 
-        public T Interpolate(T start, T end, float t)
+        public T Interpolate(T start, T end, float t, bool constantSpeed)
         {
             if (start is float startFloat && end is float endFloat)
             {
-                return (T)(object)Mathf.LerpUnclamped(startFloat, endFloat, t);
+                if (!constantSpeed)
+                {
+                    return (T)(object)Mathf.LerpUnclamped(startFloat, endFloat, t);
+                }
+                return (T)(object)Mathf.MoveTowards(startFloat, endFloat, t);
             }
 
             if (start is Vector2 startVector2 && end is Vector2 endVector2)
             {
-                return (T)(object)Vector2.LerpUnclamped(startVector2, endVector2, t);
+                if (!constantSpeed)
+                {
+                    return (T)(object)Vector2.LerpUnclamped(startVector2, endVector2, t);
+                }
+
+                return (T)(object)Vector2.MoveTowards(startVector2, endVector2, t);
             }
 
             if (start is Vector3 startVector3 && end is Vector3 endVector3)
             {
-                return (T)(object)Vector3.LerpUnclamped(startVector3, endVector3, t);
+                if (!constantSpeed)
+                {
+                    return (T)(object)Vector3.LerpUnclamped(startVector3, endVector3, t);
+                }
+
+                return (T)(object)Vector3.MoveTowards(startVector3, endVector3, t);
             }
 
             if (start is Color startColor && end is Color endColor)
@@ -567,6 +582,12 @@ namespace TidiTweening
         public TidiTween<T> SetStartDelay(float delay)
         {
             DelayTime = delay;
+            return this;
+        }
+
+        public TidiTween<T> SetConstantSpeed()
+        {
+            _constantSpeed = true;
             return this;
         }
 
