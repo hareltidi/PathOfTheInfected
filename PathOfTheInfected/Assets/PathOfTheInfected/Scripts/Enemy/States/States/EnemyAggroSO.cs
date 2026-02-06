@@ -18,14 +18,14 @@ namespace PathOfTheInfected.Enemy
 
         public override void StateFixedUpdate()
         {
-            _enemy.MoveTo(FindClosestTarget());
+            EnemyBrainBase.MoveTo(FindClosestTarget());
         }
 
         private Transform FindClosestTarget()
         {
-            _enemyPos = _enemy.transform.position;
+            _enemyPos = EnemyBrainBase.transform.position;
 
-            foreach (var spottable in _enemy.VisibleSpottables)
+            foreach (var spottable in EnemyBrainBase.VisibleSpottables)
             {
                 float distSq = (spottable.Transform.position - (Vector3)_enemyPos).sqrMagnitude;
                 if (distSq < _bestDistSq)
@@ -40,14 +40,14 @@ namespace PathOfTheInfected.Enemy
         public override void TransitionChecks()
         {
             base.TransitionChecks();
-            if (_enemy.isSpottableInAttackRange)
+            if (EnemyBrainBase.isSpottableInAttackRange)
             {
-                _stateMachine?.RequestStateChange(_enemy.spottableInAttackRangeState);
+                _stateMachine?.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
             }
 
-            if (!_enemy.isSpottableDetected)
+            if (!EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine?.RequestStateChange(_enemy.noSpottableDetectedState);
+                _stateMachine?.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
             }
         }
     }

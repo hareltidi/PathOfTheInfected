@@ -6,7 +6,7 @@ namespace PathOfTheInfected.Enemy
     public class EnemyBaseState : ScriptableObject
     {
        #region protected Fields
-       protected Enemy _enemy;
+       protected EnemyBrainBase EnemyBrainBase;
        protected EnemyStateMachine _stateMachine;
        #endregion
 
@@ -14,11 +14,11 @@ namespace PathOfTheInfected.Enemy
         /// <summary>
         /// Sets initial variables for states to function properly
         /// </summary>
-        /// <param name="enemy">the owner of the state</param>
+        /// <param name="enemyBrainBase">the owner of the state</param>
         /// <param name="stateMachine">the state machine responsible for the state</param>
-        public virtual void StateInit(Enemy enemy, EnemyStateMachine stateMachine)
+        public virtual void StateInit(EnemyBrainBase enemyBrainBase, EnemyStateMachine stateMachine)
         {
-            _enemy = enemy;
+            EnemyBrainBase = enemyBrainBase;
             _stateMachine = stateMachine;
         }
 
@@ -66,7 +66,7 @@ namespace PathOfTheInfected.Enemy
         /// draws gizmos when we select our enemy in the inspector. (if gizmos are enabled)
         /// </summary>
         /// <param name="en">enemy that called this</param>
-        public virtual void DrawGizmosOnSelected(Enemy en)
+        public virtual void DrawGizmosOnSelected(EnemyBrainBase en)
         {
 
         }

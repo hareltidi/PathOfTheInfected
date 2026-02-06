@@ -1,6 +1,5 @@
 ﻿using System;
 using PathOfTheInfected.Enemy;
-using TidiMovementComponent2D.Core;
 using TidiTweening;
 using UnityEngine;
 
@@ -11,6 +10,7 @@ namespace PathOfTheInfected.Damagable
         #region IDamageable members
         [field: SerializeField] public bool IsDead { get; set; }
         [field: SerializeField] public int MaxHealth { get; set; }
+        public GameObject GameObject { get; set; }
         public int CurrentHealth { get; set; }
         #endregion
 
@@ -70,9 +70,9 @@ namespace PathOfTheInfected.Damagable
 
             if (CurrentHealth > 0)
             {
-                CurrentHealth -= damageData.damage;
+                CurrentHealth -= damageData.Damage;
                 FlashDamage();
-                HitStop(damageData.hitStopTime);
+                HitStop(damageData.HitStopTime);
             }
             else if (!IsDead)
             {
@@ -84,6 +84,7 @@ namespace PathOfTheInfected.Damagable
         public void Die()
         {
             IsDead = true;
+            Destroy(gameObject);
         }
 
         private void FlashDamage()

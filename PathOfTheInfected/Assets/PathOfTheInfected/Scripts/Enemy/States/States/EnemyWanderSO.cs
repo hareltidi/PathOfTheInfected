@@ -15,9 +15,9 @@ namespace PathOfTheInfected.Enemy
 
         public override void StateEnter()
         {
-            Vector2 origin = _enemy.InitialPosition;
+            Vector2 origin = EnemyBrainBase.InitialPosition;
 
-            WanderDirection = _enemy.IsFacingRight ? Vector2.right : Vector2.left;
+            WanderDirection = EnemyBrainBase.IsFacingRight ? Vector2.right : Vector2.left;
             WanderMaxPosition = origin + WanderDirection * WanderRange;
             WanderMinPosition = origin - WanderDirection * WanderRange;
             CurrentWanderTarget = WanderMaxPosition;
@@ -26,7 +26,7 @@ namespace PathOfTheInfected.Enemy
         public override void StateFixedUpdate()
         {
             CalculateEnemyMovement();
-            float dx = CurrentWanderTarget.x - _enemy.transform.position.x;
+            float dx = CurrentWanderTarget.x - EnemyBrainBase.transform.position.x;
             if (Mathf.Abs(dx) <= threshold)
             {
                 CurrentWanderTarget = (CurrentWanderTarget == WanderMaxPosition) ? WanderMinPosition : WanderMaxPosition;
@@ -35,14 +35,14 @@ namespace PathOfTheInfected.Enemy
 
         private void CalculateEnemyMovement()
         {
-            float dx = CurrentWanderTarget.x - _enemy.transform.position.x;
+            float dx = CurrentWanderTarget.x - EnemyBrainBase.transform.position.x;
             float dir = Mathf.Sign(dx);
-            float desiredVx = dir * _enemy.moveSpeed;
+            float desiredVx = dir * EnemyBrainBase.moveSpeed;
             Vector2 vel = new Vector2(desiredVx, 0f);
-            _enemy.MoveEnemy(vel);
+            EnemyBrainBase.MoveEnemy(vel);
         }
 
-        public override void DrawGizmosOnSelected(Enemy en)
+        public override void DrawGizmosOnSelected(EnemyBrainBase en)
         {
             if (en == null || !trackWanderPath) return;
 
@@ -59,15 +59,15 @@ namespace PathOfTheInfected.Enemy
         public override void TransitionChecks()
         {
             base.TransitionChecks();
-            if (_enemy.isSpottableDetected)
+            if (EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine.RequestStateChange(_enemy.spottableDetectedState);
+                _stateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
 
             }
 
-            if (_enemy.isSpottableInAttackRange)
+            if (EnemyBrainBase.isSpottableInAttackRange)
             {
-                _stateMachine.RequestStateChange(_enemy.spottableInAttackRangeState);
+                _stateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
             }
         }
     }

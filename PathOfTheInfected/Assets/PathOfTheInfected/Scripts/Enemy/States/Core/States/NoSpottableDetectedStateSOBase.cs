@@ -20,7 +20,7 @@ namespace PathOfTheInfected.Enemy
             base.StateEnter();
         }
 
-        public override void DrawGizmosOnSelected(Enemy en)
+        public override void DrawGizmosOnSelected(EnemyBrainBase en)
         {
             base.DrawGizmosOnSelected(en);
         }
@@ -30,23 +30,23 @@ namespace PathOfTheInfected.Enemy
             base.StateUpdate();
         }
 
-        public override void StateInit(Enemy enemy, EnemyStateMachine stateMachine)
+        public override void StateInit(EnemyBrainBase enemyBrainBase, EnemyStateMachine stateMachine)
         {
-            base.StateInit(enemy, stateMachine);
+            base.StateInit(enemyBrainBase, stateMachine);
         }
 
         public override void TransitionChecks()
         {
             base.TransitionChecks();
-            if (_enemy.isSpottableDetected)
+            if (EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine.RequestStateChange(_enemy.spottableDetectedState);
+                _stateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
 
             }
 
-            if (_enemy.isSpottableInAttackRange)
+            if (EnemyBrainBase.isSpottableInAttackRange)
             {
-                _stateMachine.RequestStateChange(_enemy.spottableInAttackRangeState);
+                _stateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
             }
         }
     }

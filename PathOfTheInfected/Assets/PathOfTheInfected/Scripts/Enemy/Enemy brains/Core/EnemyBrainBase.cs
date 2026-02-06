@@ -6,13 +6,15 @@ namespace PathOfTheInfected.Enemy
 {
 
 
-    public class Enemy : MonoBehaviour, IDamageable, IEnemyMoveable
+    public class EnemyBrainBase : MonoBehaviour, IDamageable, IEnemyMoveable
     {
         #region Interface Varibles
 
         #region IDamageble
         public bool IsDead { get; set; }
         [field: SerializeField] public int CurrentHealth { get; set; }
+
+        public GameObject GameObject { get; set; }
 
         public int MaxHealth { get; set; }
         #endregion
@@ -30,14 +32,13 @@ namespace PathOfTheInfected.Enemy
 
         public void TakeDamage(DamageData damageaData)
         {
-            CurrentHealth -= damageaData.damage;
+            CurrentHealth -= damageaData.Damage;
         }
 
         public void Die()
         {
             Destroy(gameObject);
         }
-
         #endregion
 
         #region Plug-In States
@@ -47,25 +48,31 @@ namespace PathOfTheInfected.Enemy
         public EnemyBaseState spottableInAttackRangeState;
 
         [Header("State Debugging")]
-       [field: SerializeField] public EnemyBaseState CurrentState { get; protected set; }
+        [field: SerializeField] public EnemyBaseState CurrentState { get; protected set; }
         #endregion
 
         #region Serialized Members
 
         [Header("Box cast - general")]
         [field:SerializeField] public LayerMask SpottableMask { get; protected set;}
+        [field: SerializeField]public float CurrentPoise { get; set; }
         public Transform max;
         public Transform min;
+
+        [Header("Line of sight")]
+        [SerializeField] protected bool requiresLOS = false;
+        [SerializeField] protected LayerMask losBlockMask;
+
 
 
 
         [Header("State switch conditions")]
-        public bool isSpottableDetected = false;
-        public bool isSpottableInAttackRange = false;
+        public bool isSpottableDetected;
+        public bool isSpottableInAttackRange;
 
         [Header("Debugging - track ranges")]
-        public bool trackSpotRange = false;
-        public bool trackAttackRange = false;
+        public bool trackSpotRange;
+        public bool trackAttackRange;
 
         [Header("Spottable Detection")]
         public float maxSpotRange = 10f;
@@ -76,17 +83,19 @@ namespace PathOfTheInfected.Enemy
 
         #endregion
 
-        #region Private and non-serialized members
-        public List<ISpottable> VisibleSpottables { get; private set; } = new();
+        #region Protected and non-serialized members
+        public List<ISpottable> VisibleSpottables { get; protected set; } = new();
 
-        public Vector3 InitialPosition { get; private set; }
+        public Vector3 InitialPosition { get; protected set; }
 
         public ISpottable AttackTarget { get; protected set; }
 
-        [field: SerializeField]public float CurrentPoise { get; set; } = 0f;
+        protected bool CurrentHasLos = false;
         #endregion
 
-        private void Awake()
+        #region Virtual logic gate Methods
+
+        protected virtual void EnemyAwake()
         {
             RB = GetComponent<Rigidbody2D>();
             StateMachine = new EnemyStateMachine();
@@ -95,7 +104,7 @@ namespace PathOfTheInfected.Enemy
             spottableInAttackRangeState = Instantiate(spottableInAttackRangeState);
         }
 
-        private void Start()
+        protected virtual void EnemyStart()
         {
             noSpottableDetectedState.StateInit(this, StateMachine);
             spottableDetectedState.StateInit(this, StateMachine);
@@ -103,30 +112,60 @@ namespace PathOfTheInfected.Enemy
             CurrentPoise = maxPoise;
             InitialPosition = transform.position;
             StateMachine?.InitializeDefaultState(noSpottableDetectedState);
-
         }
 
-        private void Update()
-        {
-            AttackCheck();
-            DetectVisibleSpottables();
-            StateMachine?.ApplyQueuedStateChange();
-            CurrentState = StateMachine?.CurrentState;
-            StateMachine?.CurrentState.StateUpdate();
-        }
-
-        private void FixedUpdate()
-        {
-            StateMachine?.CurrentState.StateFixedUpdate();
-        }
-
-        private void OnDrawGizmosSelected()
+        protected virtual void DrawGizmosOnSelected()
         {
             DrawStatesGizmos();
             DrawingSpottingRange();
             DrawAttackRange();
         }
 
+        protected virtual void EnemyUpdate()
+        {
+            CheckForSpottablesInAttackRange();
+            DetectVisibleSpottables();
+            StateMachine?.ApplyQueuedStateChange();
+            CurrentState = StateMachine?.CurrentState;
+            StateMachine?.CurrentState.StateUpdate();
+        }
+
+        protected virtual void EnemyFixedUpdate()
+        {
+            StateMachine?.CurrentState.StateFixedUpdate();
+        }
+
+        #endregion
+        private void OnEnable()
+        {
+            InitialPosition = transform.position;
+        }
+        private void Awake()
+        {
+           EnemyAwake();
+        }
+
+        private void Start()
+        {
+            EnemyStart();
+        }
+
+        private void Update()
+        {
+            EnemyUpdate();
+        }
+
+        private void FixedUpdate()
+        {
+           EnemyFixedUpdate();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            DrawGizmosOnSelected();
+        }
+
+        #region Detection and drawing detection zones
         protected virtual void DetectVisibleSpottables()
         {
             VisibleSpottables.Clear();
@@ -153,9 +192,22 @@ namespace PathOfTheInfected.Enemy
 
             foreach (Collider2D hit in hits)
             {
-                if (hit.TryGetComponent(out ISpottable spottable))
+                if (requiresLOS)
                 {
-                    VisibleSpottables.Add(spottable);
+                    bool hasLineOfSight = HasLineOfSight(hit.transform);
+                    UpdateLineOfSightFlag(hasLineOfSight);
+                    if (hit.TryGetComponent(out ISpottable spottable) && hasLineOfSight)
+                    {
+                        VisibleSpottables.Add(spottable);
+
+                    }
+                }
+                else
+                {
+                    if (hit.TryGetComponent(out ISpottable spottable))
+                    {
+                        VisibleSpottables.Add(spottable);
+                    }
                 }
             }
             isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange;
@@ -201,7 +253,7 @@ namespace PathOfTheInfected.Enemy
             Gizmos.DrawWireCube(center, size);
         }
 
-        protected virtual void AttackCheck()
+        protected virtual void CheckForSpottablesInAttackRange()
         {
             Vector2 baseCenter = (min.position + max.position) * 0.5f;
             Vector2 baseSize = new Vector2(
@@ -242,19 +294,45 @@ namespace PathOfTheInfected.Enemy
             AttackTarget = testTarget;
         }
 
-        private void DrawStatesGizmos()
+        protected virtual void DrawStatesGizmos()
         {
             noSpottableDetectedState?.DrawGizmosOnSelected(this);
             spottableDetectedState?.DrawGizmosOnSelected(this);
             spottableInAttackRangeState?.DrawGizmosOnSelected(this);
         }
 
+        protected virtual bool HasLineOfSight(Transform target)
+        {
+            if (!target || !transform) return false;
+
+            Vector2 origin = transform.position;
+            Vector2 dir = (target.position - transform.position);
+            float dist = dir.magnitude;
+
+            RaycastHit2D hit = Physics2D.Raycast(
+                origin,
+                dir.normalized,
+                dist,
+                losBlockMask
+            );
+
+            // LOS is valid if we hit nothing OR we hit the target
+            return !hit || hit.transform == target;
+        }
+
+
+        protected virtual void UpdateLineOfSightFlag(bool hasLineOfSight)
+        {
+            CurrentHasLos = hasLineOfSight;
+        }
+        #endregion
+
         #region EnemyMovement
         [Header("Movement")]
         public float moveSpeed = 1f;
         public float acceleration = 1f;
 
-        public void MoveEnemy(Vector2 velocity)
+        public virtual void MoveEnemy(Vector2 velocity)
         {
             if (!RB) return;
 
@@ -269,23 +347,19 @@ namespace PathOfTheInfected.Enemy
             RB.linearVelocity = finalVelocity;
         }
 
-        public void MoveTo(Transform target)
+        public virtual void MoveTo(Transform target)
         {
-            if (!target)
-            {
-                Debug.Log("target null");
-                return;
-            }
+            if (!target) return;
             MoveTo(target.position);
         }
 
-        public void MoveTo(GameObject target)
+        public virtual void MoveTo(GameObject target)
         {
             if (!target) return;
             MoveTo(target.transform.position);
         }
 
-        public void MoveTo(Vector2 target)
+        public virtual void MoveTo(Vector2 target)
         {
             float dx = target.x - transform.position.x;
             float dir = dx > 0 ? 1f : -1f;
@@ -294,7 +368,7 @@ namespace PathOfTheInfected.Enemy
 
 
 
-        public void CheckForLeftOrRightFacing(Vector2 velocity)
+        public virtual void CheckForLeftOrRightFacing(Vector2 velocity)
         {
             if (IsFacingRight && velocity.x < 0f)
             {
@@ -311,5 +385,7 @@ namespace PathOfTheInfected.Enemy
         }
 
         #endregion
+
+
     }
 }

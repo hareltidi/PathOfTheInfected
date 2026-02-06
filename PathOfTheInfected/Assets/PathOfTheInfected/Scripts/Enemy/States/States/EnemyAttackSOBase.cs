@@ -10,33 +10,37 @@ namespace PathOfTheInfected.Enemy
 
         public override void StateEnter()
         {
-            _enemy.attack.InitAttack(context, _enemy, _enemy.AttackTarget.Transform);
+            if (EnemyBrainBase && EnemyBrainBase.AttackTarget != null && EnemyBrainBase.AttackTarget.Transform)
+            {
+                EnemyBrainBase.attack.InitAttack(context, EnemyBrainBase, EnemyBrainBase.AttackTarget.Transform);
+            }
         }
 
         public override void StateFixedUpdate()
         {
+            if (!EnemyBrainBase || EnemyBrainBase.AttackTarget == null || !EnemyBrainBase.AttackTarget.Transform) return;
             base.StateFixedUpdate();
             if (!context.IsFinished)
             {
-                _enemy.attack.AttackLogic(context);
+                EnemyBrainBase.attack.AttackLogic(context);
             }
             else
             {
-                _enemy.attack.InitAttack(context, _enemy, _enemy.AttackTarget.Transform);
+                EnemyBrainBase.attack.InitAttack(context, EnemyBrainBase, EnemyBrainBase.AttackTarget.Transform);
             }
 
         }
 
         public override void TransitionChecks()
         {
-            if (!_enemy.isSpottableInAttackRange && _enemy.isSpottableDetected)
+            if (!EnemyBrainBase.isSpottableInAttackRange && EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine.RequestStateChange(_enemy.spottableDetectedState);
+                _stateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
             }
 
-            if (!_enemy.isSpottableInAttackRange && !_enemy.isSpottableDetected)
+            if (!EnemyBrainBase.isSpottableInAttackRange && !EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine.RequestStateChange(_enemy.noSpottableDetectedState);
+                _stateMachine.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
             }
         }
     }

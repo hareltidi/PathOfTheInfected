@@ -3,22 +3,22 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
-    [CreateAssetMenu(fileName = "MeleePunchSO", menuName = "Enemy/Attack/MeleePunchSO", order = 0)]
+    [CreateAssetMenu(fileName = "MeleePunchSO", menuName = "Enemy/Attack/Melee/MeleePunchSO", order = 0)]
     public class MeleePunchSO : AttackSOBase
     {
         public override void PerformAttack(AttackContext ctx)
         {
             base.PerformAttack(ctx);
-            Enemy enemy = ctx.Owner;
+            EnemyBrainBase enemyBrainBase = ctx.Owner;
             // Box cast and if we hit an IDamageable, damage his ass up
-            Vector2 baseCenter = (enemy.min.position + enemy.max.position) * 0.5f;
+            Vector2 baseCenter = (enemyBrainBase.min.position + enemyBrainBase.max.position) * 0.5f;
             Vector2 baseSize = new Vector2(
-                Mathf.Abs(enemy.max.position.x - enemy.min.position.x),
-                Mathf.Abs(enemy.max.position.y - enemy.min.position.y)
+                Mathf.Abs(enemyBrainBase.max.position.x - enemyBrainBase.min.position.x),
+                Mathf.Abs(enemyBrainBase.max.position.y - enemyBrainBase.min.position.y)
             );
 
             float range = MaxAttackRange;
-            int facingDirection = enemy.IsFacingRight ? 1 : -1;
+            int facingDirection = enemyBrainBase.IsFacingRight ? 1 : -1;
             float forwardOffset = range * 0.5f * facingDirection;
 
             Vector2 center = baseCenter + Vector2.right * forwardOffset;
@@ -29,7 +29,7 @@ namespace PathOfTheInfected.Enemy
                 center,
                 size,
                 0f,
-                enemy.SpottableMask
+                enemyBrainBase.SpottableMask
             );
 
             foreach (var t in hits)
@@ -38,9 +38,13 @@ namespace PathOfTheInfected.Enemy
                 {
                     if (damageable != null && !damageable.IsDead)
                     {
-                        DamageData data = new DamageData();
-                        data.damage = damage;
-                        data.hitStopTime = hitStopTime;
+                        DamageData data = new DamageData
+                        {
+                            Damage = damage,
+                            HitStopTime = hitStopTime,
+                            DamagedObject = damageable,
+                            Instigator = ctx.Owner
+                        };
                         damageable.TakeDamage(data);
                     }
 

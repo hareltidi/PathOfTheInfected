@@ -21,7 +21,7 @@ namespace PathOfTheInfected.Enemy
 
 
 
-        public virtual void InitAttack(AttackContext ctx, Enemy owner, Transform target)
+        public virtual void InitAttack(AttackContext ctx, EnemyBrainBase owner, Transform target)
         {
             ctx.Phase = AttackPhase.WindUp;
             ctx.HasHit = false;

@@ -4,4 +4,11 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cattack/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cattack_005Cattacks/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cattack_005Cattacks_005Cmelee/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cattack_005Chitstop/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cattack_005Cattacks_005Cranged/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cattack_005Chitstop/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cenemy_0020brains/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cenemy_0020brains_005Cbrains/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cenemy_0020brains_005Cbrains_005Cflying_005Cmelee/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cenemy_0020brains_005Cbrains_005Cflying/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cenemy_0020brains_005Cbrains_005Cmelee/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cpathoftheinfected_005Cscripts_005Cenemy_005Cenemy_0020brains_005Cbrains_005Cranged/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
