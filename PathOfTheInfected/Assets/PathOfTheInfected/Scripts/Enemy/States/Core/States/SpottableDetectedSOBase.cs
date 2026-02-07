@@ -40,12 +40,12 @@ namespace PathOfTheInfected.Enemy
         {
             if (EnemyBrainBase.isSpottableInAttackRange)
             {
-                _stateMachine?.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
+                StateMachine?.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
             }
 
             if (!EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine?.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
+                StateMachine?.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
             }
         }
     }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FireProjectileSO
   damage: 1
   hitStopTime: 0.15
-  <MaxAttackRange>k__BackingField: 14
+  <MaxAttackRange>k__BackingField: 9
   <PoiseConsumed>k__BackingField: 0.5
   windupDuration: 0.5
   recoveryTime: 0.7

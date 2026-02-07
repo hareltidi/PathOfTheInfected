@@ -40,13 +40,13 @@ namespace PathOfTheInfected.Enemy
             base.TransitionChecks();
             if (EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
+                StateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
 
             }
 
             if (EnemyBrainBase.isSpottableInAttackRange)
             {
-                _stateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
+                StateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
             }
         }
     }

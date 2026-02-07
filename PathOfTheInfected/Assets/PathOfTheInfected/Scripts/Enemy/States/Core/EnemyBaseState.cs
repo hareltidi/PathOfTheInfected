@@ -7,7 +7,7 @@ namespace PathOfTheInfected.Enemy
     {
        #region protected Fields
        protected EnemyBrainBase EnemyBrainBase;
-       protected EnemyStateMachine _stateMachine;
+       protected EnemyStateMachine StateMachine;
        #endregion
 
         #region Virtual Methods
@@ -19,7 +19,7 @@ namespace PathOfTheInfected.Enemy
         public virtual void StateInit(EnemyBrainBase enemyBrainBase, EnemyStateMachine stateMachine)
         {
             EnemyBrainBase = enemyBrainBase;
-            _stateMachine = stateMachine;
+            StateMachine = stateMachine;
         }
 
         /// <summary>

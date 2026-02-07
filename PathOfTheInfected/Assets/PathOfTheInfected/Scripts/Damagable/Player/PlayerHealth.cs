@@ -8,23 +8,30 @@ namespace PathOfTheInfected.Damagable
     public class PlayerHealth : MonoBehaviour, IDamageable, IHitStoppable
     {
         #region IDamageable members
+
         [field: SerializeField] public bool IsDead { get; set; }
         [field: SerializeField] public int MaxHealth { get; set; }
         public GameObject GameObject { get; set; }
         public int CurrentHealth { get; set; }
+
         #endregion
 
         #region Script members
+
         private SpriteRenderer[] _spriteRenderers;
         private Material[] _materials;
         private bool _isHitStopped = false;
         private Rigidbody2D RB => GetComponent<Rigidbody2D>();
         private float _hitStopTimer;
         [SerializeField] private float flashTime;
+
         [ColorUsage(true, true)]
-        [SerializeField] private Color flashColor;
+        [SerializeField]
+        private Color flashColor;
+
         [SerializeField] private EaseType damageFlashEaseType;
         [SerializeField] private GameObject visuals;
+
         #endregion
 
 
@@ -67,7 +74,6 @@ namespace PathOfTheInfected.Damagable
 
         public void TakeDamage(DamageData damageData)
         {
-
             if (CurrentHealth > 0)
             {
                 CurrentHealth -= damageData.Damage;
@@ -78,7 +84,6 @@ namespace PathOfTheInfected.Damagable
             {
                 Die();
             }
-
         }
 
         public void Die()
@@ -96,10 +101,10 @@ namespace PathOfTheInfected.Damagable
                 Material localMat = t;
                 localMat.name += $"Hit Flash Material_{i}";
                 float currentAmount = localMat.GetFloat("_FlashAmount");
-                TidiTweenManager.TweenFloat(localMat, currentAmount, 1, flashTime, (value) =>
-                {
-                    localMat.SetFloat("_FlashAmount", value);
-                }).SetPingPong(2).SetEase(damageFlashEaseType);
+                TidiTweenManager
+                    .TweenFloat(localMat, currentAmount, 1, flashTime,
+                        (value) => { localMat.SetFloat("_FlashAmount", value); }).SetPingPong(2)
+                    .SetEase(damageFlashEaseType);
                 i++;
             }
         }
@@ -118,6 +123,7 @@ namespace PathOfTheInfected.Damagable
             {
                 new GameObject("HitStopManager").AddComponent<HitStopManager>();
             }
+
             HitStopManager.Instance?.HitStop(duration);
         }
     }

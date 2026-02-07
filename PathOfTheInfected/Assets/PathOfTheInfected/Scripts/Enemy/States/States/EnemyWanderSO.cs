@@ -2,7 +2,7 @@
 
 namespace PathOfTheInfected.Enemy
 {
-    [CreateAssetMenu(fileName = "EnemyWanderState", menuName = "Enemy/States/EnemyWanderState", order = 0)]
+    [CreateAssetMenu(fileName = "EnemyWanderState", menuName = "Enemy/States/Grounded/EnemyWanderState", order = 0)]
     public class EnemyWanderSo : EnemyBaseState
     {
         [field: SerializeField] public float WanderRange { get; protected set; } = 15f;
@@ -20,17 +20,34 @@ namespace PathOfTheInfected.Enemy
             WanderDirection = EnemyBrainBase.IsFacingRight ? Vector2.right : Vector2.left;
             WanderMaxPosition = origin + WanderDirection * WanderRange;
             WanderMinPosition = origin - WanderDirection * WanderRange;
-            CurrentWanderTarget = WanderMaxPosition;
+            if (EnemyBrainBase.HasLastKnownTarget)
+            {
+                CurrentWanderTarget = EnemyBrainBase.LastKnownTargetPosition;
+            }
+            else
+            {
+                CurrentWanderTarget = WanderMaxPosition;
+            }
         }
 
         public override void StateFixedUpdate()
         {
             CalculateEnemyMovement();
-            float dx = CurrentWanderTarget.x - EnemyBrainBase.transform.position.x;
-            if (Mathf.Abs(dx) <= threshold)
+            if (HasReachedTarget())
             {
+                if (EnemyBrainBase.HasLastKnownTarget)
+                {
+                    EnemyBrainBase.HasLastKnownTarget = false;
+                }
+
                 CurrentWanderTarget = (CurrentWanderTarget == WanderMaxPosition) ? WanderMinPosition : WanderMaxPosition;
             }
+        }
+
+        private bool HasReachedTarget()
+        {
+            float dx = CurrentWanderTarget.x - EnemyBrainBase.transform.position.x;
+            return Mathf.Abs(dx) <= threshold;
         }
 
         private void CalculateEnemyMovement()
@@ -61,13 +78,13 @@ namespace PathOfTheInfected.Enemy
             base.TransitionChecks();
             if (EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
+                StateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
 
             }
 
             if (EnemyBrainBase.isSpottableInAttackRange)
             {
-                _stateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
+                StateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
             }
         }
     }

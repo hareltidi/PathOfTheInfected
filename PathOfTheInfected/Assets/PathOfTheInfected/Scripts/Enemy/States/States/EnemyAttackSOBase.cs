@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
-    [CreateAssetMenu(fileName = "EnemyAttackSOBase", menuName = "Enemy/States/EnemyAttackSOBase", order = 0)]
+    [CreateAssetMenu(fileName = "EnemyAttackSOBase", menuName = "Enemy/States/Grounded/EnemyAttackSOBase", order = 0)]
     public class EnemyAttackSOBase : EnemyBaseState
     {
         AttackContext context = new();
@@ -35,12 +35,12 @@ namespace PathOfTheInfected.Enemy
         {
             if (!EnemyBrainBase.isSpottableInAttackRange && EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
+                StateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
             }
 
             if (!EnemyBrainBase.isSpottableInAttackRange && !EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
+                StateMachine.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
             }
         }
     }

@@ -9,11 +9,11 @@ namespace PathOfTheInfected.Enemy
         {
             if (EnemyBrainBase.isSpottableDetected && !EnemyBrainBase.isSpottableInAttackRange)
             {
-                _stateMachine?.RequestStateChange(EnemyBrainBase.spottableDetectedState);
+                StateMachine?.RequestStateChange(EnemyBrainBase.spottableDetectedState);
             }
             else if (!EnemyBrainBase.isSpottableInAttackRange && !EnemyBrainBase.isSpottableDetected)
             {
-                _stateMachine?.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
+                StateMachine?.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
             }
         }
     }

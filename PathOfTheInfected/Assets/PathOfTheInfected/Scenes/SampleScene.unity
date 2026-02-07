@@ -2212,7 +2212,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
       propertyPath: maxSpotRange
-      value: 9
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: noSpottableDetectedState
+      value: 
+      objectReference: {fileID: 11400000, guid: a58c3d506f9c3b24eaef6b0e5d624b91, type: 2}
+    - target: {fileID: 2390873425810895601, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3085813784086349589, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2269,6 +2277,14 @@ PrefabInstance:
     - target: {fileID: 5162650134944388228, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
       propertyPath: m_Name
       value: FlyingPuncherTest
+      objectReference: {fileID: 0}
+    - target: {fileID: 5162650134944388228, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6903448386151607466, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

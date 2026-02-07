@@ -26,7 +26,6 @@ namespace PathOfTheInfected.Enemy
                     if (hit.TryGetComponent(out ISpottable spottable) && hasLineOfSight)
                     {
                         VisibleSpottables.Add(spottable);
-
                     }
                 }
                 else
@@ -52,9 +51,10 @@ namespace PathOfTheInfected.Enemy
             ISpottable testTarget = null;
             foreach (Collider2D hit in hits)
             {
-                if (hit.TryGetComponent<ISpottable>(out var spottable) && hit.TryGetComponent<IDamageable>(out var damageable))
+                if (hit.TryGetComponent<ISpottable>(out var spottable) &&
+                    hit.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    if (VisibleSpottables.Contains(spottable) &&  damageable != null)
+                    if (VisibleSpottables.Contains(spottable) && damageable != null)
                     {
                         testTarget = spottable;
                         test = true;
@@ -62,6 +62,7 @@ namespace PathOfTheInfected.Enemy
                     }
                 }
             }
+
             isSpottableInAttackRange = test;
             AttackTarget = testTarget;
         }
@@ -81,6 +82,7 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region Movement overrides
+
         public override void MoveEnemy(Vector2 velocity)
         {
             if (!RB) return;
@@ -94,7 +96,6 @@ namespace PathOfTheInfected.Enemy
                 targetVelocity,
                 t
             );
-
             CheckForLeftOrRightFacing(newVelocity);
             RB.linearVelocity = newVelocity;
         }
@@ -105,6 +106,19 @@ namespace PathOfTheInfected.Enemy
             dir.Normalize();
             MoveEnemy(dir);
         }
+
+        public override void MoveTo(GameObject target)
+        {
+            if (!target || !target.transform) return;
+            MoveTo(target.transform.position);
+        }
+
+        public override void MoveTo(Transform target)
+        {
+            if (!target) return;
+            MoveTo(target.position);
+        }
+
         #endregion
     }
 }
