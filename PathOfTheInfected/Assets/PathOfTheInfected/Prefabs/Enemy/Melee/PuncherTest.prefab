@@ -193,11 +193,15 @@ MonoBehaviour:
   <CurrentPoise>k__BackingField: 0
   max: {fileID: 1097756811225222640}
   min: {fileID: 7565596375646536435}
+  requiresLOS: 0
+  losBlockMask:
+    serializedVersion: 2
+    m_Bits: 0
   isSpottableDetected: 0
   isSpottableInAttackRange: 0
   trackSpotRange: 1
   trackAttackRange: 1
-  maxSpotRange: 10
+  maxSpotRange: 8
   attack: {fileID: 11400000, guid: 2ab4bcd3230da154cb4add1136e64b7b, type: 2}
   maxPoise: 10
   moveSpeed: 15

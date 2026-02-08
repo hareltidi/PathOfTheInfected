@@ -15,3 +15,5 @@ MonoBehaviour:
   <WanderRadius>k__BackingField: 15
   wallCheckRayRadius: 3
   trackWanderPath: 1
+  investigationDuration: 5
+  investigationRadius: 3

@@ -212,14 +212,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5162650134944388228}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -230,7 +230,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &64289677223417128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FlyingPuncher
   <CurrentHealth>k__BackingField: 1
   <IsFacingRight>k__BackingField: 1
-  noSpottableDetectedState: {fileID: 11400000, guid: d14407899ba6b074bb80a17f98ab1d17, type: 2}
+  noSpottableDetectedState: {fileID: 11400000, guid: a58c3d506f9c3b24eaef6b0e5d624b91, type: 2}
   spottableDetectedState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
   spottableInAttackRangeState: {fileID: 11400000, guid: fd0825611c5cee6499d38a53e749d3f8, type: 2}
   <CurrentState>k__BackingField: {fileID: 0}
@@ -255,7 +255,7 @@ MonoBehaviour:
   <CurrentPoise>k__BackingField: 0
   max: {fileID: 5271096905927194383}
   min: {fileID: 102935596213456145}
-  requiresLOS: 1
+  requiresLOS: 0
   losBlockMask:
     serializedVersion: 2
     m_Bits: 64
@@ -263,8 +263,8 @@ MonoBehaviour:
   isSpottableInAttackRange: 0
   trackSpotRange: 1
   trackAttackRange: 1
-  maxSpotRange: 8
+  maxSpotRange: 7
   attack: {fileID: 11400000, guid: 70523291ea3df334e97c3b5694e81d31, type: 2}
   maxPoise: 10
-  moveSpeed: 15
+  moveSpeed: 2
   acceleration: 1

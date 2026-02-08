@@ -9,6 +9,10 @@ namespace PathOfTheInfected.Enemy
         public Vector2 CurrentWanderTarget { get; protected set; }
         public float wallCheckRayRadius = 0.5f;
         public bool trackWanderPath = true;
+        public float investigationDuration = 1f;
+        public float investigationRadius = 8f;
+        private float _investigationTimer;
+        private bool _isInvestigating;
         public override void StateEnter()
         {
             if (EnemyBrainBase.HasLastKnownTarget)
@@ -30,11 +34,34 @@ namespace PathOfTheInfected.Enemy
                 if (EnemyBrainBase.HasLastKnownTarget)
                 {
                     EnemyBrainBase.HasLastKnownTarget = false;
+                    _isInvestigating = true;
                 }
 
                 CurrentWanderTarget = GetNextWanderTarget();
             }
         }
+
+        public override void StateUpdate()
+        {
+            base.StateUpdate();
+            if (_isInvestigating)
+            {
+                _investigationTimer += Time.deltaTime;
+            }
+            if (_investigationTimer >= investigationDuration)
+            {
+                _investigationTimer = 0;
+                _isInvestigating = false;
+            }
+        }
+
+        private Vector2 Investigate()
+        {
+            Vector2 center = EnemyBrainBase.LastKnownTargetPosition;
+            Vector2 offset = Random.insideUnitCircle * investigationRadius;
+            return center + offset;
+        }
+
 
         private void CalculateEnemyMovement()
         {
@@ -83,6 +110,11 @@ namespace PathOfTheInfected.Enemy
 
         private Vector2 GetNextWanderTarget()
         {
+            if (_isInvestigating)
+            {
+                Debug.Log("Investigating");
+                return Investigate();
+            }
             Vector2 target;
             do
             {

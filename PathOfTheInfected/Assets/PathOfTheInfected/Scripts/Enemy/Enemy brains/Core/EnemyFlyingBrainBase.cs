@@ -17,6 +17,8 @@ namespace PathOfTheInfected.Enemy
                 SpottableMask
             );
 
+            ClosestTarget = null;
+            BestDistSq = float.MaxValue;
             foreach (Collider2D hit in hits)
             {
                 if (requiresLOS)
@@ -35,6 +37,7 @@ namespace PathOfTheInfected.Enemy
                         VisibleSpottables.Add(spottable);
                     }
                 }
+                FindClosestTarget();
             }
 
             isSpottableDetected = VisibleSpottables.Count > 0;

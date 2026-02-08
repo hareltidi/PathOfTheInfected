@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Damagable.PlayerHealth
   <IsDead>k__BackingField: 0
-  <MaxHealth>k__BackingField: 3
+  <MaxHealth>k__BackingField: 5
   flashTime: 0.25
   flashColor: {r: 4, g: 0, b: 0, a: 1}
   damageFlashEaseType: 0

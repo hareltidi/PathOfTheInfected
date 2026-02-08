@@ -200,6 +200,8 @@ namespace PathOfTheInfected.Enemy
                 SpottableMask
             );
 
+            ClosestTarget = null;
+            BestDistSq = float.MaxValue;
             foreach (Collider2D hit in hits)
             {
                 if (requiresLOS)
@@ -219,9 +221,10 @@ namespace PathOfTheInfected.Enemy
                     }
                 }
                 FindClosestTarget();
+
             }
 
-            isSpottableDetected = ClosestTarget && !isSpottableInAttackRange;
+            isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange;
         }
 
         protected virtual void DrawingSpottingRange()
@@ -338,29 +341,31 @@ namespace PathOfTheInfected.Enemy
             CurrentHasLos = hasLineOfSight;
         }
 
-        protected virtual void FindClosestTarget()
+        protected void FindClosestTarget()
         {
-            BestDistSq = float.MaxValue;
             Vector2 enemyPos = transform.position;
 
             foreach (var spottable in VisibleSpottables)
             {
-                float distSq = (spottable.Transform.position - (Vector3)enemyPos).sqrMagnitude;
+                if (spottable == null) continue;
+
+                float distSq =
+                    (spottable.Transform.position - (Vector3)enemyPos).sqrMagnitude;
+
                 if (distSq < BestDistSq)
                 {
                     BestDistSq = distSq;
                     ClosestTarget = spottable.Transform;
-                    LastKnownTargetPosition = ClosestTarget.position;
-                    HasLastKnownTarget = true;
-                }
-                else
-                {
-                    ClosestTarget = null;
-                    LastKnownTargetPosition = Vector3.zero;
-                    HasLastKnownTarget = false;
                 }
             }
+
+            if (ClosestTarget)
+            {
+                LastKnownTargetPosition = ClosestTarget.position;
+                HasLastKnownTarget = true;
+            }
         }
+
 
         #endregion
 

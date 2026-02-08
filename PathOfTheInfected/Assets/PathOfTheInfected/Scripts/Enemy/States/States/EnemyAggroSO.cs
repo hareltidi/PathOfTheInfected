@@ -6,12 +6,10 @@ namespace PathOfTheInfected.Enemy
     public class EnemyAggroSO : EnemyBaseState
     {
         public Transform target;
-        private Vector2 _enemyPos = Vector2.zero;
 
         public override void StateEnter()
         {
             base.StateEnter();
-            _enemyPos = Vector2.zero;
         }
 
         public override void StateFixedUpdate()
