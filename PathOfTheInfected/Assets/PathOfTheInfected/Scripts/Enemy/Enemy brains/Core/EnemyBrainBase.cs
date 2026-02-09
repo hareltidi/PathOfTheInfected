@@ -64,7 +64,8 @@ namespace PathOfTheInfected.Enemy
         public Transform max;
         public Transform min;
 
-        [Header("Line of sight")] [SerializeField]
+        [Header("Line of sight")]
+        [SerializeField]
         protected bool requiresLOS = false;
 
         [SerializeField] protected LayerMask losBlockMask;
