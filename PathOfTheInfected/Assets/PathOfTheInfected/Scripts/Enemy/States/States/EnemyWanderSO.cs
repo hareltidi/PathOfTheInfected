@@ -53,10 +53,9 @@ namespace PathOfTheInfected.Enemy
         private void CalculateEnemyMovement()
         {
             float dx = CurrentWanderTarget.x - EnemyBrainBase.transform.position.x;
-            float dir = Mathf.Sign(dx);
-            float desiredVx = dir * EnemyBrainBase.moveSpeed;
-            Vector2 vel = new Vector2(desiredVx, 0f);
-            EnemyBrainBase.MoveEnemy(vel);
+            float desiredDir = Mathf.Sign(dx);
+            Vector2 dir = new Vector2(desiredDir, 0f);
+            EnemyBrainBase.MoveEnemy(dir);
         }
 
         public override void DrawGizmosOnSelected(EnemyBrainBase en)

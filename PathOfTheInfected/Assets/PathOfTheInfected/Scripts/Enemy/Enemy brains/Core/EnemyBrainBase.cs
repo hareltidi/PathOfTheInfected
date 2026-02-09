@@ -29,7 +29,6 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region Damage
-
         public void TakeDamage(DamageData damageaData)
         {
             CurrentHealth -= damageaData.Damage;
@@ -86,10 +85,27 @@ namespace PathOfTheInfected.Enemy
 
         #region Protected and non-serialized members
 
+        /// <summary>
+        /// A list of currently detected entities that implement the <see cref="ISpottable"/> interface
+        /// and are visible to the enemy.
+        /// This property is updated during the detection process and is used to determine
+        /// potential targets within the enemy's spotting range.
+        /// </summary>
         public List<ISpottable> VisibleSpottables { get; protected set; } = new();
 
+        /// <summary>
+        /// The initial position of the enemy (used to calculate spot and attack ranges, as well as drawing them in the gizmos)
+        /// </summary>
         public Vector3 InitialPosition { get; protected set; }
 
+        /// <summary>
+        /// Represents the current target that the enemy intends to attack.
+        /// </summary>
+        /// <remarks>
+        /// This property identifies an object that implements the <see cref="ISpottable"/> interface,
+        /// and serves as the attack target for the enemy. It is determined based on the enemy's detection
+        /// logic and attack range conditions.
+        /// </remarks>
         public ISpottable AttackTarget { get; protected set; }
 
         protected bool CurrentHasLos = false;
@@ -102,6 +118,9 @@ namespace PathOfTheInfected.Enemy
 
         #region Virtual logic gate Methods
 
+        /// <summary>
+        /// Awake method for our enemy (can be overridden so use the base.EnemyAwake at the start of each override)
+        /// </summary>
         protected virtual void EnemyAwake()
         {
             RB = GetComponent<Rigidbody2D>();
@@ -111,6 +130,9 @@ namespace PathOfTheInfected.Enemy
             spottableInAttackRangeState = Instantiate(spottableInAttackRangeState);
         }
 
+        /// <summary>
+        /// Start method for our enemy (can be overridden so use the base.EnemyStart at the start of each override)
+        /// </summary>
         protected virtual void EnemyStart()
         {
             noSpottableDetectedState.StateInit(this, StateMachine);
@@ -121,6 +143,9 @@ namespace PathOfTheInfected.Enemy
             StateMachine?.InitializeDefaultState(noSpottableDetectedState);
         }
 
+        /// <summary>
+        /// Draws gizmos for the enemy when we select it in unity (can be overridden so use the base.DrawGizmosOnSelected at the start of each override)
+        /// </summary>
         protected virtual void DrawGizmosOnSelected()
         {
             DrawStatesGizmos();
@@ -128,6 +153,9 @@ namespace PathOfTheInfected.Enemy
             DrawAttackRange();
         }
 
+        /// <summary>
+        /// Update method for our enemy (can be overridden so use the base.EnemyUpdate at the start of each override)
+        /// </summary>
         protected virtual void EnemyUpdate()
         {
             CheckForSpottablesInAttackRange();
@@ -137,6 +165,9 @@ namespace PathOfTheInfected.Enemy
             StateMachine?.CurrentState.StateUpdate();
         }
 
+        /// <summary>
+        /// FixedUpdate method for our enemy (can be overridden so use the base.EnemyFixedUpdate at the start of each override)
+        /// </summary>
         protected virtual void EnemyFixedUpdate()
         {
             StateMachine?.CurrentState.StateFixedUpdate();
@@ -176,6 +207,9 @@ namespace PathOfTheInfected.Enemy
 
         #region Detection and drawing detection zones
 
+        /// <summary>
+        /// This method detects spottables that are in our spotting range and sets isSpottableDetected boolean to drive the state transitions
+        /// </summary>
         protected virtual void DetectVisibleSpottables()
         {
             VisibleSpottables.Clear();
@@ -220,13 +254,16 @@ namespace PathOfTheInfected.Enemy
                         VisibleSpottables.Add(spottable);
                     }
                 }
-                FindClosestTarget();
 
+                FindClosestTarget();
             }
 
             isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange;
         }
 
+        /// <summary>
+        /// Draws the spotting range gizmos (Can be overridden. But if there's no base.DrawingSpottingRange, this enemy uses a different shape for spot range)
+        /// </summary>
         protected virtual void DrawingSpottingRange()
         {
             if (!trackSpotRange) return;
@@ -247,6 +284,9 @@ namespace PathOfTheInfected.Enemy
             Gizmos.DrawWireCube(center, size);
         }
 
+        /// <summary>
+        /// Draws the Attacking range gizmos (Can be overridden. But if there's no base.DrawAttackRange, this enemy uses a different shape for attack range)
+        /// </summary>
         protected virtual void DrawAttackRange()
         {
             if (!trackAttackRange) return;
@@ -294,7 +334,8 @@ namespace PathOfTheInfected.Enemy
             ISpottable testTarget = null;
             foreach (Collider2D hit in hits)
             {
-                if (hit.TryGetComponent<ISpottable>(out var spottable) && hit.TryGetComponent<IDamageable>(out var damageable))
+                if (hit.TryGetComponent<ISpottable>(out var spottable) &&
+                    hit.TryGetComponent<IDamageable>(out var damageable))
                 {
                     if (VisibleSpottables.Contains(spottable) && damageable != null)
                     {
@@ -309,6 +350,12 @@ namespace PathOfTheInfected.Enemy
             AttackTarget = testTarget;
         }
 
+        /// <summary>
+        /// Draws gizmos for the current state of the enemy. This method delegates the gizmo drawing
+        /// responsibility to the `DrawGizmosOnSelected` method of the associated states
+        /// (e.g., noSpottableDetectedState, spottableDetectedState, and spottableInAttackRangeState).
+        /// It provides a visual debugging utility to represent the enemy's state in the Unity editor.
+        /// </summary>
         protected virtual void DrawStatesGizmos()
         {
             noSpottableDetectedState?.DrawGizmosOnSelected(this);
@@ -316,6 +363,12 @@ namespace PathOfTheInfected.Enemy
             spottableInAttackRangeState?.DrawGizmosOnSelected(this);
         }
 
+
+        /// <summary>
+        /// Determines if the enemy has a clear line of sight to the specified target.
+        /// </summary>
+        /// <param name="target">The target transform to check line of sight for.</param>
+        /// <returns>True if there is a clear line of sight to the target, otherwise false.</returns>
         protected virtual bool HasLineOfSight(Transform target)
         {
             if (!target || !transform) return false;
@@ -336,11 +389,19 @@ namespace PathOfTheInfected.Enemy
         }
 
 
+        /// <summary>
+        /// Updates the internal flag indicating whether the enemy has a line of sight to the target.
+        /// </summary>
+        /// <param name="hasLineOfSight">A boolean value determining whether the line of sight to the target is unobstructed.</param>
         protected virtual void UpdateLineOfSightFlag(bool hasLineOfSight)
         {
             CurrentHasLos = hasLineOfSight;
         }
 
+        /// <summary>
+        /// Determines the closest visible target to the enemy from the list of detected spottables.
+        /// Updates the closest target's position, distance, and line of sight status accordingly.
+        /// </summary>
         protected void FindClosestTarget()
         {
             Vector2 enemyPos = transform.position;
@@ -366,7 +427,6 @@ namespace PathOfTheInfected.Enemy
             }
         }
 
-
         #endregion
 
         #region EnemyMovement
@@ -374,11 +434,11 @@ namespace PathOfTheInfected.Enemy
         [Header("Movement")] public float moveSpeed = 1f;
         public float acceleration = 1f;
 
-        public virtual void MoveEnemy(Vector2 velocity)
+        public virtual void MoveEnemy(Vector2 dir)
         {
             if (!RB) return;
 
-            float targetVx = Mathf.Sign(velocity.x) * moveSpeed;
+            float targetVx = Mathf.Sign(dir.x) * moveSpeed;
             float t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
 
             float newVx = Mathf.Lerp(RB.linearVelocity.x, targetVx, t);
@@ -389,25 +449,36 @@ namespace PathOfTheInfected.Enemy
             RB.linearVelocity = finalVelocity;
         }
 
+        /// <summary>
+        /// Moves the enemy towards a specified target Transform.
+        /// </summary>
+        /// <param name="target">The target Transform to move towards. If null, the method exits early.</param>
         public virtual void MoveTo(Transform target)
         {
             if (!target) return;
             MoveTo(target.position);
         }
 
+        /// <summary>
+        /// Moves the enemy towards the specified target position.
+        /// </summary>
+        /// <param name="target">The target position to move towards.</param>
         public virtual void MoveTo(GameObject target)
         {
             if (!target) return;
             MoveTo(target.transform.position);
         }
 
+        /// <summary>
+        /// Moves the enemy towards the specified target position.
+        /// </summary>
+        /// <param name="target">The target position as a Vector2.</param>
         public virtual void MoveTo(Vector2 target)
         {
             float dx = target.x - transform.position.x;
             float dir = dx > 0 ? 1f : -1f;
             MoveEnemy(new Vector2(dir, 0f));
         }
-
 
         public virtual void CheckForLeftOrRightFacing(Vector2 velocity)
         {

@@ -86,11 +86,11 @@ namespace PathOfTheInfected.Enemy
 
         #region Movement overrides
 
-        public override void MoveEnemy(Vector2 velocity)
+        public override void MoveEnemy(Vector2 dir)
         {
             if (!RB) return;
 
-            Vector2 targetVelocity = velocity * moveSpeed;
+            Vector2 targetVelocity = dir * moveSpeed;
 
             float t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
 
