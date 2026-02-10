@@ -25,8 +25,7 @@ namespace PathOfTheInfected.Damagable
         private float _hitStopTimer;
         [SerializeField] private float flashTime;
 
-        [ColorUsage(true, true)]
-        [SerializeField]
+        [ColorUsage(true, true)] [SerializeField]
         private Color flashColor;
 
         [SerializeField] private EaseType damageFlashEaseType;
@@ -34,7 +33,7 @@ namespace PathOfTheInfected.Damagable
 
         #endregion
 
-
+        
         private void Awake()
         {
             _spriteRenderers = visuals.GetComponentsInChildren<SpriteRenderer>();

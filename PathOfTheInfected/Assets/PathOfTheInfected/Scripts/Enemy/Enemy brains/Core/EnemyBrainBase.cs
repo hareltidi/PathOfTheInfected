@@ -117,6 +117,7 @@ namespace PathOfTheInfected.Enemy
 
         #endregion
 
+
         #region Virtual logic gate Methods
 
         /// <summary>
@@ -308,6 +309,9 @@ namespace PathOfTheInfected.Enemy
             Gizmos.DrawWireCube(center, size);
         }
 
+        /// <summary>
+        /// This method checks for enemies in our attacking range and sets isSpottableInAttackRange boolean and AttackTarget Transform to drive the state transitions
+        /// </summary>
         protected virtual void CheckForSpottablesInAttackRange()
         {
             Vector2 baseCenter = (min.position + max.position) * 0.5f;
