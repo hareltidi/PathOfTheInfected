@@ -24,7 +24,7 @@ namespace PathOfTheInfected.Enemy
         /// </summary>
         /// <param name="dir">The direction vector for enemy movement, where x represents horizontal movement
         /// and y represents vertical movement.</param>
-        void MoveEnemy(Vector2 dir);
+        void MoveEnemy(Vector2 dir, bool instant = false);
 
         /// <summary>
         /// Checks the direction of movement and adjusts the enemy's facing direction accordingly.
