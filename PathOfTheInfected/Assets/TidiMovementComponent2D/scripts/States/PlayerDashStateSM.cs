@@ -83,8 +83,6 @@ namespace TidiMovementComponent2D.States
             _dashTimer = 0.0f;
             player.DashOnGroundTimer = moveStats.TimeBtwDashesOnGround;
             player.DashStartY = player.Rb.position.y;
-            Object.Instantiate(player.dashParticles, player.transform.position,
-                Quaternion.FromToRotation(Vector2.right,  - player.DashDirection));
             player.GhostTrail.LeaveGhostTrail(moveStats.DashTime * 1.75f);
             player.StopWallSliding();
             player.DashBufferTimer = 0.0f;

@@ -64,7 +64,8 @@ namespace PathOfTheInfected.Enemy
         public Transform max;
         public Transform min;
 
-        [Header("Line of sight")] [SerializeField]
+        [Header("Line of sight")]
+        [SerializeField]
         protected bool requiresLOS = false;
 
         [SerializeField] protected LayerMask losBlockMask;
@@ -115,6 +116,7 @@ namespace PathOfTheInfected.Enemy
         protected float BestDistSq = float.MaxValue;
 
         #endregion
+
 
         #region Virtual logic gate Methods
 
@@ -307,6 +309,9 @@ namespace PathOfTheInfected.Enemy
             Gizmos.DrawWireCube(center, size);
         }
 
+        /// <summary>
+        /// This method checks for enemies in our attacking range and sets isSpottableInAttackRange boolean and AttackTarget Transform to drive the state transitions
+        /// </summary>
         protected virtual void CheckForSpottablesInAttackRange()
         {
             Vector2 baseCenter = (min.position + max.position) * 0.5f;
