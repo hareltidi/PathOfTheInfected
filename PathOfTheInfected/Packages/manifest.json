@@ -2,6 +2,7 @@
   "dependencies": {
     "com.anchorpoint.sourcecontrol": "https://github.com/Anchorpoint-Software/ap-unity.git",
     "com.maligan.unity-zed": "https://github.com/DilaverSerif/unity-zed.git",
+    "com.sarpersoher.ide.sublimetext": "https://github.com/ssoher/com.sarpersoher.ide.sublimetext.git",
     "com.unity.2d.animation": "13.0.4",
     "com.unity.2d.aseprite": "3.0.1",
     "com.unity.2d.psdimporter": "12.0.1",
