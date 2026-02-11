@@ -10,6 +10,7 @@ namespace PathOfTheInfected.Enemy
 
         public override void StateEnter()
         {
+            EnemyBrainBase.MoveEnemy(Vector2.zero);
             if (EnemyBrainBase && EnemyBrainBase.AttackTarget != null && EnemyBrainBase.AttackTarget.Transform)
             {
                 EnemyBrainBase.attack.InitAttack(context, EnemyBrainBase, EnemyBrainBase.AttackTarget.Transform);

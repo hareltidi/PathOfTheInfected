@@ -439,14 +439,22 @@ namespace PathOfTheInfected.Enemy
         [Header("Movement")] public float moveSpeed = 1f;
         public float acceleration = 1f;
 
-        public virtual void MoveEnemy(Vector2 dir)
+        public virtual void MoveEnemy(Vector2 dir, bool instant = false)
         {
             if (!RB) return;
 
             float targetVx = Mathf.Sign(dir.x) * moveSpeed;
             float t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
 
-            float newVx = Mathf.Lerp(RB.linearVelocity.x, targetVx, t);
+            float newVx;
+            if (!instant)
+            {
+                newVx = Mathf.Lerp(RB.linearVelocity.x, targetVx, t);
+            }
+            else
+            {
+                newVx = targetVx;
+            }
 
             Vector2 finalVelocity = new Vector2(newVx, RB.linearVelocity.y);
 

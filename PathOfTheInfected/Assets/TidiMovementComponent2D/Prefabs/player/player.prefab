@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6332882187905190587}
   - component: {fileID: 3003456726444111312}
   - component: {fileID: 2922634611066337022}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -138,7 +138,6 @@ MonoBehaviour:
   particleSpawnTransform: {fileID: 4981986705210761568}
   trailRenderer: {fileID: 1676983456721088425}
   speedParticles: {fileID: 7662933739771154079}
-  dashParticles: {fileID: 1833567938896166, guid: 4c193b94e7d33934d97da37a1b7a1711, type: 3}
   wallSlideParticles: {fileID: 4116485645114589387}
   showStateTrailLog: 0
   showEnteredStateDebugLog: 0
@@ -156,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd685431df54274f9b9f61b24d1f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NumOfHorizontalRays: 4
+  NumOfHorizontalRays: 29
   NumOfVerticalRays: 4
   NumOfVerticalRaysForVisualNormals: 9
   _verticalProbeDistance: 0.1
@@ -176,6 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testGhost: {fileID: 1937055770074379, guid: 1f1a5f2b203519246ba99a0661c2f5f9, type: 3}
   numberOfTrails: 4
+  cabFade: 1
   fadeTime: 1
   playerSpriteRenderers:
   - {fileID: 3660354679852897772}
@@ -258,7 +258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6837148435072316309}
   - component: {fileID: 2911610944538248846}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Interpolator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,7 +303,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4981986705210761568}
   - component: {fileID: 5416479168150096257}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: VISUALS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425,7 +425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5106636758813924014, guid: a14a6a52a7274d646a7c5ccce9508790, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -456,7 +456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2092006548537748538, guid: ac958522ce8258748874fe2720907fca, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3433296323587184927, guid: ac958522ce8258748874fe2720907fca, type: 3}
       propertyPath: m_LocalPosition.x
@@ -543,7 +543,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1143038524904089668, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1143038524904089668, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
       propertyPath: m_IsActive
@@ -559,7 +559,7 @@ PrefabInstance:
       objectReference: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 5474075665545635511, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7109959372851402756, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
       propertyPath: m_Name
@@ -567,7 +567,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7109959372851402756, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7272204438039265345, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -615,7 +615,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9003525367185558486, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -656,7 +656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 288629233237396407, guid: 21fcf057910b8154a87d99e717e4ca0a, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2842996761887846703, guid: 21fcf057910b8154a87d99e717e4ca0a, type: 3}
       propertyPath: m_Size.x
@@ -732,7 +732,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1d5e48be17b4f9f48a93828d65c10305, type: 2}
     - target: {fileID: 7366624364154043392, guid: 21fcf057910b8154a87d99e717e4ca0a, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -765,6 +765,10 @@ PrefabInstance:
     - target: {fileID: 3544453252803140601, guid: 58ae461f07f793046949203f2aebfffb, type: 3}
       propertyPath: m_Name
       value: SHADOW
+      objectReference: {fileID: 0}
+    - target: {fileID: 3544453252803140601, guid: 58ae461f07f793046949203f2aebfffb, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6898750184353699220, guid: 58ae461f07f793046949203f2aebfffb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -826,7 +830,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 75722280401076114, guid: 94ded1a628561e24d9ebccb6efb72ed8, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1645764233632445309, guid: 94ded1a628561e24d9ebccb6efb72ed8, type: 3}
       propertyPath: m_Name
@@ -834,11 +838,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1645764233632445309, guid: 94ded1a628561e24d9ebccb6efb72ed8, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6796224587706971501, guid: 94ded1a628561e24d9ebccb6efb72ed8, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7891911847002540116, guid: 94ded1a628561e24d9ebccb6efb72ed8, type: 3}
       propertyPath: m_LocalPosition.x

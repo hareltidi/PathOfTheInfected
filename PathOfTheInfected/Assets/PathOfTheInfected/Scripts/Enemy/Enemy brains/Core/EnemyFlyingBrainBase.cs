@@ -86,7 +86,7 @@ namespace PathOfTheInfected.Enemy
 
         #region Movement overrides
 
-        public override void MoveEnemy(Vector2 dir)
+        public override void MoveEnemy(Vector2 dir, bool instant = false)
         {
             if (!RB) return;
 
@@ -94,11 +94,19 @@ namespace PathOfTheInfected.Enemy
 
             float t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
 
-            Vector2 newVelocity = Vector2.Lerp(
-                RB.linearVelocity,
-                targetVelocity,
-                t
-            );
+            Vector2 newVelocity;
+            if (!instant)
+            {
+                 newVelocity = Vector2.Lerp(
+                    RB.linearVelocity,
+                    targetVelocity,
+                    t
+                );
+            }
+            else
+            {
+                 newVelocity = targetVelocity;
+            }
             CheckForLeftOrRightFacing(newVelocity);
             RB.linearVelocity = newVelocity;
         }

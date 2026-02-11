@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3408081767801535820}
   - component: {fileID: 8259263020966537812}
   - component: {fileID: 4910819071904536229}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PuncherTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,14 +189,14 @@ MonoBehaviour:
   <CurrentState>k__BackingField: {fileID: 0}
   <SpottableMask>k__BackingField:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 256
   <CurrentPoise>k__BackingField: 0
   max: {fileID: 1097756811225222640}
   min: {fileID: 7565596375646536435}
-  requiresLOS: 0
+  requiresLOS: 1
   losBlockMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   isSpottableDetected: 0
   isSpottableInAttackRange: 0
   trackSpotRange: 1
@@ -215,7 +215,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7565596375646536435}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Min
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1097756811225222640}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Max
   m_TagString: Untagged
   m_Icon: {fileID: 0}

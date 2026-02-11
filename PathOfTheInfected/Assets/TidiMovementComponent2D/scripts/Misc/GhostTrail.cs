@@ -10,6 +10,8 @@ namespace TidiMovementComponent2D.Misc
 
         [FormerlySerializedAs("_numberOfTrails")] [SerializeField] private int numberOfTrails = 3;
 
+        [SerializeField] private bool cabFade = true;
+
         [FormerlySerializedAs("_fadeTime")] [SerializeField] private float fadeTime = 1f;
 
         [FormerlySerializedAs("PlayerSpriteRenderers")] public SpriteRenderer[] playerSpriteRenderers;
@@ -69,6 +71,7 @@ namespace TidiMovementComponent2D.Misc
             }
 
             gameObject.SetActive(true);
+            if (!cabFade) return;
             StartCoroutine(FadeGhost(componentsInChildren, gameObject));
         }
 

@@ -175,7 +175,7 @@
                 {
                     "name": "",
                     "id": "5b431f0b-e900-4e9f-be03-897c0ef43013",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<HID::Microntek              USB Joystick          >/button8",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Controller",
@@ -190,6 +190,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Controller",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aa8d4f5f-ab6d-4ee3-b38c-deaa4081138a",
+                    "path": "<HID::USB gamepad>/button3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Controller;Keyboard",
                     "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
