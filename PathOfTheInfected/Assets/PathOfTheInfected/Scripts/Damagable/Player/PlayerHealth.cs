@@ -20,8 +20,13 @@ namespace PathOfTheInfected.Damagable
 
         private SpriteRenderer[] _spriteRenderers;
         private Material[] _materials;
+
+        ///<summary>
+        ///Checks if wer'e hit stopped (meaning the time is currently freezing)
+        ///</summary>
         private bool _isHitStopped = false;
-        private Rigidbody2D RB => GetComponent<Rigidbody2D>();
+
+        private Rigidbody2D Rb => GetComponent<Rigidbody2D>();
         private float _hitStopTimer;
         [SerializeField] private float flashTime;
 
@@ -33,13 +38,17 @@ namespace PathOfTheInfected.Damagable
 
         #endregion
 
-        
+
         private void Awake()
         {
             _spriteRenderers = visuals.GetComponentsInChildren<SpriteRenderer>();
             InitMaterials();
         }
 
+        ///<summary>
+        ///Initiating the materials for our player to make hit flash work only for this object and not all of the other
+        ///objects who have the hit effect material to be affected.
+        ///</summary>
         private void InitMaterials()
         {
             _materials = new Material[_spriteRenderers.Length];
@@ -65,7 +74,7 @@ namespace PathOfTheInfected.Damagable
                 if (_hitStopTimer <= 0f)
                 {
                     _isHitStopped = false;
-                    RB.simulated = true;
+                    Rb.simulated = true;
                 }
             }
         }
@@ -91,6 +100,9 @@ namespace PathOfTheInfected.Damagable
             Destroy(gameObject);
         }
 
+        ///<summary>
+        ///Make the player flash.
+        ///</summary>
         private void FlashDamage()
         {
             SetFlashColor(flashColor);
@@ -108,6 +120,10 @@ namespace PathOfTheInfected.Damagable
             }
         }
 
+        ///<summary>
+        /// Set the flash color when we need to flash
+        ///</summary>
+        /// <param name="color">The color the flash should be in</param>
         private void SetFlashColor(Color color)
         {
             for (int i = 0; i < _materials.Length; i++)
@@ -116,6 +132,10 @@ namespace PathOfTheInfected.Damagable
             }
         }
 
+        ///<summary>
+        /// Apply hit stop
+        ///</summary>
+        ///<param name="duration">How long should we freeze time</param>
         public void HitStop(float duration)
         {
             if (!HitStopManager.Instance)

@@ -6,7 +6,13 @@ namespace PathOfTheInfected.Enemy
     public class EnemyBaseState : ScriptableObject
     {
        #region protected Fields
-       protected EnemyBrainBase EnemyBrainBase;
+       /// <summary>
+       /// The enemy that owns this state
+       /// </summary>
+       protected EnemyBrainBase CurrentEnemyBrain;
+       /// <summary>
+       /// The state machine that manages this state
+       /// </summary>
        protected EnemyStateMachine StateMachine;
        #endregion
 
@@ -18,7 +24,7 @@ namespace PathOfTheInfected.Enemy
         /// <param name="stateMachine">the state machine responsible for the state</param>
         public virtual void StateInit(EnemyBrainBase enemyBrainBase, EnemyStateMachine stateMachine)
         {
-            EnemyBrainBase = enemyBrainBase;
+            CurrentEnemyBrain = enemyBrainBase;
             StateMachine = stateMachine;
         }
 

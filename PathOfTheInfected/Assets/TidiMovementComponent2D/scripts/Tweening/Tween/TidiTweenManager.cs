@@ -73,10 +73,7 @@ namespace TidiTweening
         public static TidiTween<float> TweenFloat(object target, float startValue, float endValue, float duration, Action<float> setter)
         {
             string identifier = $"{target}_FloatTween";
-            TidiTween<float> tween = new TidiTween<float>(target, identifier, startValue, endValue, duration, (value) =>
-            {
-                setter(value);
-            });
+            TidiTween<float> tween = new TidiTween<float>(target, identifier, startValue, endValue, duration, setter);
             return tween;
         }
 

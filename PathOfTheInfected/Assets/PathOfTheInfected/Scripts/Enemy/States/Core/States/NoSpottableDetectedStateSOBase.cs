@@ -38,15 +38,15 @@ namespace PathOfTheInfected.Enemy
         public override void TransitionChecks()
         {
             base.TransitionChecks();
-            if (EnemyBrainBase.isSpottableDetected)
+            if (CurrentEnemyBrain.isSpottableDetected)
             {
-                StateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
+                StateMachine.RequestStateChange(CurrentEnemyBrain.spottableDetectedState);
 
             }
 
-            if (EnemyBrainBase.isSpottableInAttackRange)
+            if (CurrentEnemyBrain.isSpottableInAttackRange)
             {
-                StateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
+                StateMachine.RequestStateChange(CurrentEnemyBrain.spottableInAttackRangeState);
             }
         }
     }

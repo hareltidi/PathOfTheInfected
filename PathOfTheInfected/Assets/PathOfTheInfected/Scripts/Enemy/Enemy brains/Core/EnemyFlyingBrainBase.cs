@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
 using PathOfTheInfected.Damagable;
 using TidiPathFinding;
+using TidiTweening;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
     public class EnemyFlyingBrainBase : EnemyBrainBase
     {
+        #region Member Variables
+       [SerializeField] protected float obstacleCheckDistance = 5f;
+       #endregion
+
+
         #region Detection Methods
 
         protected override void DetectVisibleSpottables()
@@ -156,12 +162,23 @@ namespace PathOfTheInfected.Enemy
             int targetIndex = Mathf.Min(currentIndex + 1, currentPath.Count - 1); // Next waypoint
             Vector2 waypoint = currentPath[targetIndex];
 
-            Vector2 toWaypoint = waypoint - (Vector2)transform.position; // Distance to waypoint
+            Vector2 toWaypoint = waypoint - (Vector2)transform.position;
+            Vector2 dir = toWaypoint.normalized;
 
-            // Ground enemy moves only horizontally
-            Vector2 dir = new Vector2(Mathf.Sign(toWaypoint.x), Mathf.Sign(toWaypoint.y)); // Direction to waypoint
+            Collider2D[] hits = Physics2D.OverlapBoxAll(boxCollider.bounds.center, boxCollider.bounds.size, 0,
+                LayerMask.GetMask("ground")); // Check for obstacles
 
-            MoveEnemy(dir); // Move the enemy in that direction
+            bool pathWantsUp = hits.Length > 0 || waypoint.y > transform.position.y + 0.1f; // Check if we need to go up or we hit something that we need to climb
+
+            if (pathWantsUp) // If there are obstacles and we want to go up
+            {
+                MoveEnemy(Vector2.up); // Move the enemy upward
+            }
+            else
+            {
+                MoveEnemy(dir); // Move the enemy in the normal direction we calculated
+            }
+
 
             // Advance waypoint if close enough
             if (Mathf.Abs(toWaypoint.x) <= waypointTolerance || Mathf.Abs(toWaypoint.y) <= waypointTolerance)
@@ -183,5 +200,28 @@ namespace PathOfTheInfected.Enemy
         }
 
         #endregion
+
+        private void OnDrawGizmos()
+        {
+            if (currentPath != null && currentPath.Count > 0)
+            {
+                Gizmos.color = Color.yellow;
+                Vector3 prev = transform.position;
+                for (int i = currentIndex; i < currentPath.Count; i++)
+                {
+                    Vector3 p = currentPath[i];
+                    Gizmos.DrawLine(prev, p);
+                    Gizmos.DrawSphere(p, 0.07f);
+                    prev = p;
+                }
+            }
+
+            if (boxCollider)
+            {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawWireCube(boxCollider.bounds.center, boxCollider.bounds.size);
+            }
+
+        }
     }
 }

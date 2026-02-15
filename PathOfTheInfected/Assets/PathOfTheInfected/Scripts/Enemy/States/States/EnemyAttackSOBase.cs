@@ -6,42 +6,48 @@ namespace PathOfTheInfected.Enemy
     [CreateAssetMenu(fileName = "EnemyAttackSOBase", menuName = "Enemy/States/Grounded/EnemyAttackSOBase", order = 0)]
     public class EnemyAttackSOBase : EnemyBaseState
     {
+        /// <summary>
+        /// The context containing data and state information for enemy attack behavior.
+        /// Used to manage and track the state of an ongoing attack, including the owner performing
+        /// the attack, the target being attacked, the timeline of the attack, and the current phase of the attack.
+        /// </summary>
         AttackContext context = new();
 
         public override void StateEnter()
         {
-            EnemyBrainBase.MoveEnemy(Vector2.zero);
-            if (EnemyBrainBase && EnemyBrainBase.AttackTarget != null && EnemyBrainBase.AttackTarget.Transform)
+            if (CurrentEnemyBrain && CurrentEnemyBrain.AttackTarget != null && CurrentEnemyBrain.AttackTarget.Transform)
             {
-                EnemyBrainBase.attack.InitAttack(context, EnemyBrainBase, EnemyBrainBase.AttackTarget.Transform);
+                CurrentEnemyBrain.attack.InitAttack(context, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
             }
         }
 
         public override void StateFixedUpdate()
         {
-            if (!EnemyBrainBase || EnemyBrainBase.AttackTarget == null || !EnemyBrainBase.AttackTarget.Transform) return;
+            // TODO: for some reason, this line makes the transitions between attack and aggro states on grounded enemies to go insane. Why? Why you askin' me?
+            CurrentEnemyBrain.MoveEnemy(Vector2.zero);
+            if (!CurrentEnemyBrain || CurrentEnemyBrain.AttackTarget == null || !CurrentEnemyBrain.AttackTarget.Transform) return;
             base.StateFixedUpdate();
             if (!context.IsFinished)
             {
-                EnemyBrainBase.attack.AttackLogic(context);
+                CurrentEnemyBrain.attack.AttackLogic(context);
             }
             else
             {
-                EnemyBrainBase.attack.InitAttack(context, EnemyBrainBase, EnemyBrainBase.AttackTarget.Transform);
+                CurrentEnemyBrain.attack.InitAttack(context, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
             }
 
         }
 
         public override void TransitionChecks()
         {
-            if (!EnemyBrainBase.isSpottableInAttackRange && EnemyBrainBase.isSpottableDetected)
+            if (!CurrentEnemyBrain.isSpottableInAttackRange && CurrentEnemyBrain.isSpottableDetected)
             {
-                StateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
+                StateMachine.RequestStateChange(CurrentEnemyBrain.spottableDetectedState);
             }
 
-            if (!EnemyBrainBase.isSpottableInAttackRange && !EnemyBrainBase.isSpottableDetected)
+            if (!CurrentEnemyBrain.isSpottableInAttackRange && !CurrentEnemyBrain.isSpottableDetected)
             {
-                StateMachine.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
+                StateMachine.RequestStateChange(CurrentEnemyBrain.noSpottableDetectedState);
             }
         }
     }

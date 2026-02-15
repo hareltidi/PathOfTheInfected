@@ -6,6 +6,7 @@ namespace PathOfTheInfected.Enemy
     public class FlyingEnemyWanderSO : EnemyBaseState
     {
         [field: SerializeField] public float WanderRadius { get; protected set; } = 15f;
+        [SerializeField] private float reachThreshold = 0.5f;
         public Vector2 CurrentWanderTarget { get; protected set; }
         public float wallCheckRayRadius = 0.5f;
         public bool trackWanderPath = true;
@@ -13,11 +14,12 @@ namespace PathOfTheInfected.Enemy
         public float investigationRadius = 8f;
         private float _investigationTimer;
         private bool _isInvestigating;
+
         public override void StateEnter()
         {
-            if (EnemyBrainBase.HasLastKnownTarget)
+            if (CurrentEnemyBrain.HasLastKnownTarget)
             {
-                CurrentWanderTarget = EnemyBrainBase.LastKnownTargetPosition;
+                CurrentWanderTarget = CurrentEnemyBrain.LastKnownTargetPosition;
             }
             else
             {
@@ -31,9 +33,9 @@ namespace PathOfTheInfected.Enemy
             EnemyWallCheck();
             if (ReachedTarget())
             {
-                if (EnemyBrainBase.HasLastKnownTarget)
+                if (CurrentEnemyBrain.HasLastKnownTarget)
                 {
-                    EnemyBrainBase.HasLastKnownTarget = false;
+                    CurrentEnemyBrain.HasLastKnownTarget = false;
                     _isInvestigating = true;
                 }
 
@@ -48,6 +50,7 @@ namespace PathOfTheInfected.Enemy
             {
                 _investigationTimer += Time.deltaTime;
             }
+
             if (_investigationTimer >= investigationDuration)
             {
                 _investigationTimer = 0;
@@ -55,9 +58,9 @@ namespace PathOfTheInfected.Enemy
             }
         }
 
-        private Vector2 Investigate()
+        private Vector2 GenerateInvestigationPoint()
         {
-            Vector2 center = EnemyBrainBase.LastKnownTargetPosition;
+            Vector2 center = CurrentEnemyBrain.LastKnownTargetPosition;
             Vector2 offset = Random.insideUnitCircle * investigationRadius;
             return center + offset;
         }
@@ -65,15 +68,12 @@ namespace PathOfTheInfected.Enemy
 
         private void CalculateEnemyMovement()
         {
-            Vector2 pos = EnemyBrainBase.transform.position;
-            Vector2 dir = (CurrentWanderTarget - pos).normalized;
-
-            EnemyBrainBase.MoveEnemy(dir);
+            CurrentEnemyBrain.MoveTo(CurrentWanderTarget);
         }
 
         public override void DrawGizmosOnSelected(EnemyBrainBase en)
         {
-            if (en == null || !trackWanderPath) return;
+            if (!en || !trackWanderPath) return;
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(en.InitialPosition, WanderRadius);
         }
@@ -81,15 +81,14 @@ namespace PathOfTheInfected.Enemy
         public override void TransitionChecks()
         {
             base.TransitionChecks();
-            if (EnemyBrainBase.isSpottableDetected)
+            if (CurrentEnemyBrain.isSpottableDetected)
             {
-                StateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
-
+                StateMachine.RequestStateChange(CurrentEnemyBrain.spottableDetectedState);
             }
 
-            if (EnemyBrainBase.isSpottableInAttackRange)
+            if (CurrentEnemyBrain.isSpottableInAttackRange)
             {
-                StateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
+                StateMachine.RequestStateChange(CurrentEnemyBrain.spottableInAttackRangeState);
             }
         }
 
@@ -97,35 +96,36 @@ namespace PathOfTheInfected.Enemy
 
         private Vector2 CalculateWanderTarget()
         {
-            Vector2 origin = EnemyBrainBase.InitialPosition;
+            Vector2 origin = CurrentEnemyBrain.InitialPosition;
             Vector2 circle = Random.insideUnitCircle * WanderRadius;
             return circle + origin;
         }
 
         private bool CheckForWalls(Vector2 target, float radius = 0.5f)
         {
-           var hits =  Physics2D.OverlapCircleAll(target, radius, LayerMask.GetMask("ground"));
-           return hits.Length > 0;
+            var hits = Physics2D.OverlapCircleAll(target, radius, LayerMask.GetMask("ground"));
+            return hits.Length > 0;
         }
 
         private Vector2 GetNextWanderTarget()
         {
             if (_isInvestigating)
             {
-                Debug.Log("Investigating");
-                return Investigate();
+                return GenerateInvestigationPoint();
             }
+
             Vector2 target;
             do
             {
                 target = CalculateWanderTarget();
             } while (CheckForWalls(target));
+
             return target;
         }
 
         private void EnemyWallCheck()
         {
-            Vector2 pos = EnemyBrainBase.transform.position;
+            Vector2 pos = CurrentEnemyBrain.transform.position;
             Vector2 dir = (CurrentWanderTarget - pos).normalized;
 
             float checkDistance = wallCheckRayRadius + 0.2f;
@@ -147,10 +147,11 @@ namespace PathOfTheInfected.Enemy
         private bool ReachedTarget()
         {
             return Vector2.Distance(
-                EnemyBrainBase.transform.position,
+                CurrentEnemyBrain.transform.position,
                 CurrentWanderTarget
-            ) < 0.3f;
+            ) < reachThreshold;
         }
+
         #endregion
     }
 }

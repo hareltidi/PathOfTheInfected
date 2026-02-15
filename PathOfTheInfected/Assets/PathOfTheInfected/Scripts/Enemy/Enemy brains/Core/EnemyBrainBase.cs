@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using PathOfTheInfected.Damagable;
 using TidiPathFinding;
+using TidiTweening;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
@@ -55,12 +56,16 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region Serialized Members
+        [Header("Movement")]
+        public float moveSpeed = 1f;
+        public float acceleration = 1f;
+        [SerializeField] protected float waypointTolerance = 0.1f;
+        [SerializeField] protected float repathInterval = 1f;
+
 
         [Header("Box cast - general")]
         [field: SerializeField]
         public LayerMask SpottableMask { get; protected set; }
-
-        [field: SerializeField] public float CurrentPoise { get; set; }
         public Transform max;
         public Transform min;
 
@@ -79,7 +84,9 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Spottable Detection")] public float maxSpotRange = 10f;
 
-        [Header("Attack")] public AttackSOBase attack;
+        [Header("Attack")]
+        [field: SerializeField] public float CurrentPoise { get; set; }
+        public AttackSOBase attack;
         public float maxPoise = 10f;
 
         #endregion
@@ -120,6 +127,8 @@ namespace PathOfTheInfected.Enemy
         protected float nextRepath;
         protected Vector2 lastTargetPosition;
 
+        protected BoxCollider2D boxCollider;
+
         #endregion
 
 
@@ -131,6 +140,7 @@ namespace PathOfTheInfected.Enemy
         protected virtual void EnemyAwake()
         {
             RB = GetComponent<Rigidbody2D>();
+            boxCollider = GetComponent<BoxCollider2D>();
             StateMachine = new EnemyStateMachine();
             noSpottableDetectedState = Instantiate(noSpottableDetectedState);
             spottableDetectedState = Instantiate(spottableDetectedState);
@@ -440,12 +450,6 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region EnemyMovement
-
-        [Header("Movement")]
-        public float moveSpeed = 1f;
-        public float acceleration = 1f;
-        [SerializeField] protected float waypointTolerance = 0.1f;
-        [SerializeField] protected float repathInterval = 1f;
 
         public virtual void MoveEnemy(Vector2 dir, bool instant = false)
         {

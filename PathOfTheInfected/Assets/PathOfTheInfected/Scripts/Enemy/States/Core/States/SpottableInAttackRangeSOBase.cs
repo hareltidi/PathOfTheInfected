@@ -7,13 +7,13 @@ namespace PathOfTheInfected.Enemy
     {
         public override void TransitionChecks()
         {
-            if (EnemyBrainBase.isSpottableDetected && !EnemyBrainBase.isSpottableInAttackRange)
+            if (CurrentEnemyBrain.isSpottableDetected && !CurrentEnemyBrain.isSpottableInAttackRange)
             {
-                StateMachine?.RequestStateChange(EnemyBrainBase.spottableDetectedState);
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.spottableDetectedState);
             }
-            else if (!EnemyBrainBase.isSpottableInAttackRange && !EnemyBrainBase.isSpottableDetected)
+            else if (!CurrentEnemyBrain.isSpottableInAttackRange && !CurrentEnemyBrain.isSpottableDetected)
             {
-                StateMachine?.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.noSpottableDetectedState);
             }
         }
     }

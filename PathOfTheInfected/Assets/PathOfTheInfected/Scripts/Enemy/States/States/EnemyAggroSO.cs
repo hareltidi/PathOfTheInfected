@@ -14,21 +14,21 @@ namespace PathOfTheInfected.Enemy
 
         public override void StateFixedUpdate()
         {
-            target = EnemyBrainBase.ClosestTarget;
-            EnemyBrainBase.MoveTo(target);
+            target = CurrentEnemyBrain.ClosestTarget;
+            CurrentEnemyBrain.MoveTo(target);
         }
 
         public override void TransitionChecks()
         {
             base.TransitionChecks();
-            if (EnemyBrainBase.isSpottableInAttackRange)
+            if (CurrentEnemyBrain.isSpottableInAttackRange)
             {
-                StateMachine?.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.spottableInAttackRangeState);
             }
 
-            if (!EnemyBrainBase.isSpottableDetected)
+            if (!CurrentEnemyBrain.isSpottableDetected)
             {
-                StateMachine?.RequestStateChange(EnemyBrainBase.noSpottableDetectedState);
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.noSpottableDetectedState);
             }
         }
     }

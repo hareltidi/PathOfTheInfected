@@ -4,11 +4,22 @@ using UnityEngine;
 namespace PathOfTheInfected.Damagable
 
 {
+    ///<summary>
+    ///A struct containing damage details, including the damage amount, hit stop time,
+    /// the entity responsible for causing the damage, and the object being damaged.
+    ///</summary>
     public struct DamageData
     {
+        ///<summary>How much damage does the enemy inflict in this attack</summary>
         public int Damage;
+
+        /// <summary>For how long we freeze time for hitstop</summary>
         public float HitStopTime;
+
+        /// <summary>Which enemy inflicted the damage</summary>
         public EnemyBrainBase Instigator;
+
+        /// <summary>Who got damaged</summary>
         public IDamageable DamagedObject;
     }
 
@@ -40,10 +51,12 @@ namespace PathOfTheInfected.Damagable
         /// Is the object who implements the <see cref="IDamageable"/> interface dead?
         /// </summary>
         public bool IsDead { get; set; }
+
         /// <summary>
         /// The current health of the object implementing the <see cref="IDamageable"/> interface.
         /// </summary>
         public int CurrentHealth { get; set; }
+
         /// <summary>
         /// The maximum health of the object implementing the <see cref="IDamageable"/> interface.
         /// </summary>

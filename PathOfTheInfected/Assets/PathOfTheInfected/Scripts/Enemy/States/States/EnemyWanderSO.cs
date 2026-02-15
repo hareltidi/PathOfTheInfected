@@ -15,14 +15,14 @@ namespace PathOfTheInfected.Enemy
 
         public override void StateEnter()
         {
-            Vector2 origin = EnemyBrainBase.InitialPosition;
+            Vector2 origin = CurrentEnemyBrain.InitialPosition;
 
-            WanderDirection = EnemyBrainBase.IsFacingRight ? Vector2.right : Vector2.left;
+            WanderDirection = CurrentEnemyBrain.IsFacingRight ? Vector2.right : Vector2.left;
             WanderMaxPosition = origin + WanderDirection * WanderRange;
             WanderMinPosition = origin - WanderDirection * WanderRange;
-            if (EnemyBrainBase.HasLastKnownTarget)
+            if (CurrentEnemyBrain.HasLastKnownTarget)
             {
-                CurrentWanderTarget = EnemyBrainBase.LastKnownTargetPosition;
+                CurrentWanderTarget = CurrentEnemyBrain.LastKnownTargetPosition;
             }
             else
             {
@@ -35,9 +35,9 @@ namespace PathOfTheInfected.Enemy
             CalculateEnemyMovement();
             if (HasReachedTarget())
             {
-                if (EnemyBrainBase.HasLastKnownTarget)
+                if (CurrentEnemyBrain.HasLastKnownTarget)
                 {
-                    EnemyBrainBase.HasLastKnownTarget = false;
+                    CurrentEnemyBrain.HasLastKnownTarget = false;
                 }
 
                 CurrentWanderTarget = (CurrentWanderTarget == WanderMaxPosition) ? WanderMinPosition : WanderMaxPosition;
@@ -46,16 +46,13 @@ namespace PathOfTheInfected.Enemy
 
         private bool HasReachedTarget()
         {
-            float dx = CurrentWanderTarget.x - EnemyBrainBase.transform.position.x;
+            float dx = CurrentWanderTarget.x - CurrentEnemyBrain.transform.position.x;
             return Mathf.Abs(dx) <= threshold;
         }
 
         private void CalculateEnemyMovement()
         {
-            float dx = CurrentWanderTarget.x - EnemyBrainBase.transform.position.x;
-            float desiredDir = Mathf.Sign(dx);
-            Vector2 dir = new Vector2(desiredDir, 0f);
-            EnemyBrainBase.MoveEnemy(dir);
+           CurrentEnemyBrain.MoveTo(CurrentWanderTarget);
         }
 
         public override void DrawGizmosOnSelected(EnemyBrainBase en)
@@ -75,15 +72,15 @@ namespace PathOfTheInfected.Enemy
         public override void TransitionChecks()
         {
             base.TransitionChecks();
-            if (EnemyBrainBase.isSpottableDetected)
+            if (CurrentEnemyBrain.isSpottableDetected)
             {
-                StateMachine.RequestStateChange(EnemyBrainBase.spottableDetectedState);
+                StateMachine.RequestStateChange(CurrentEnemyBrain.spottableDetectedState);
 
             }
 
-            if (EnemyBrainBase.isSpottableInAttackRange)
+            if (CurrentEnemyBrain.isSpottableInAttackRange)
             {
-                StateMachine.RequestStateChange(EnemyBrainBase.spottableInAttackRangeState);
+                StateMachine.RequestStateChange(CurrentEnemyBrain.spottableInAttackRangeState);
             }
         }
     }
