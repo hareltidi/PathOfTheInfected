@@ -1,8 +1,7 @@
 {
-    "name": "PathOfTheInfected",
+    "name": "TidiPatjFindingEditor",
     "rootNamespace": "",
     "references": [
-        "GUID:3b6257f84980fdc428a1d48db325deb5",
         "GUID:56b9344483c8592449cbc1de114b832f"
     ],
     "includePlatforms": [],
