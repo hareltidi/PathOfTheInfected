@@ -24,11 +24,12 @@ namespace PathOfTheInfected.Enemy
         /// </summary>
         /// <param name="dir">The direction vector for enemy movement, where x represents horizontal movement
         /// and y represents vertical movement.</param>
+        /// <param name="instant">Should we instantly change our velocity?</param>
         void MoveEnemy(Vector2 dir, bool instant = false);
 
         /// <summary>
         /// Checks the direction of movement and adjusts the enemy's facing direction accordingly.
-        /// Ensures the enemy's orientation matches the horizontal direction of velocity.
+        /// Ensures the enemy's orientation matches the horizontal direction of velocity to either face left or right.
         /// </summary>
         /// <param name="velocity">The velocity vector of the enemy, used to determine the current direction of movement.</param>
         void CheckForLeftOrRightFacing(Vector2 velocity);

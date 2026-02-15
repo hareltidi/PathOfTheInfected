@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using PathOfTheInfected.Damagable;
+using TidiPathFinding;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
@@ -20,7 +21,6 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region IEnemyMoveable
-
         public Rigidbody2D RB { get; set; }
         [field: SerializeField] public bool IsFacingRight { get; set; } = true;
 
@@ -66,7 +66,7 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Line of sight")]
         [SerializeField]
-        protected bool requiresLOS = false;
+        protected bool requiresLos = false;
 
         [SerializeField] protected LayerMask losBlockMask;
 
@@ -114,6 +114,11 @@ namespace PathOfTheInfected.Enemy
         public Vector3 LastKnownTargetPosition { get; protected set; }
         public bool HasLastKnownTarget { get; set; } = false;
         protected float BestDistSq = float.MaxValue;
+
+        protected List<Vector2> currentPath;
+        protected int currentIndex;
+        protected float nextRepath;
+        protected Vector2 lastTargetPosition;
 
         #endregion
 
@@ -240,7 +245,7 @@ namespace PathOfTheInfected.Enemy
             BestDistSq = float.MaxValue;
             foreach (Collider2D hit in hits)
             {
-                if (requiresLOS)
+                if (requiresLos)
                 {
                     bool hasLineOfSight = HasLineOfSight(hit.transform);
                     UpdateLineOfSightFlag(hasLineOfSight);
@@ -436,8 +441,11 @@ namespace PathOfTheInfected.Enemy
 
         #region EnemyMovement
 
-        [Header("Movement")] public float moveSpeed = 1f;
+        [Header("Movement")]
+        public float moveSpeed = 1f;
         public float acceleration = 1f;
+        [SerializeField] protected float waypointTolerance = 0.1f;
+        [SerializeField] protected float repathInterval = 1f;
 
         public virtual void MoveEnemy(Vector2 dir, bool instant = false)
         {
@@ -488,9 +496,59 @@ namespace PathOfTheInfected.Enemy
         /// <param name="target">The target position as a Vector2.</param>
         public virtual void MoveTo(Vector2 target)
         {
-            float dx = target.x - transform.position.x;
-            float dir = dx > 0 ? 1f : -1f;
-            MoveEnemy(new Vector2(dir, 0f));
+            if (AStarPathFinder.CurrentGraph == null || !RB) return;
+
+            // --- Recalculate path on timer ---
+            if (Time.timeSinceLevelLoad >= nextRepath)
+            {
+                List<Vector2> newPath =
+                    AStarPathFinder.FindPath_CurrentGraph(transform.position, target);
+
+                nextRepath = Time.timeSinceLevelLoad + repathInterval;
+
+                if (newPath != null && newPath.Count > 0)
+                {
+                    currentPath = newPath;
+
+                    float bestDistance = float.MaxValue;
+                    int bestIndex = 0;
+
+                    for (int i = 0; i < currentPath.Count; i++)
+                    {
+                        float dist = Vector2.Distance(transform.position, currentPath[i]);
+                        if (dist < bestDistance)
+                        {
+                            bestDistance = dist;
+                            bestIndex = i;
+                        }
+                    }
+
+                    currentIndex = bestIndex;
+                }
+            }
+
+            if (currentPath == null || currentIndex >= currentPath.Count)
+            {
+                MoveEnemy(Vector2.zero);
+                return;
+            }
+
+            // --- Look-ahead ---
+            int targetIndex = Mathf.Min(currentIndex + 1, currentPath.Count - 1);
+            Vector2 waypoint = currentPath[targetIndex];
+
+            Vector2 toWaypoint = waypoint - (Vector2)transform.position;
+
+            // Ground enemy moves only horizontally
+            Vector2 horizontalDir = new Vector2(Mathf.Sign(toWaypoint.x), 0f);
+
+            MoveEnemy(horizontalDir);
+
+            // Advance waypoint if close enough (horizontal check only because this is a grounded enemy)
+            if (Mathf.Abs(toWaypoint.x) <= waypointTolerance)
+            {
+                currentIndex++;
+            }
         }
 
         public virtual void CheckForLeftOrRightFacing(Vector2 velocity)

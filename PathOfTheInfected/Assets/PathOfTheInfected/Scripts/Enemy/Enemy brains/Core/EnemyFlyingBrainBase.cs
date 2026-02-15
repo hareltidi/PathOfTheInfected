@@ -1,4 +1,6 @@
-﻿using PathOfTheInfected.Damagable;
+﻿using System.Collections.Generic;
+using PathOfTheInfected.Damagable;
+using TidiPathFinding;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
@@ -21,7 +23,7 @@ namespace PathOfTheInfected.Enemy
             BestDistSq = float.MaxValue;
             foreach (Collider2D hit in hits)
             {
-                if (requiresLOS)
+                if (requiresLos)
                 {
                     bool hasLineOfSight = HasLineOfSight(hit.transform);
                     UpdateLineOfSightFlag(hasLineOfSight);
@@ -113,9 +115,59 @@ namespace PathOfTheInfected.Enemy
 
         public override void MoveTo(Vector2 target)
         {
-            Vector2 dir = target - (Vector2)transform.position;
-            dir.Normalize();
-            MoveEnemy(dir);
+            if (AStarPathFinder.CurrentGraph == null || !RB) return;
+
+            // --- Recalculate path on timer ---
+            if (Time.timeSinceLevelLoad >= nextRepath)
+            {
+                List<Vector2> newPath = AStarPathFinder.FindPath_CurrentGraph(
+                    transform.position, target);
+
+                nextRepath = Time.timeSinceLevelLoad + repathInterval; // Reset timer
+
+                if (newPath != null && newPath.Count > 0) // If a path was found
+                {
+                    currentPath = newPath;
+
+                    float bestDistance = float.MaxValue;
+                    int bestIndex = 0;
+
+                    for (int i = 0; i < currentPath.Count; i++)
+                    {
+                        float dist = Vector2.Distance(transform.position, currentPath[i]);
+                        if (dist < bestDistance)
+                        {
+                            bestDistance = dist;
+                            bestIndex = i;
+                        }
+                    }
+
+                    currentIndex = bestIndex;
+                }
+            }
+
+            if (currentPath == null || currentIndex >= currentPath.Count) // If no path found or reached te end
+            {
+                MoveEnemy(Vector2.zero); // Stop moving
+                return; // Exit method early
+            }
+
+            // --- Look-ahead ---
+            int targetIndex = Mathf.Min(currentIndex + 1, currentPath.Count - 1); // Next waypoint
+            Vector2 waypoint = currentPath[targetIndex];
+
+            Vector2 toWaypoint = waypoint - (Vector2)transform.position; // Distance to waypoint
+
+            // Ground enemy moves only horizontally
+            Vector2 dir = new Vector2(Mathf.Sign(toWaypoint.x), Mathf.Sign(toWaypoint.y)); // Direction to waypoint
+
+            MoveEnemy(dir); // Move the enemy in that direction
+
+            // Advance waypoint if close enough
+            if (Mathf.Abs(toWaypoint.x) <= waypointTolerance || Mathf.Abs(toWaypoint.y) <= waypointTolerance)
+            {
+                currentIndex++;
+            }
         }
 
         public override void MoveTo(GameObject target)
