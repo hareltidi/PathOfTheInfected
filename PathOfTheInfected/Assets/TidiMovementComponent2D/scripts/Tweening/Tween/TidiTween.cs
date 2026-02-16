@@ -523,12 +523,12 @@ namespace TidiTweening
                 case EaseType.EaseOutBack: return EaseOutBack(t);
                 case EaseType.EaseInOutBack: return EaseInOutBack(t);
 
-                
+
                 case EaseType.ElasticEaseIn: return ElasticEaseIn(t);
                 case EaseType.ElasticEaseOut: return ElasticEaseOut(t);
                 case EaseType.ElasticEaseInOut: return ElasticEaseInOut(t);
 
-     
+
                 case EaseType.BounceEaseIn: return BounceEaseIn(t);
                 case EaseType.BounceEaseOut: return BounceEaseOut(t);
                 case EaseType.BounceEaseInOut: return BounceEaseInOut(t);
@@ -539,6 +539,8 @@ namespace TidiTweening
         }
 
         #endregion
+
+
 
         #region Method Chaining
         public TidiTween<T> SetEase(EaseType easeType)

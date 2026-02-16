@@ -98,9 +98,10 @@ namespace PathOfTheInfected.Enemy
         {
             if (!RB) return;
 
-            Vector2 targetVelocity = dir * moveSpeed;
+            Vector2 targetVelocity = dir * movementPersonality.maxSpeed;
 
-            float t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
+            float t = Mathf.Clamp01(movementPersonality.acceleration * Time.fixedDeltaTime);
+            float easedT = TidiTween<float>.Ease(movementPersonality.movementEase, t);
 
             Vector2 newVelocity;
             if (!instant)
@@ -108,7 +109,7 @@ namespace PathOfTheInfected.Enemy
                  newVelocity = Vector2.Lerp(
                     RB.linearVelocity,
                     targetVelocity,
-                    t
+                    easedT
                 );
             }
             else

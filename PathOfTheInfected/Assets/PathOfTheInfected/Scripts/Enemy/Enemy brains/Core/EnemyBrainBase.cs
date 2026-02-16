@@ -57,8 +57,7 @@ namespace PathOfTheInfected.Enemy
 
         #region Serialized Members
         [Header("Movement")]
-        public float moveSpeed = 1f;
-        public float acceleration = 1f;
+        [SerializeField] protected MovementPersonality movementPersonality;
         [SerializeField] protected float waypointTolerance = 0.1f;
         [SerializeField] protected float repathInterval = 1f;
 
@@ -128,6 +127,9 @@ namespace PathOfTheInfected.Enemy
         protected Vector2 lastTargetPosition;
 
         protected BoxCollider2D boxCollider;
+
+        protected Vector2 currentTargetVelocity;
+        private TidiTween<float> _velocityTween;
 
         #endregion
 
@@ -455,13 +457,14 @@ namespace PathOfTheInfected.Enemy
         {
             if (!RB) return;
 
-            float targetVx = Mathf.Sign(dir.x) * moveSpeed;
-            float t = Mathf.Clamp01(acceleration * Time.fixedDeltaTime);
+            float targetVx = Mathf.Sign(dir.x) * movementPersonality.maxSpeed;
+            float t = Mathf.Clamp01(movementPersonality.acceleration * Time.fixedDeltaTime);
+            float easedT = TidiTween<float>.Ease(movementPersonality.movementEase, t);
 
             float newVx;
             if (!instant)
             {
-                newVx = Mathf.Lerp(RB.linearVelocity.x, targetVx, t);
+                newVx = Mathf.Lerp(RB.linearVelocity.x, targetVx, easedT);
             }
             else
             {

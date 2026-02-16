@@ -433,6 +433,26 @@ PrefabInstance:
       propertyPath: requiresLos
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: movementPersonality.maxSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: movementPersonality.turnSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: movementPersonality.acceleration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: movementPersonality.movementEase
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: movementPersonality.burstMultiplier
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2108,6 +2128,26 @@ PrefabInstance:
     - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
       propertyPath: obstacleCheckDistance
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: movementPersonality.maxSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: movementPersonality.turnSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: movementPersonality.acceleration
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: movementPersonality.movementEase
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: movementPersonality.burstMultiplier
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2390873425810895601, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
