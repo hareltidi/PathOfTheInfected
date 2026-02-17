@@ -187,13 +187,20 @@ MonoBehaviour:
   spottableDetectedState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
   spottableInAttackRangeState: {fileID: 11400000, guid: fd0825611c5cee6499d38a53e749d3f8, type: 2}
   <CurrentState>k__BackingField: {fileID: 0}
+  movementPersonality:
+    maxSpeed: 3
+    acceleration: 1
+    turnSpeed: 5
+    burstMultiplier: 2
+    movementEase: 0
+  waypointTolerance: 0.1
+  repathInterval: 1
   <SpottableMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 256
-  <CurrentPoise>k__BackingField: 10
   max: {fileID: 1097756811225222640}
   min: {fileID: 7565596375646536435}
-  requiresLOS: 1
+  requiresLos: 1
   losBlockMask:
     serializedVersion: 2
     m_Bits: 64
@@ -202,10 +209,9 @@ MonoBehaviour:
   trackSpotRange: 1
   trackAttackRange: 1
   maxSpotRange: 15
+  <CurrentPoise>k__BackingField: 10
   attack: {fileID: 11400000, guid: 36f030bb1135909439293f54f5f9b5ab, type: 2}
   maxPoise: 10
-  moveSpeed: 10
-  acceleration: 1
 --- !u!1 &2896338765570997556
 GameObject:
   m_ObjectHideFlags: 0

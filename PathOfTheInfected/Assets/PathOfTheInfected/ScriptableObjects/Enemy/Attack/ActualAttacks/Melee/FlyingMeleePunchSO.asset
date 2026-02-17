@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a30d68a0cbd449495a563015b2d3dc8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f9a002dfc90ea342845c09e853a368a, type: 3}
   m_Name: FlyingMeleePunchSO
-  m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.MeleePunchSO
+  m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FlyingMeleePunch
   damage: 1
   hitStopTime: 0.1
   <MaxAttackRange>k__BackingField: 5

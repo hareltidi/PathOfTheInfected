@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
+    /// <summary>
+    /// Provides a base state for enemy attack behavior within a grounded enemy state machine. Enables initialization,
+    /// execution, and transition logic for enemy attacks using context-driven state management.
+    /// </summary>
+    /// <remarks>Pseudo state: Spottable in attack range</remarks>
     [CreateAssetMenu(fileName = "EnemyAttackSOBase", menuName = "Enemy/States/Grounded/EnemyAttackSOBase", order = 0)]
     public class EnemyAttackSOBase : EnemyBaseState
     {
@@ -23,8 +28,6 @@ namespace PathOfTheInfected.Enemy
 
         public override void StateFixedUpdate()
         {
-            // TODO: for some reason, this line makes the transitions between attack and aggro states on grounded enemies to go insane. Why? Why you askin' me?
-            CurrentEnemyBrain.MoveEnemy(Vector2.zero);
             if (!CurrentEnemyBrain || CurrentEnemyBrain.AttackTarget == null || !CurrentEnemyBrain.AttackTarget.Transform) return;
             base.StateFixedUpdate();
             if (!context.IsFinished)

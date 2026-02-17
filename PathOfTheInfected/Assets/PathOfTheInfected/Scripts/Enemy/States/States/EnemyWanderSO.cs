@@ -2,6 +2,12 @@
 
 namespace PathOfTheInfected.Enemy
 {
+    /// <summary>
+    /// This state represents the wandering behavior of a grounded enemy when it has no detected targets. The enemy will move back and forth within a defined range from its initial position, creating a patrolling effect. 
+    /// The state manages the wander direction, target positions, and transitions to other states based on target detection and attack range conditions. For our grounded enemies, this state serves as the default behavior when no spottable targets are detected, 
+    /// allowing them to patrol their area until a target is spotted or comes within attack range.
+    /// </summary>
+    /// <remarks>Pseudo state: No spottable detected</remarks>
     [CreateAssetMenu(fileName = "EnemyWanderState", menuName = "Enemy/States/Grounded/EnemyWanderState", order = 0)]
     public class EnemyWanderSo : EnemyBaseState
     {

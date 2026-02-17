@@ -10,6 +10,11 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Attack stats")]
         [SerializeField] protected int damage = 1;
+
+        [Tooltip("Should we check if the distance between the enemy and the spottable are under a certain threshold for us to attack?")]
+        [field: SerializeField] public bool RequireDistanceFromEnemyToSpottable { get; protected set; } = true;
+        [Tooltip("If we require distance, what is the threshold we should be under?")] [Range(0f, 100f)]
+        [field: SerializeField] public float DistanceThreshold { get; protected set; } = 5f;
         [SerializeField] protected float hitStopTime = 0.5f;
         [field: SerializeField] public float MaxAttackRange { get; protected set; } = 10f;
         [field: SerializeField] public float PoiseConsumed { get; protected set; } = 0.5f;
@@ -43,6 +48,7 @@ namespace PathOfTheInfected.Enemy
             switch (ctx.Phase)
             {
                 case AttackPhase.WindUp:
+                    ctx.Owner.MoveEnemy(Vector2.zero, false);
                     if (ctx.Timer >= windupDuration)
                     {
                         ctx.Timer = 0f;
@@ -86,6 +92,7 @@ namespace PathOfTheInfected.Enemy
         /// <param name="ctx">The attack context we have on this specific attack</param>
         public virtual void PerformAttack(AttackContext ctx)
         {
+            ctx.Owner.MoveEnemy(Vector2.zero, false);
             if (ctx.Owner.CurrentPoise > 0)
             {
                 ctx.Owner.CurrentPoise = Mathf.Clamp(ctx.Owner.CurrentPoise - PoiseConsumed, 0f, ctx.Owner.maxPoise);

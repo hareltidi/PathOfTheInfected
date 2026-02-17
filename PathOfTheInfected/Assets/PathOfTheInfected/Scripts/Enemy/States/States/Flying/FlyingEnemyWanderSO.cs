@@ -2,6 +2,11 @@
 
 namespace PathOfTheInfected.Enemy
 {
+    /// <summary>
+    /// This state represents the wandering behavior of a flying enemy when it has no detected targets. The enemy will move to random points within a defined radius from its initial position, 
+    /// creating a patrolling effect.
+    /// </summary>
+    /// <remarks>Pseudo state: No spottable detected</remarks>
     [CreateAssetMenu(fileName = "FlyingEnemyWanderSO", menuName = "Enemy/States/Flying/FlyingEnemyWanderSO", order = 0)]
     public class FlyingEnemyWanderSO : EnemyBaseState
     {

@@ -68,7 +68,15 @@ namespace PathOfTheInfected.Enemy
                     if (VisibleSpottables.Contains(spottable) && damageable != null)
                     {
                         testTarget = spottable;
-                        test = true;
+                        if (attack && attack.RequireDistanceFromEnemyToSpottable)
+                        {
+                            test = (Mathf.Abs(Vector2.Distance(transform.position, testTarget.Transform.position))
+                                    < attack.DistanceThreshold);
+                        }
+                        else if (attack)
+                        {
+                            test = true;
+                        }
                         break;
                     }
                 }
@@ -166,7 +174,17 @@ namespace PathOfTheInfected.Enemy
             Vector2 toWaypoint = waypoint - (Vector2)transform.position;
             Vector2 dir = toWaypoint.normalized;
 
-            Collider2D[] hits = Physics2D.OverlapBoxAll(boxCollider.bounds.center, boxCollider.bounds.size, 0,
+            Vector2 baseCenter = (min.position + max.position) * 0.5f;
+            Vector2 baseSize = boxCollider.size;
+
+            float range = attack.MaxAttackRange;
+            int facingDirection = IsFacingRight ? 1 : -1;
+            float forwardOffset = range * 0.5f * facingDirection;
+
+            Vector2 center = baseCenter + Vector2.right * forwardOffset;
+            Vector2 size = new Vector2(baseSize.x + range, baseSize.y);
+
+            Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0,
                 LayerMask.GetMask("ground")); // Check for obstacles
 
             bool pathWantsUp = hits.Length > 0 || waypoint.y > transform.position.y + 0.1f; // Check if we need to go up or we hit something that we need to climb
@@ -220,7 +238,19 @@ namespace PathOfTheInfected.Enemy
             if (boxCollider)
             {
                 Gizmos.color = Color.magenta;
-                Gizmos.DrawWireCube(boxCollider.bounds.center, boxCollider.bounds.size);
+                Vector2 baseCenter = (min.position + max.position) * 0.5f;
+                Vector2 baseSize = new Vector2(
+                    Mathf.Abs(max.position.x - min.position.x),
+                    Mathf.Abs(max.position.y - min.position.y)
+                );
+
+                float range = attack.MaxAttackRange;
+                int facingDirection = IsFacingRight ? 1 : -1;
+                float forwardOffset = range * 0.5f * facingDirection;
+
+                Vector2 center = baseCenter + Vector2.right * forwardOffset;
+                Vector2 size = new Vector2(baseSize.x + range, baseSize.y);
+                Gizmos.DrawWireCube(center, size);
             }
 
         }

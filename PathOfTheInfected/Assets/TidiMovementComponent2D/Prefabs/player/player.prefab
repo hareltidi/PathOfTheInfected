@@ -246,7 +246,7 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 5
   flashTime: 0.25
   flashColor: {r: 4, g: 0, b: 0, a: 1}
-  damageFlashEaseType: 0
+  damageFlashEaseType: 26
   visuals: {fileID: 5744188244262479377}
 --- !u!1 &5243345907230391907
 GameObject:
@@ -772,11 +772,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6898750184353699220, guid: 58ae461f07f793046949203f2aebfffb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.14
+      value: -0.19
       objectReference: {fileID: 0}
     - target: {fileID: 6898750184353699220, guid: 58ae461f07f793046949203f2aebfffb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.52
       objectReference: {fileID: 0}
     - target: {fileID: 6898750184353699220, guid: 58ae461f07f793046949203f2aebfffb, type: 3}
       propertyPath: m_LocalPosition.z

@@ -362,7 +362,15 @@ namespace PathOfTheInfected.Enemy
                     if (VisibleSpottables.Contains(spottable) && damageable != null)
                     {
                         testTarget = spottable;
-                        test = true;
+                        if (attack && attack.RequireDistanceFromEnemyToSpottable)
+                        {
+                            test = (Mathf.Abs(Vector2.Distance(transform.position, testTarget.Transform.position))
+                                    < attack.DistanceThreshold);
+                        }
+                        else if (attack)
+                        {
+                            test = true;
+                        }
                         break;
                     }
                 }
