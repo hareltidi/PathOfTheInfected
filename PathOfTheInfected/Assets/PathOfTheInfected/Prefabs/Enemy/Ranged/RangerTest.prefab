@@ -188,8 +188,8 @@ MonoBehaviour:
   spottableInAttackRangeState: {fileID: 11400000, guid: fd0825611c5cee6499d38a53e749d3f8, type: 2}
   <CurrentState>k__BackingField: {fileID: 0}
   movementPersonality:
-    maxSpeed: 3
-    acceleration: 1
+    maxSpeed: 5
+    acceleration: 3
     turnSpeed: 5
     burstMultiplier: 2
     movementEase: 0

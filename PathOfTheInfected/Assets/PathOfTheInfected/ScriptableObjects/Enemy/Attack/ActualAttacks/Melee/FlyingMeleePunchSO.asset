@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: FlyingMeleePunchSO
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FlyingMeleePunch
   damage: 1
+  <RequireDistanceFromEnemyToSpottable>k__BackingField: 1
+  <DistanceThreshold>k__BackingField: 5
   hitStopTime: 0.1
   <MaxAttackRange>k__BackingField: 5
   <PoiseConsumed>k__BackingField: 0.5

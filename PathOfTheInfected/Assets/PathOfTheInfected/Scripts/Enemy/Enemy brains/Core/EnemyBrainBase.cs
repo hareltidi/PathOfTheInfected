@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
+    /// <summary>
+    /// This is the main script or the brains of the enemies.
+    /// </summary>
     public class EnemyBrainBase : MonoBehaviour, IDamageable, IEnemyMoveable
     {
         #region Interface Variables
@@ -131,8 +134,9 @@ namespace PathOfTheInfected.Enemy
         protected Vector2 currentTargetVelocity;
         private TidiTween<float> _velocityTween;
 
-        #endregion
+        protected Material[] Materials;
 
+        #endregion
 
         #region Virtual logic gate Methods
 
@@ -150,10 +154,11 @@ namespace PathOfTheInfected.Enemy
         }
 
         /// <summary>
-        /// Start method for our enemy (can be overridden so use the base.EnemyStart at the start of each override)
+        /// Start method for our enemy (can be overridden, so use the base.EnemyStart at the start of each override)
         /// </summary>
         protected virtual void EnemyStart()
         {
+            InitMaterials();
             noSpottableDetectedState.StateInit(this, StateMachine);
             spottableDetectedState.StateInit(this, StateMachine);
             spottableInAttackRangeState.StateInit(this, StateMachine);
@@ -281,7 +286,8 @@ namespace PathOfTheInfected.Enemy
         }
 
         /// <summary>
-        /// Draws the spotting range gizmos (Can be overridden. But if there's no base.DrawingSpottingRange, this enemy uses a different shape for spot range)
+        /// Draws the spotting range gizmos (Can be overridden. But if there's no
+        /// base.DrawingSpottingRange, this enemy uses a different shape for spot range)
         /// </summary>
         protected virtual void DrawingSpottingRange()
         {
@@ -467,7 +473,7 @@ namespace PathOfTheInfected.Enemy
 
             float targetVx = Mathf.Sign(dir.x) * movementPersonality.maxSpeed;
             float t = Mathf.Clamp01(movementPersonality.acceleration * Time.fixedDeltaTime);
-            float easedT = TidiTween<float>.Ease(movementPersonality.movementEase, t);
+            float easedT = TidiEasing.Ease(movementPersonality.movementEase, t);
 
             float newVx;
             if (!instant)
@@ -580,6 +586,31 @@ namespace PathOfTheInfected.Enemy
                 transform.rotation = Quaternion.Euler(rotator);
                 IsFacingRight = !IsFacingRight;
             }
+        }
+
+        #endregion
+
+        #region Misc methods
+
+        /// <summary>
+        /// Create a runtime instance of our materials
+        /// </summary>
+        protected virtual void InitMaterials()
+        {
+            SpriteRenderer[] spriteRenderers = GetComponents<SpriteRenderer>();
+            Materials = new Material[spriteRenderers.Length];
+            for (int i = 0; i < spriteRenderers.Length; i++)
+            {
+                Material instance = Instantiate(spriteRenderers[i].sharedMaterial);
+                spriteRenderers[i].material = instance;
+                Materials[i] = instance;
+            }
+        }
+
+        public static bool isObjectInCameraView(GameObject obj, Camera cam)
+        {
+            Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
+            return GeometryUtility.TestPlanesAABB(planes, obj.GetComponent<Renderer>().bounds);
         }
 
         #endregion

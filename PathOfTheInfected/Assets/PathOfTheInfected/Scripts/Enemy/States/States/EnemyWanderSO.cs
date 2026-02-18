@@ -50,6 +50,13 @@ namespace PathOfTheInfected.Enemy
             }
         }
 
+        /// <summary>
+        /// Determines whether the enemy has reached its current wander target.
+        /// </summary>
+        /// <returns>
+        /// True if the enemy's position is within the defined threshold of the current wander target;
+        /// otherwise, false.
+        /// </returns>
         private bool HasReachedTarget()
         {
             float dx = CurrentWanderTarget.x - CurrentEnemyBrain.transform.position.x;
@@ -58,12 +65,12 @@ namespace PathOfTheInfected.Enemy
 
         private void CalculateEnemyMovement()
         {
-           CurrentEnemyBrain.MoveTo(CurrentWanderTarget);
+            CurrentEnemyBrain.MoveTo(CurrentWanderTarget);
         }
 
         public override void DrawGizmosOnSelected(EnemyBrainBase en)
         {
-            if (en == null || !trackWanderPath) return;
+            if (en|| !trackWanderPath) return;
 
             Vector3 origin = en.InitialPosition;
             Vector3 dir = en.IsFacingRight ? Vector3.right : Vector3.left;
@@ -81,7 +88,6 @@ namespace PathOfTheInfected.Enemy
             if (CurrentEnemyBrain.isSpottableDetected)
             {
                 StateMachine.RequestStateChange(CurrentEnemyBrain.spottableDetectedState);
-
             }
 
             if (CurrentEnemyBrain.isSpottableInAttackRange)

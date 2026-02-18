@@ -87,7 +87,7 @@ namespace TidiTweening
             else
             {
                 t = Mathf.Clamp01(_elapsedTime / _duration);
-                easedT = Ease(_easeType, t);
+                easedT = TidiEasing.Ease(_easeType, t);
             }
 
             T currentValue;
@@ -211,9 +211,73 @@ namespace TidiTweening
         }
 
 
+        #region Method Chaining
+        public TidiTween<T> SetEase(EaseType easeType)
+        {
+            _easeType = easeType;
+            return this;
+        }
+
+        public TidiTween<T> SetPingPong(int loopCount)
+        {
+            _loopCount = loopCount;
+            _pingPong = true;
+            return this;
+        }
+
+        public TidiTween<T> SetOnComplete(Action onComplete)
+        {
+            OnComplete = onComplete;
+            return this;
+        }
+
+        public TidiTween<T> SetIgnoreTimeScale()
+        {
+            IgnoreTimeScale = true;
+            return this;
+        }
+
+        public TidiTween<T> SetOnUpdate(Action onUpdate)
+        {
+            _onUpdate = onUpdate;
+            return this;
+        }
+
+        public TidiTween<T> SetOnPercentCompleted(float percentCompleted, Action onPercentCompleted)
+        {
+            _percentThreshold = Mathf.Clamp01(percentCompleted);
+            _onPercentCompleted = onPercentCompleted;
+            return this;
+        }
+
+        public TidiTween<T> SetStartDelay(float delay)
+        {
+            DelayTime = delay;
+            return this;
+        }
+
+        public TidiTween<T> SetConstantSpeed()
+        {
+            _constantSpeed = true;
+            return this;
+        }
+
+        #endregion
 
 
-        #region Easing Calculations
+
+
+    }
+
+    /// <summary>
+    /// Provides a collection of easing functions for interpolation.
+    /// These functions are used to calculate eased values based on a normalized time parameter (t),
+    /// allowing for smooth animations and transitions with various easing styles such as linear, quadratic,
+    /// cubic, and elastic.
+    /// </summary>
+    public static class TidiEasing
+    {
+         #region Easing Calculations
         public static float Linear(float t)
         {
             return t;
@@ -482,7 +546,7 @@ namespace TidiTweening
 
         #endregion
 
-        #region Easing Function
+         #region Easing Function
         public static float Ease(EaseType equation, float t)
         {
             t = Mathf.Clamp01(t);
@@ -539,65 +603,6 @@ namespace TidiTweening
         }
 
         #endregion
-
-
-
-        #region Method Chaining
-        public TidiTween<T> SetEase(EaseType easeType)
-        {
-            _easeType = easeType;
-            return this;
-        }
-
-        public TidiTween<T> SetPingPong(int loopCount)
-        {
-            _loopCount = loopCount;
-            _pingPong = true;
-            return this;
-        }
-
-        public TidiTween<T> SetOnComplete(Action onComplete)
-        {
-            OnComplete = onComplete;
-            return this;
-        }
-
-        public TidiTween<T> SetIgnoreTimeScale()
-        {
-            IgnoreTimeScale = true;
-            return this;
-        }
-
-        public TidiTween<T> SetOnUpdate(Action onUpdate)
-        {
-            _onUpdate = onUpdate;
-            return this;
-        }
-
-        public TidiTween<T> SetOnPercentCompleted(float percentCompleted, Action onPercentCompleted)
-        {
-            _percentThreshold = Mathf.Clamp01(percentCompleted);
-            _onPercentCompleted = onPercentCompleted;
-            return this;
-        }
-
-        public TidiTween<T> SetStartDelay(float delay)
-        {
-            DelayTime = delay;
-            return this;
-        }
-
-        public TidiTween<T> SetConstantSpeed()
-        {
-            _constantSpeed = true;
-            return this;
-        }
-
-        #endregion
-
-
-
-
     }
 }
 

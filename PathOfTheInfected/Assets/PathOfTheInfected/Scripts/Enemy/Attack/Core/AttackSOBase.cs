@@ -48,7 +48,6 @@ namespace PathOfTheInfected.Enemy
             switch (ctx.Phase)
             {
                 case AttackPhase.WindUp:
-                    ctx.Owner.MoveEnemy(Vector2.zero, false);
                     if (ctx.Timer >= windupDuration)
                     {
                         ctx.Timer = 0f;
@@ -92,7 +91,6 @@ namespace PathOfTheInfected.Enemy
         /// <param name="ctx">The attack context we have on this specific attack</param>
         public virtual void PerformAttack(AttackContext ctx)
         {
-            ctx.Owner.MoveEnemy(Vector2.zero, false);
             if (ctx.Owner.CurrentPoise > 0)
             {
                 ctx.Owner.CurrentPoise = Mathf.Clamp(ctx.Owner.CurrentPoise - PoiseConsumed, 0f, ctx.Owner.maxPoise);
@@ -107,7 +105,7 @@ namespace PathOfTheInfected.Enemy
         public virtual void RecoverPoise(AttackContext ctx)
         {
             ctx.Owner.CurrentPoise = Mathf.MoveTowards(ctx.Owner.CurrentPoise, ctx.Owner.maxPoise, Time.fixedDeltaTime * PoiseConsumed);
-            if (ctx.Owner.CurrentPoise >= ctx.Owner.maxPoise)
+            if (ctx.Owner.CurrentPoise >= 0)
             {
                 ctx.Phase = AttackPhase.WindUp;
             }

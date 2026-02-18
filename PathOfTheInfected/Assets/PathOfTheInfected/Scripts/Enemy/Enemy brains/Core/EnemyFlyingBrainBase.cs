@@ -109,7 +109,7 @@ namespace PathOfTheInfected.Enemy
             Vector2 targetVelocity = dir * movementPersonality.maxSpeed;
 
             float t = Mathf.Clamp01(movementPersonality.acceleration * Time.fixedDeltaTime);
-            float easedT = TidiTween<float>.Ease(movementPersonality.movementEase, t);
+            float easedT = TidiEasing.Ease(movementPersonality.movementEase, t);
 
             Vector2 newVelocity;
             if (!instant)

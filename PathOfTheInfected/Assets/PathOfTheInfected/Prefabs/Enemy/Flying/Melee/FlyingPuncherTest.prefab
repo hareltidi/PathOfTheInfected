@@ -247,14 +247,14 @@ MonoBehaviour:
   <IsFacingRight>k__BackingField: 1
   noSpottableDetectedState: {fileID: 11400000, guid: a58c3d506f9c3b24eaef6b0e5d624b91, type: 2}
   spottableDetectedState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
-  spottableInAttackRangeState: {fileID: 11400000, guid: fd0825611c5cee6499d38a53e749d3f8, type: 2}
+  spottableInAttackRangeState: {fileID: 11400000, guid: 0cb5effbe39d87c4f80ee44bac7d3a59, type: 2}
   <CurrentState>k__BackingField: {fileID: 0}
   movementPersonality:
     maxSpeed: 5
     acceleration: 3
     turnSpeed: 10
     burstMultiplier: 15
-    movementEase: 2
+    movementEase: 1
   waypointTolerance: 0.1
   repathInterval: 1
   <SpottableMask>k__BackingField:

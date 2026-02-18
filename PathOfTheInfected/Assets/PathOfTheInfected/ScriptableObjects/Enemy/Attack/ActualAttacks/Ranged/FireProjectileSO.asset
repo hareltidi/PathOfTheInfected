@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: FireProjectileSO
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FireProjectileSO
   damage: 1
+  <RequireDistanceFromEnemyToSpottable>k__BackingField: 1
+  <DistanceThreshold>k__BackingField: 15
   hitStopTime: 0.15
   <MaxAttackRange>k__BackingField: 9
-  <PoiseConsumed>k__BackingField: 0.5
+  <PoiseConsumed>k__BackingField: 1
   windupDuration: 0.5
   recoveryTime: 0.7
   projectilePrefab: {fileID: 5303159517039868119, guid: a22ad40534731c741b4a5c70fdcfc442, type: 3}
