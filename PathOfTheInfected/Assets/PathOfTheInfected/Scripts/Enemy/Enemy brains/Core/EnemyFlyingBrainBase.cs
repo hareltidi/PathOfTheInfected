@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
+    /// <summary>
+    /// Represents the base class for flying enemy AI behaviors in the game. It provides
+    /// core functionality for detecting, targeting, and moving towards targets while managing
+    /// obstacles and other interactions specific to flying enemies.
+    /// Inherits from <see cref="EnemyBrainBase"/>.
+    /// </summary>
     public class EnemyFlyingBrainBase : EnemyBrainBase
     {
         #region Member Variables
@@ -48,7 +54,15 @@ namespace PathOfTheInfected.Enemy
                 FindClosestTarget();
             }
 
-            isSpottableDetected = VisibleSpottables.Count > 0;
+            if (requireObjectsToBeInCameraView)
+            {
+                isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange &&
+                                      IsObjectInCameraView(gameObject, Camera.main);
+            }
+            else
+            {
+                isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange;
+            }
         }
 
         protected override void CheckForSpottablesInAttackRange()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PathOfTheInfected.Damagable;
 using TidiPathFinding;
 using TidiTweening;
@@ -7,7 +8,9 @@ using UnityEngine;
 namespace PathOfTheInfected.Enemy
 {
     /// <summary>
-    /// This is the main script or the brains of the enemies.
+    /// Provides a base implementation for the behavior and functionality of an enemy entity in the game.
+    /// This class manages the enemy's movement, state transitions, health, and interactions with other game entities.
+    /// It also includes functionality for detecting targets, handling line-of-sight checks, and managing attack behaviors.
     /// </summary>
     public class EnemyBrainBase : MonoBehaviour, IDamageable, IEnemyMoveable
     {
@@ -70,6 +73,7 @@ namespace PathOfTheInfected.Enemy
         public LayerMask SpottableMask { get; protected set; }
         public Transform max;
         public Transform min;
+        public bool requireObjectsToBeInCameraView = true;
 
         [Header("Line of sight")]
         [SerializeField]
@@ -282,7 +286,15 @@ namespace PathOfTheInfected.Enemy
                 FindClosestTarget();
             }
 
-            isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange;
+            if (requireObjectsToBeInCameraView)
+            {
+                isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange &&
+                                      IsObjectInCameraView(gameObject, Camera.main);
+            }
+            else
+            {
+                isSpottableDetected = VisibleSpottables.Count > 0 && !isSpottableInAttackRange;
+            }
         }
 
         /// <summary>
@@ -607,7 +619,7 @@ namespace PathOfTheInfected.Enemy
             }
         }
 
-        public static bool isObjectInCameraView(GameObject obj, Camera cam)
+        public static bool IsObjectInCameraView(GameObject obj, Camera cam)
         {
             Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
             return GeometryUtility.TestPlanesAABB(planes, obj.GetComponent<Renderer>().bounds);
