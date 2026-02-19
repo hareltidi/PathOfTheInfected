@@ -425,6 +425,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: movementPersonality.maxSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: movementPersonality.acceleration
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: movementPersonality.movementEase
+      value: 13
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2087,7 +2099,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
       propertyPath: movementPersonality.movementEase
-      value: 25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3085813784086349589, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
       propertyPath: m_LocalPosition.x

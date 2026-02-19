@@ -269,6 +269,15 @@ namespace PathOfTheInfected.Enemy
 
         }
 
+
+        /// <summary>
+        /// Checks if a point is inside a circle.
+        /// </summary>
+        /// <param name="point">The point to check if it's inside the circle</param>
+        /// <param name="center">The center point of the circle</param>
+        /// <param name="radius">The radius of the circle</param>
+        /// <returns>Is the point parameter in our circle? (Vector2.Distance(point, center)
+        /// is less than or equal to radius)</returns>
         public static bool IsPointInCircle(Vector2 point, Vector2 center, float radius)
         {
             return Vector2.Distance(point, center) <= radius;

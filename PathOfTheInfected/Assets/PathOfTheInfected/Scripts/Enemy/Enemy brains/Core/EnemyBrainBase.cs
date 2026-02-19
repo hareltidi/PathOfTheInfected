@@ -484,23 +484,37 @@ namespace PathOfTheInfected.Enemy
             if (!RB) return;
 
             float targetVx = Mathf.Sign(dir.x) * movementPersonality.maxSpeed;
-            float t = Mathf.Clamp01(movementPersonality.acceleration * Time.fixedDeltaTime);
-            float easedT = TidiEasing.Ease(movementPersonality.movementEase, t);
+
+            float velocityDiff = Mathf.Abs(targetVx - RB.linearVelocity.x);
+            float progress = Mathf.Clamp01(velocityDiff / movementPersonality.maxSpeed);
+
+            // Invert so easing works naturally
+            float eased = TidiEasing.Ease(
+                movementPersonality.movementEase,
+                1f - progress
+            );
+
+            // Make sure acceleration never dies
+            float accelMultiplier = Mathf.Lerp(0.3f, 1f, eased);
+
+            float adjustedAccel = movementPersonality.acceleration * accelMultiplier;
 
             float newVx;
+
             if (!instant)
             {
-                newVx = Mathf.Lerp(RB.linearVelocity.x, targetVx, easedT);
+                newVx = Mathf.MoveTowards(
+                    RB.linearVelocity.x,
+                    targetVx,
+                    adjustedAccel * Time.fixedDeltaTime
+                );
             }
             else
             {
                 newVx = targetVx;
             }
-
-            Vector2 finalVelocity = new Vector2(newVx, RB.linearVelocity.y);
-
-            CheckForLeftOrRightFacing(finalVelocity);
-            RB.linearVelocity = finalVelocity;
+            RB.linearVelocity = new Vector2(newVx, RB.linearVelocity.y);
+            CheckForLeftOrRightFacing(RB.linearVelocity);
         }
 
         /// <summary>

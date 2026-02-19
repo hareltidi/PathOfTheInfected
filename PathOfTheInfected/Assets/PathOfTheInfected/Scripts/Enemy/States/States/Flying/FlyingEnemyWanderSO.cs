@@ -66,11 +66,13 @@ namespace PathOfTheInfected.Enemy
         {
             Vector2 center = CurrentEnemyBrain.LastKnownTargetPosition;
             Vector2 offset = Random.insideUnitCircle * investigationRadius;
-            if (EnemyFlyingBrainBase.IsPointInCircle(CurrentEnemyBrain.LastKnownTargetPosition, center, WanderRadius))
+            if (EnemyFlyingBrainBase.IsPointInCircle(CurrentEnemyBrain.LastKnownTargetPosition, CurrentEnemyBrain.InitialPosition, WanderRadius))
             {
                 return center + offset;
             }
 
+            _isInvestigating = false;
+            _investigationTimer = 0;
             return Vector2.zero;
         }
 

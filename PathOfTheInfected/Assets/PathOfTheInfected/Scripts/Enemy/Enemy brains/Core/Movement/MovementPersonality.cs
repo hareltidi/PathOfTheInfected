@@ -12,8 +12,6 @@ namespace PathOfTheInfected.Enemy
     {
         public float maxSpeed;
         public float acceleration;
-        public float turnSpeed;
-        public float burstMultiplier;
         public EaseType movementEase;
     }
 }
