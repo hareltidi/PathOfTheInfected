@@ -36,14 +36,13 @@ namespace PathOfTheInfected.Enemy
         {
             CalculateEnemyMovement();
             EnemyWallCheck();
+            if (CurrentEnemyBrain.HasLastKnownTarget)
+            {
+                CurrentEnemyBrain.HasLastKnownTarget = false;
+                _isInvestigating = true;
+            }
             if (ReachedTarget())
             {
-                if (CurrentEnemyBrain.HasLastKnownTarget)
-                {
-                    CurrentEnemyBrain.HasLastKnownTarget = false;
-                    _isInvestigating = true;
-                }
-
                 CurrentWanderTarget = GetNextWanderTarget();
             }
         }
@@ -67,7 +66,12 @@ namespace PathOfTheInfected.Enemy
         {
             Vector2 center = CurrentEnemyBrain.LastKnownTargetPosition;
             Vector2 offset = Random.insideUnitCircle * investigationRadius;
-            return center + offset;
+            if (EnemyFlyingBrainBase.IsPointInCircle(CurrentEnemyBrain.LastKnownTargetPosition, center, WanderRadius))
+            {
+                return center + offset;
+            }
+
+            return Vector2.zero;
         }
 
 

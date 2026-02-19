@@ -268,5 +268,10 @@ namespace PathOfTheInfected.Enemy
             }
 
         }
+
+        public static bool IsPointInCircle(Vector2 point, Vector2 center, float radius)
+        {
+            return Vector2.Distance(point, center) <= radius;
+        }
     }
 }
