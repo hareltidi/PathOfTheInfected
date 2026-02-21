@@ -8,7 +8,7 @@
         "com.unity.nuget.newtonsoft-json": "3.2.1",
         "com.unity.editorcoroutines": "1.0.0"
       },
-      "hash": "90a1bff0bd5a08f6547077d9ca6644b0b0ed784c"
+      "hash": "b6e80bd8437011c0892db08945c5f145a8f802ae"
     },
     "com.maligan.unity-zed": {
       "version": "https://github.com/DilaverSerif/unity-zed.git",
