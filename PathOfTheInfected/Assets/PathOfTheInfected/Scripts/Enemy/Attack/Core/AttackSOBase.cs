@@ -44,7 +44,7 @@ namespace PathOfTheInfected.Enemy
         /// <param name="ctx">The attack context we have on this specific attack</param>
         public virtual void AttackLogic(AttackContext ctx)
         {
-            ctx.Timer += Time.fixedDeltaTime;
+            ctx.Timer += Time.deltaTime;
             switch (ctx.Phase)
             {
                 case AttackPhase.WindUp:
@@ -73,14 +73,7 @@ namespace PathOfTheInfected.Enemy
                     }
                     break;
                 case AttackPhase.PoiseRecovery:
-                    if (ctx.Owner.CurrentPoise < ctx.Owner.maxPoise)
-                    {
-                        RecoverPoise(ctx);
-                    }
-                    else
-                    {
-                        ctx.Timer = 0f;
-                    }
+                    RecoverPoise(ctx);
                     break;
             }
         }
@@ -105,7 +98,7 @@ namespace PathOfTheInfected.Enemy
         public virtual void RecoverPoise(AttackContext ctx)
         {
             ctx.Owner.CurrentPoise = Mathf.MoveTowards(ctx.Owner.CurrentPoise, ctx.Owner.maxPoise, Time.fixedDeltaTime * PoiseConsumed);
-            if (ctx.Owner.CurrentPoise >= 0)
+            if (ctx.Owner.CurrentPoise >= ctx.Owner.maxPoise)
             {
                 ctx.Phase = AttackPhase.WindUp;
             }

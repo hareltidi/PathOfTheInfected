@@ -126,10 +126,12 @@ namespace PathOfTheInfected.Enemy
             }
 
             Vector2 target;
+            float distance;
             do
             {
                 target = CalculateWanderTarget();
-            } while (CheckForWalls(target));
+                distance = Vector2.Distance(target, CurrentEnemyBrain.transform.position);
+            } while (CheckForWalls(target) && distance <= reachThreshold);
 
             return target;
         }

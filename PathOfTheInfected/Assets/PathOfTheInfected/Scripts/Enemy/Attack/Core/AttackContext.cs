@@ -8,10 +8,14 @@ namespace PathOfTheInfected.Enemy
     /// </summary>
     public class AttackContext
     {
+        /// <summary>
         /// Who is performing the attack
+        /// </summary>
         public EnemyBrainBase Owner;
 
+        /// <summary>
         /// Who is being attacked
+        /// </summary>
         public Transform Target;
 
         /// <summary>
@@ -21,19 +25,25 @@ namespace PathOfTheInfected.Enemy
         /// </summary>
         public float Timer;
 
+        /// <summary>
         /// The current phase of the attack, representing its progression through distinct
         /// stages: WindUp, Active, Recovery, and PoiseRecovery. Each stage corresponds
         /// to a specific point in the attack lifecycle, determining the behavior and
         /// logic to be executed during that phase.
+        /// </summary>
         public AttackPhase Phase;
 
+        /// <summary>
         /// State flags
+        /// </summary>
         public bool HasHit;
 
 
+        /// <summary>
         /// Indicates whether the attack process has been completed.
         /// This flag is set to true when the attack has fully executed, signaling
         /// that no further logic or updates are required for the current attack context.
+        /// </summary>
         public bool IsFinished;
     }
 

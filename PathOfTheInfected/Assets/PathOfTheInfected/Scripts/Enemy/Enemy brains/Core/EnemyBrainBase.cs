@@ -66,6 +66,7 @@ namespace PathOfTheInfected.Enemy
         [SerializeField] protected MovementPersonality movementPersonality;
         [SerializeField] protected float waypointTolerance = 0.1f;
         [SerializeField] protected float repathInterval = 1f;
+        [SerializeField] protected float facingFlipDeadzone = 1;
 
 
         [Header("Box cast - general")]
@@ -500,21 +501,17 @@ namespace PathOfTheInfected.Enemy
             float adjustedAccel = movementPersonality.acceleration * accelMultiplier;
 
             float newVx;
-
             if (!instant)
             {
-                newVx = Mathf.MoveTowards(
-                    RB.linearVelocity.x,
-                    targetVx,
-                    adjustedAccel * Time.fixedDeltaTime
-                );
+                newVx = Mathf.MoveTowards(RB.linearVelocity.x, targetVx, adjustedAccel * Time.fixedDeltaTime);
             }
             else
             {
                 newVx = targetVx;
             }
-            RB.linearVelocity = new Vector2(newVx, RB.linearVelocity.y);
-            CheckForLeftOrRightFacing(RB.linearVelocity);
+            var newVelocity = new Vector2(newVx, RB.linearVelocity.y);
+            CheckForLeftOrRightFacing(newVelocity);
+            RB.linearVelocity = newVelocity;
         }
 
         /// <summary>
@@ -600,17 +597,19 @@ namespace PathOfTheInfected.Enemy
 
         public virtual void CheckForLeftOrRightFacing(Vector2 velocity)
         {
+            if (Mathf.Abs(velocity.x) < facingFlipDeadzone) return;
+
             if (IsFacingRight && velocity.x < 0f)
             {
-                Vector3 rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
-                transform.rotation = Quaternion.Euler(rotator);
-                IsFacingRight = !IsFacingRight;
+                var euler = transform.eulerAngles;
+                transform.eulerAngles = new Vector3(euler.x, 180f, euler.z);
+                IsFacingRight = false;
             }
             else if (!IsFacingRight && velocity.x > 0f)
             {
-                Vector3 rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
-                transform.rotation = Quaternion.Euler(rotator);
-                IsFacingRight = !IsFacingRight;
+                var euler = transform.eulerAngles;
+                transform.eulerAngles = new Vector3(euler.x, 0f, euler.z);
+                IsFacingRight = true;
             }
         }
 

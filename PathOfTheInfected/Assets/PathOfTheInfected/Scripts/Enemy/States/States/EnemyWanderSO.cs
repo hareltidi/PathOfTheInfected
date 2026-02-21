@@ -11,7 +11,7 @@ namespace PathOfTheInfected.Enemy
     [CreateAssetMenu(fileName = "EnemyWanderState", menuName = "Enemy/States/Grounded/EnemyWanderState", order = 0)]
     public class EnemyWanderSo : EnemyBaseState
     {
-        [field: SerializeField] public float WanderRange { get; protected set; } = 15f;
+         [field: SerializeField] public float WanderRange { get; protected set; } = 15f;
         public Vector2 WanderDirection { get; protected set; }
         public Vector2 WanderMaxPosition { get; protected set; }
         public Vector2 WanderMinPosition { get; protected set; }
@@ -19,48 +19,66 @@ namespace PathOfTheInfected.Enemy
         public float threshold = 0.5f;
         public bool trackWanderPath = true;
 
+        private bool _goingToMax;
+
+        [Header("Stability")]
+        [SerializeField, Tooltip("Prevents flip-flip when we arrive at a boundary and physics overshoots a bit.")]
+        private float switchCooldown = 0.1f;
+
+        private float _nextAllowedSwitchTime;
+
         public override void StateEnter()
         {
             Vector2 origin = CurrentEnemyBrain.InitialPosition;
 
-            WanderDirection = CurrentEnemyBrain.IsFacingRight ? Vector2.right : Vector2.left;
-            WanderMaxPosition = origin + WanderDirection * WanderRange;
-            WanderMinPosition = origin - WanderDirection * WanderRange;
+            // Grounded wander is horizontal: define true min/max X regardless of current facing.
+            WanderMinPosition = new Vector2(origin.x - WanderRange, origin.y);
+            WanderMaxPosition = new Vector2(origin.x + WanderRange, origin.y);
+
+            _nextAllowedSwitchTime = 0f;
+
             if (CurrentEnemyBrain.HasLastKnownTarget)
             {
                 CurrentWanderTarget = CurrentEnemyBrain.LastKnownTargetPosition;
+                _goingToMax = CurrentWanderTarget.x >= origin.x;
             }
             else
             {
-                CurrentWanderTarget = WanderMaxPosition;
+                // Start by walking in the direction we're facing (purely cosmetic/personality).
+                _goingToMax = CurrentEnemyBrain.IsFacingRight;
+                CurrentWanderTarget = _goingToMax ? WanderMaxPosition : WanderMinPosition;
             }
         }
 
         public override void StateFixedUpdate()
         {
             CalculateEnemyMovement();
-            if (HasReachedTarget())
+
+            if (Time.timeSinceLevelLoad < _nextAllowedSwitchTime) return;
+            if (HasReachedOrPassedTarget())
             {
                 if (CurrentEnemyBrain.HasLastKnownTarget)
                 {
                     CurrentEnemyBrain.HasLastKnownTarget = false;
                 }
 
-                CurrentWanderTarget = (CurrentWanderTarget == WanderMaxPosition) ? WanderMinPosition : WanderMaxPosition;
+                _goingToMax = !_goingToMax;
+                CurrentWanderTarget = _goingToMax ? WanderMaxPosition : WanderMinPosition;
+
+                _nextAllowedSwitchTime = Time.timeSinceLevelLoad + switchCooldown;
             }
         }
 
-        /// <summary>
-        /// Determines whether the enemy has reached its current wander target.
-        /// </summary>
-        /// <returns>
-        /// True if the enemy's position is within the defined threshold of the current wander target;
-        /// otherwise, false.
-        /// </returns>
-        private bool HasReachedTarget()
+        private bool HasReachedOrPassedTarget()
         {
-            float dx = CurrentWanderTarget.x - CurrentEnemyBrain.transform.position.x;
-            return Mathf.Abs(dx) <= threshold;
+            float x = CurrentEnemyBrain.transform.position.x;
+
+            if (_goingToMax)
+            {
+                return x >= (WanderMaxPosition.x - threshold);
+            }
+
+            return x <= (WanderMinPosition.x + threshold);
         }
 
         private void CalculateEnemyMovement()
@@ -70,13 +88,11 @@ namespace PathOfTheInfected.Enemy
 
         public override void DrawGizmosOnSelected(EnemyBrainBase en)
         {
-            if (en|| !trackWanderPath) return;
+            if (!en || !trackWanderPath) return;
 
             Vector3 origin = en.InitialPosition;
-            Vector3 dir = en.IsFacingRight ? Vector3.right : Vector3.left;
-
-            Vector3 max = origin + dir * WanderRange;
-            Vector3 min = origin - dir * WanderRange;
+            Vector3 max = new Vector3(origin.x + WanderRange, origin.y, origin.z);
+            Vector3 min = new Vector3(origin.x - WanderRange, origin.y, origin.z);
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(min, max);

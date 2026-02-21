@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FlyingEnemyWanderSO
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FlyingEnemyWanderSO
   <WanderRadius>k__BackingField: 15
-  reachThreshold: 1.5
+  reachThreshold: 3
   wallCheckRayRadius: 3
   trackWanderPath: 1
   investigationDuration: 5

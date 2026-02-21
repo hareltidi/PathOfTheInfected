@@ -24,11 +24,16 @@ namespace PathOfTheInfected.Enemy
         /// </summary>
         /// <param name="newState">The new state to switch to</param>
         /// <param name="reason">Why were switching states - optional</param>
-        public void RequestStateChange(EnemyBaseState newState, string reason = "")
+        /// <param name="debug">Should we print the state transition and the reason for the transition?</param>
+        public void RequestStateChange(EnemyBaseState newState, string reason = "", bool debug = false)
         {
             if (!NextState)
             {
                 NextState = newState;
+            }
+            if (reason != "" && debug)
+            {
+                Debug.Log($"State change requested: {CurrentState?.name} -> {newState.name}. Reason: {reason}");
             }
         }
 

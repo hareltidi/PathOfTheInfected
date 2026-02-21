@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using PathOfTheInfected.Damagable;
+﻿using PathOfTheInfected.Damagable;
+using System.Collections.Generic;
 using TidiPathFinding;
 using TidiTweening;
 using UnityEngine;
+
 
 namespace PathOfTheInfected.Enemy
 {
@@ -17,7 +18,6 @@ namespace PathOfTheInfected.Enemy
         #region Member Variables
        [SerializeField] protected float obstacleCheckDistance = 5f;
        #endregion
-
 
         #region Detection Methods
 
@@ -122,21 +122,29 @@ namespace PathOfTheInfected.Enemy
 
             Vector2 targetVelocity = dir * movementPersonality.maxSpeed;
 
-            float t = Mathf.Clamp01(movementPersonality.acceleration * Time.fixedDeltaTime);
-            float easedT = TidiEasing.Ease(movementPersonality.movementEase, t);
+            float velocityDiff = Mathf.Abs((targetVelocity - RB.linearVelocity).magnitude);
+            float progress = Mathf.Clamp01(velocityDiff / movementPersonality.maxSpeed);
+
+            // Invert so easing works naturally
+            float eased = TidiEasing.Ease(
+                movementPersonality.movementEase,
+                1f - progress
+            );
+
+            // Make sure acceleration never dies
+            float accelMultiplier = Mathf.Lerp(0.3f, 1f, eased);
+
+            float adjustedAccel = movementPersonality.acceleration * accelMultiplier;
 
             Vector2 newVelocity;
+
             if (!instant)
             {
-                 newVelocity = Vector2.Lerp(
-                    RB.linearVelocity,
-                    targetVelocity,
-                    easedT
-                );
+                newVelocity = Vector2.MoveTowards(RB.linearVelocity, targetVelocity, adjustedAccel * Time.fixedDeltaTime);
             }
             else
             {
-                 newVelocity = targetVelocity;
+                newVelocity = targetVelocity;
             }
             CheckForLeftOrRightFacing(newVelocity);
             RB.linearVelocity = newVelocity;
@@ -201,7 +209,7 @@ namespace PathOfTheInfected.Enemy
             Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0,
                 LayerMask.GetMask("ground")); // Check for obstacles
 
-            bool pathWantsUp = hits.Length > 0 || waypoint.y > transform.position.y + 0.1f; // Check if we need to go up or we hit something that we need to climb
+            bool pathWantsUp = hits.Length > 0 && waypoint.y > transform.position.y + 0.1f; // Check if we need to go up and we hit something that we need to climb
 
             if (pathWantsUp) // If there are obstacles and we want to go up
             {
@@ -253,7 +261,7 @@ namespace PathOfTheInfected.Enemy
             {
                 Gizmos.color = Color.magenta;
                 Vector2 baseCenter = (min.position + max.position) * 0.5f;
-                Vector2 baseSize = new Vector2(
+                Vector2 baseSize = new(
                     Mathf.Abs(max.position.x - min.position.x),
                     Mathf.Abs(max.position.y - min.position.y)
                 );
@@ -262,8 +270,8 @@ namespace PathOfTheInfected.Enemy
                 int facingDirection = IsFacingRight ? 1 : -1;
                 float forwardOffset = range * 0.5f * facingDirection;
 
-                Vector2 center = baseCenter + Vector2.right * forwardOffset;
-                Vector2 size = new Vector2(baseSize.x + range, baseSize.y);
+                Vector2 center = baseCenter + (Vector2.right * forwardOffset);
+                Vector2 size = new(baseSize.x + range, baseSize.y);
                 Gizmos.DrawWireCube(center, size);
             }
 
@@ -276,8 +284,7 @@ namespace PathOfTheInfected.Enemy
         /// <param name="point">The point to check if it's inside the circle</param>
         /// <param name="center">The center point of the circle</param>
         /// <param name="radius">The radius of the circle</param>
-        /// <returns>Is the point parameter in our circle? (Vector2.Distance(point, center)
-        /// is less than or equal to radius)</returns>
+        /// <returns>Is the point parameter in our circle?</returns>
         public static bool IsPointInCircle(Vector2 point, Vector2 center, float radius)
         {
             return Vector2.Distance(point, center) <= radius;
