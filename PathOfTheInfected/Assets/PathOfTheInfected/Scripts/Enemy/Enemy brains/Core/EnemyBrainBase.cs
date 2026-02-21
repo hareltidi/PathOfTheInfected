@@ -19,11 +19,8 @@ namespace PathOfTheInfected.Enemy
         #region IDamageble
 
         public bool IsDead { get; set; }
-        [field: SerializeField] public int CurrentHealth { get; set; }
 
         public GameObject GameObject { get; set; }
-
-        public int MaxHealth { get; set; }
 
         #endregion
 
@@ -36,14 +33,67 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region Damage
-        public void TakeDamage(DamageData damageaData)
+        public void TakeDamage(DamageData damageData)
         {
-            CurrentHealth -= damageaData.Damage;
+            if (CurrentHealth > 0)
+            {
+                CurrentHealth -= damageData.Damage;
+                FlashDamage();
+                HitStop(damageData.HitStopTime);
+            }
+            else if (!IsDead)
+            {
+                Die();
+            }
         }
 
         public void Die()
         {
+            IsDead = true;
             Destroy(gameObject);
+        }
+
+        private void FlashDamage()
+        {
+            SetFlashColor(flashColor);
+            int i = 0;
+            foreach (var t in Materials)
+            {
+                Material localMat = t;
+                localMat.name += $"Hit Flash Material_{i}";
+                float currentAmount = localMat.GetFloat("_FlashAmount");
+                TidiTweenManager
+                    .TweenFloat(localMat, currentAmount, 1, flashTime,
+                        (value) => { localMat.SetFloat("_FlashAmount", value); }).SetPingPong(2)
+                    .SetEase(damageFlashEaseType);
+                i++;
+            }
+        }
+
+        ///<summary>
+        /// Set the flash color when we need to flash
+        ///</summary>
+        /// <param name="color">The color the flash should be in</param>
+        private void SetFlashColor(Color color)
+        {
+            for (int i = 0; i < Materials.Length; i++)
+            {
+                Materials[i].SetColor("_FlashColor", color);
+            }
+        }
+
+        ///<summary>
+        /// Apply hit stop
+        ///</summary>
+        ///<param name="duration">How long should we freeze time</param>
+        public void HitStop(float duration)
+        {
+            if (!HitStopManager.Instance)
+            {
+                HitStopManager.Initialize();
+            }
+
+            HitStopManager.Instance?.HitStop(duration);
         }
 
         #endregion
@@ -95,6 +145,15 @@ namespace PathOfTheInfected.Enemy
         [field: SerializeField] public float CurrentPoise { get; set; }
         public AttackSOBase attack;
         public float maxPoise = 10f;
+
+        [Header("Health and damage")]
+        [field: SerializeField] public int CurrentHealth { get; set; }
+        [field: SerializeField] public int MaxHealth { get; set; }
+        [ColorUsage(true, true)] public Color flashColor = Color.red;
+        [SerializeField] public float flashTime = 0.1f;
+        [SerializeField] public EaseType damageFlashEaseType = EaseType.Linear;
+
+
 
         #endregion
 

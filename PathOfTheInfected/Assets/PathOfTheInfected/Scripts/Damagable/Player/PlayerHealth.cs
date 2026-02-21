@@ -139,7 +139,7 @@ namespace PathOfTheInfected.Damagable
         {
             if (!HitStopManager.Instance)
             {
-                new GameObject("HitStopManager").AddComponent<HitStopManager>();
+                HitStopManager.Initialize();
             }
 
             HitStopManager.Instance?.HitStop(duration);

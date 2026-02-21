@@ -3,8 +3,14 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
+    /// <summary>
+    /// Hit stop manager.
+    /// </summary>
     public class HitStopManager : MonoBehaviour
     {
+        /// <summary>
+        /// Singleton instance of the <see cref="HitStopManager"/> class.
+        /// </summary>
         public static HitStopManager Instance;
 
         private Coroutine _hitStopRoutine;
