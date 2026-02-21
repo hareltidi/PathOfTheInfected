@@ -17,7 +17,7 @@ namespace PathOfTheInfected.Enemy
 
         private void Awake()
         {
-            if (Instance != null)
+            if (Instance)
             {
                 Destroy(gameObject);
                 return;
@@ -29,7 +29,7 @@ namespace PathOfTheInfected.Enemy
 
         public static void Initialize()
         {
-            if (Instance == null)
+            if (!Instance)
             {
                 new GameObject("HitStopManager").AddComponent<HitStopManager>();
             }
