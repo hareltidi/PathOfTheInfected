@@ -426,6 +426,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: facingFlipDeadzone
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
       propertyPath: movementPersonality.maxSpeed
       value: 5
       objectReference: {fileID: 0}

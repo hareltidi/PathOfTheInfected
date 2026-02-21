@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: EnemyWanderState
   m_EditorClassIdentifier: Assembly-CSharp::PathOfTheInfected.Enemy.EnemyWanderSO
   <WanderRange>k__BackingField: 10
-  threshold: 0.5
+  threshold: 1.5
   trackWanderPath: 1
+  switchCooldown: 0.1

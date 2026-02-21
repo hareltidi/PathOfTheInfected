@@ -69,6 +69,11 @@ namespace PathOfTheInfected.Enemy
             }
         }
 
+        /// <summary>
+        /// Determines whether the enemy has reached or passed the current target position
+        /// based on its movement direction and the defined threshold.
+        /// </summary>
+        /// <returns>True if the enemy has reached or passed the target position; otherwise, false.</returns>
         private bool HasReachedOrPassedTarget()
         {
             float x = CurrentEnemyBrain.transform.position.x;
@@ -81,6 +86,11 @@ namespace PathOfTheInfected.Enemy
             return x <= (WanderMinPosition.x + threshold);
         }
 
+        /// <summary>
+        /// Calculates and updates the enemy's movement logic during its wander state.
+        /// Moves the enemy towards the currently assigned wander target using the
+        /// associated enemy brain's movement behavior.
+        /// </summary>
         private void CalculateEnemyMovement()
         {
             CurrentEnemyBrain.MoveTo(CurrentWanderTarget);
