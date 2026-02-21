@@ -68,15 +68,12 @@ namespace TidiTweening
 
 
 
-        #region Static Methods and helpers
+        #region Static Methods and helpers - Normal lerp
 
         public static TidiTween<float> TweenFloat(object target, float startValue, float endValue, float duration, Action<float> setter)
         {
             string identifier = $"{target}_FloatTween";
-            TidiTween<float> tween = new TidiTween<float>(target, identifier, startValue, endValue, duration, (value) =>
-            {
-                setter(value);
-            });
+            TidiTween<float> tween = new TidiTween<float>(target, identifier, startValue, endValue, duration, setter);
             return tween;
         }
 

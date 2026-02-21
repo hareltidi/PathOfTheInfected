@@ -83,8 +83,6 @@ namespace TidiMovementComponent2D.States
             _dashTimer = 0.0f;
             player.DashOnGroundTimer = moveStats.TimeBtwDashesOnGround;
             player.DashStartY = player.Rb.position.y;
-            Object.Instantiate(player.dashParticles, player.transform.position,
-                Quaternion.FromToRotation(Vector2.right,  - player.DashDirection));
             player.GhostTrail.LeaveGhostTrail(moveStats.DashTime * 1.75f);
             player.StopWallSliding();
             player.DashBufferTimer = 0.0f;
@@ -147,7 +145,9 @@ namespace TidiMovementComponent2D.States
                                          player.DashDirection.y == 0.0 && Mathf.Sign(player.DashDirection.x) !=
                                          (double)Mathf.Sign(player.Controller.State.SlopeNormal.x);
                 if (_isPerformingSlopeDash)
+                {
                     _slopeDashAngle = player.Controller.State.SlopeAngle;
+                }
             }
 
             _dashTimer += Time.fixedDeltaTime;

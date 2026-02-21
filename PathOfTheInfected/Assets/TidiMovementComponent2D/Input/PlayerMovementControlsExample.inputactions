@@ -164,7 +164,7 @@
                 {
                     "name": "",
                     "id": "d700a9e7-cfe5-434e-9490-2755ba025ba2",
-                    "path": "<Keyboard>/c",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard",
@@ -175,7 +175,7 @@
                 {
                     "name": "",
                     "id": "5b431f0b-e900-4e9f-be03-897c0ef43013",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<HID::Microntek              USB Joystick          >/button8",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Controller",
@@ -196,6 +196,17 @@
                 },
                 {
                     "name": "",
+                    "id": "aa8d4f5f-ab6d-4ee3-b38c-deaa4081138a",
+                    "path": "<HID::USB gamepad>/button3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Controller;Keyboard",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "6cb45266-2f63-43ad-95f1-ba0696fb2736",
                     "path": "<Gamepad>/leftStickPress",
                     "interactions": "",
@@ -208,7 +219,7 @@
                 {
                     "name": "",
                     "id": "55722441-6534-4a8b-b459-1f4099ce72e0",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/ctrl",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard",

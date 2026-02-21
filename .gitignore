@@ -73,3 +73,10 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+/PathOfTheInfected/.zed
+/PathOfTheInfected/.vscode
+/PathOfTheInfected/Packages/com.merry-yellow.code-assist
+/PathOfTheInfected/AGENTS.md
+*.slnx
+PathOfTheInfected/PathOfTheInfected.sublime-project
+PathOfTheInfected/PathOfTheInfected.sublime-workspace

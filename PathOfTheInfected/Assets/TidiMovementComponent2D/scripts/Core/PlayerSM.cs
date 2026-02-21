@@ -45,7 +45,6 @@ namespace TidiMovementComponent2D.Core
         [FormerlySerializedAs("ParticleSpawnTransform")] public Transform particleSpawnTransform;
         [FormerlySerializedAs("TrailRenderer")] public TrailRenderer trailRenderer;
         [FormerlySerializedAs("SpeedParticles")] public ParticleSystem speedParticles;
-        [FormerlySerializedAs("DashParticles")] public GameObject dashParticles;
         [FormerlySerializedAs("WallSlideParticles")] public ParticleSystem wallSlideParticles;
 
         [FormerlySerializedAs("ShowStateTrailLog")][Header("Debug")] public bool showStateTrailLog;

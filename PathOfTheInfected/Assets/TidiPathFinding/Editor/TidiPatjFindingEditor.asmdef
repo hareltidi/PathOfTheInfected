@@ -1,0 +1,16 @@
+{
+    "name": "TidiPatjFindingEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:56b9344483c8592449cbc1de114b832f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
