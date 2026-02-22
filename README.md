@@ -1,2 +1,2 @@
 # PathOfTheInfected
-the repository wher ethe development of PathOfTheInfected takes place
+the repository where the development of PathOfTheInfected takes place
