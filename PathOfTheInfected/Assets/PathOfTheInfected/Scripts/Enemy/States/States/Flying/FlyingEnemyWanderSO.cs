@@ -157,6 +157,12 @@ namespace PathOfTheInfected.Enemy
             }
         }
 
+        /// <summary>
+        /// Determines whether the flying enemy has reached its current wander target.
+        /// </summary>
+        /// <returns>
+        /// True if the enemy is within the defined reach threshold to the target position; otherwise, false.
+        /// </returns>
         private bool ReachedTarget()
         {
             return Vector2.Distance(
