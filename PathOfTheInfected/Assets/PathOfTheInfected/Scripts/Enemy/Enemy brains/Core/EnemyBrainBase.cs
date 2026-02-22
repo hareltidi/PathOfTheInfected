@@ -694,7 +694,8 @@ namespace PathOfTheInfected.Enemy
         public static bool IsObjectInCameraView(GameObject obj, Camera cam)
         {
             Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
-            return GeometryUtility.TestPlanesAABB(planes, obj.GetComponent<Renderer>().bounds);
+            Renderer r = obj.GetComponent<Renderer>();
+            return GeometryUtility.TestPlanesAABB(planes, r.bounds);
         }
 
         #endregion
