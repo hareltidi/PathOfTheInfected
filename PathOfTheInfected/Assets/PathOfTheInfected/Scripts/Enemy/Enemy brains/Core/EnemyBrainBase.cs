@@ -188,14 +188,14 @@ namespace PathOfTheInfected.Enemy
         public bool HasLastKnownTarget { get; set; } = false;
         protected float BestDistSq = float.MaxValue;
 
-        protected List<Vector2> currentPath;
-        protected int currentIndex;
-        protected float nextRepath;
-        protected Vector2 lastTargetPosition;
+        protected List<Vector2> CurrentPath;
+        protected int CurrentIndex;
+        protected float NextRepath;
+        protected Vector2 LastTargetPosition;
 
-        protected BoxCollider2D boxCollider;
+        protected BoxCollider2D BoxCollider;
 
-        protected Vector2 currentTargetVelocity;
+        protected Vector2 CurrentTargetVelocity;
         private TidiTween<float> _velocityTween;
 
         protected Material[] Materials;
@@ -210,7 +210,7 @@ namespace PathOfTheInfected.Enemy
         protected virtual void EnemyAwake()
         {
             RB = GetComponent<Rigidbody2D>();
-            boxCollider = GetComponent<BoxCollider2D>();
+            BoxCollider = GetComponent<BoxCollider2D>();
             StateMachine = new EnemyStateMachine();
             noSpottableDetectedState = Instantiate(noSpottableDetectedState);
             spottableDetectedState = Instantiate(spottableDetectedState);
@@ -602,23 +602,23 @@ namespace PathOfTheInfected.Enemy
             if (AStarPathFinder.CurrentGraph == null || !RB) return;
 
             // --- Recalculate path on timer ---
-            if (Time.timeSinceLevelLoad >= nextRepath)
+            if (Time.timeSinceLevelLoad >= NextRepath)
             {
                 List<Vector2> newPath =
                     AStarPathFinder.FindPath_CurrentGraph(transform.position, target);
 
-                nextRepath = Time.timeSinceLevelLoad + repathInterval;
+                NextRepath = Time.timeSinceLevelLoad + repathInterval;
 
                 if (newPath != null && newPath.Count > 0)
                 {
-                    currentPath = newPath;
+                    CurrentPath = newPath;
 
                     float bestDistance = float.MaxValue;
                     int bestIndex = 0;
 
-                    for (int i = 0; i < currentPath.Count; i++)
+                    for (int i = 0; i < CurrentPath.Count; i++)
                     {
-                        float dist = Vector2.Distance(transform.position, currentPath[i]);
+                        float dist = Vector2.Distance(transform.position, CurrentPath[i]);
                         if (dist < bestDistance)
                         {
                             bestDistance = dist;
@@ -626,19 +626,19 @@ namespace PathOfTheInfected.Enemy
                         }
                     }
 
-                    currentIndex = bestIndex;
+                    CurrentIndex = bestIndex;
                 }
             }
 
-            if (currentPath == null || currentIndex >= currentPath.Count)
+            if (CurrentPath == null || CurrentIndex >= CurrentPath.Count)
             {
                 MoveEnemy(Vector2.zero);
                 return;
             }
 
             // --- Look-ahead ---
-            int targetIndex = Mathf.Min(currentIndex + 1, currentPath.Count - 1);
-            Vector2 waypoint = currentPath[targetIndex];
+            int targetIndex = Mathf.Min(CurrentIndex + 1, CurrentPath.Count - 1);
+            Vector2 waypoint = CurrentPath[targetIndex];
 
             Vector2 toWaypoint = waypoint - (Vector2)transform.position;
 
@@ -650,7 +650,7 @@ namespace PathOfTheInfected.Enemy
             // Advance waypoint if close enough (horizontal check only because this is a grounded enemy)
             if (Mathf.Abs(toWaypoint.x) <= waypointTolerance)
             {
-                currentIndex++;
+                CurrentIndex++;
             }
         }
 

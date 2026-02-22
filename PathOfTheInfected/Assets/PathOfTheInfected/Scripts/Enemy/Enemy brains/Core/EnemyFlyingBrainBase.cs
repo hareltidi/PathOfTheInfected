@@ -155,23 +155,23 @@ namespace PathOfTheInfected.Enemy
             if (AStarPathFinder.CurrentGraph == null || !RB) return;
 
             // --- Recalculate path on timer ---
-            if (Time.timeSinceLevelLoad >= nextRepath)
+            if (Time.timeSinceLevelLoad >= NextRepath)
             {
                 List<Vector2> newPath = AStarPathFinder.FindPath_CurrentGraph(
                     transform.position, target);
 
-                nextRepath = Time.timeSinceLevelLoad + repathInterval; // Reset timer
+                NextRepath = Time.timeSinceLevelLoad + repathInterval; // Reset timer
 
                 if (newPath != null && newPath.Count > 0) // If a path was found
                 {
-                    currentPath = newPath;
+                    CurrentPath = newPath;
 
                     float bestDistance = float.MaxValue;
                     int bestIndex = 0;
 
-                    for (int i = 0; i < currentPath.Count; i++)
+                    for (int i = 0; i < CurrentPath.Count; i++)
                     {
-                        float dist = Vector2.Distance(transform.position, currentPath[i]);
+                        float dist = Vector2.Distance(transform.position, CurrentPath[i]);
                         if (dist < bestDistance)
                         {
                             bestDistance = dist;
@@ -179,25 +179,25 @@ namespace PathOfTheInfected.Enemy
                         }
                     }
 
-                    currentIndex = bestIndex;
+                    CurrentIndex = bestIndex;
                 }
             }
 
-            if (currentPath == null || currentIndex >= currentPath.Count) // If no path found or reached te end
+            if (CurrentPath == null || CurrentIndex >= CurrentPath.Count) // If no path found or reached te end
             {
                 MoveEnemy(Vector2.zero); // Stop moving
                 return; // Exit method early
             }
 
             // --- Look-ahead ---
-            int targetIndex = Mathf.Min(currentIndex + 1, currentPath.Count - 1); // Next waypoint
-            Vector2 waypoint = currentPath[targetIndex];
+            int targetIndex = Mathf.Min(CurrentIndex + 1, CurrentPath.Count - 1); // Next waypoint
+            Vector2 waypoint = CurrentPath[targetIndex];
 
             Vector2 toWaypoint = waypoint - (Vector2)transform.position;
             Vector2 dir = toWaypoint.normalized;
 
             Vector2 baseCenter = (min.position + max.position) * 0.5f;
-            Vector2 baseSize = boxCollider.size;
+            Vector2 baseSize = BoxCollider.size;
 
             float range = attack.MaxAttackRange;
             int facingDirection = IsFacingRight ? 1 : -1;
@@ -224,7 +224,7 @@ namespace PathOfTheInfected.Enemy
             // Advance waypoint if close enough
             if (Mathf.Abs(toWaypoint.x) <= waypointTolerance || Mathf.Abs(toWaypoint.y) <= waypointTolerance)
             {
-                currentIndex++;
+                CurrentIndex++;
             }
         }
 
@@ -244,20 +244,20 @@ namespace PathOfTheInfected.Enemy
 
         private void OnDrawGizmos()
         {
-            if (currentPath != null && currentPath.Count > 0)
+            if (CurrentPath != null && CurrentPath.Count > 0)
             {
                 Gizmos.color = Color.yellow;
                 Vector3 prev = transform.position;
-                for (int i = currentIndex; i < currentPath.Count; i++)
+                for (int i = CurrentIndex; i < CurrentPath.Count; i++)
                 {
-                    Vector3 p = currentPath[i];
+                    Vector3 p = CurrentPath[i];
                     Gizmos.DrawLine(prev, p);
                     Gizmos.DrawSphere(p, 0.07f);
                     prev = p;
                 }
             }
 
-            if (boxCollider)
+            if (BoxCollider)
             {
                 Gizmos.color = Color.magenta;
                 Vector2 baseCenter = (min.position + max.position) * 0.5f;
