@@ -45,7 +45,7 @@ namespace PathOfTheInfected.Damagable
         }
 
         ///<summary>
-        ///Initiating the materials for our player to make hit flash work only for this object and not all of the other
+        ///Initiating the materials for our player to make hit flash work only for this object and not all the other
         ///objects who have the hit effect material to be affected.
         ///</summary>
         private void InitMaterials()
