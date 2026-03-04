@@ -1,4 +1,5 @@
-﻿using TidiTweening;
+﻿using PathOfTheInfected.Combat;
+using TidiTweening;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
@@ -8,20 +9,17 @@ namespace PathOfTheInfected.Enemy
     {
         private AttackContext _context;
 
-        [Header("Attack stats")]
-        [SerializeField] protected int damage = 1;
+        [Header("Attack stats")] [SerializeField]
+        protected AttackDefinition attackDef;
 
         [Tooltip("Should we check if the distance between the enemy and the spottable are under a certain threshold for us to attack?")]
         [field: SerializeField] public bool RequireDistanceFromEnemyToSpottable { get; protected set; } = true;
         [Tooltip("If we require distance, what is the threshold we should be under?")] [Range(0f, 100f)]
         [field: SerializeField] public float DistanceThreshold { get; protected set; } = 5f;
-        [SerializeField] protected float hitStopTime = 0.5f;
         [field: SerializeField] public float MaxAttackRange { get; protected set; } = 10f;
         [field: SerializeField] public float PoiseConsumed { get; protected set; } = 0.5f;
-
         [Header("Timers")]
         public float windupDuration = 0.5f;
-        public float recoveryTime = 0.7f;
 
 
 
@@ -67,7 +65,7 @@ namespace PathOfTheInfected.Enemy
                     }
                     break;
                 case AttackPhase.Recovery:
-                    if (ctx.Timer >= recoveryTime)
+                    if (ctx.Timer >= attackDef.recoveryTime)
                     {
                         ctx.IsFinished = true;
                     }

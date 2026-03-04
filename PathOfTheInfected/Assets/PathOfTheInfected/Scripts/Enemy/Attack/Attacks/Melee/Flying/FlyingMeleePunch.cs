@@ -1,4 +1,5 @@
-﻿using PathOfTheInfected.Damagable;
+﻿using PathOfTheInfected.Combat;
+using PathOfTheInfected.Damagable;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
@@ -13,26 +14,24 @@ namespace PathOfTheInfected.Enemy
             float range = MaxAttackRange;
 
 
-            Collider2D[] hits = Physics2D.OverlapCircleAll(enemyBrainBase.transform.position, range,enemyBrainBase.SpottableMask);
+            Collider2D hit = Physics2D.OverlapCircle(enemyBrainBase.transform.position, range,enemyBrainBase.SpottableMask);
 
-            foreach (var t in hits)
+            // build the hit data:
+            HitData data = new HitData()
             {
-                if (t.TryGetComponent<IDamageable>(out var damageable))
-                {
-                    if (damageable != null && !damageable.IsDead)
-                    {
-                        DamageData data = new DamageData
-                        {
-                            Damage = damage,
-                            HitStopTime = hitStopTime,
-                            DamagedObject = damageable,
-                            Instigator = ctx.Owner
-                        };
-                        damageable.TakeDamage(data);
-                    }
+                attackDefinition = attackDef,
+                isFirstHit = false,
+                isPlayerDamage = false,
+                isAttackerInAir = false,
+                source = ctx.Owner.gameObject,
+                timeStamp = Time.timeSinceLevelLoad,
+                target = hit.gameObject,
+                firstHitDamageBoost = 0,
+                comboDamageScalingLevel = 1,
+            };
 
-                }
-            }
+            // process the hit
+            HitDispatcher.ProcessHit(data);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using PathOfTheInfected.Damagable;
 using System.Collections.Generic;
+using PathOfTheInfected.Combat;
 using TidiPathFinding;
 using TidiTweening;
 using UnityEngine;
@@ -77,9 +78,9 @@ namespace PathOfTheInfected.Enemy
             foreach (Collider2D hit in hits)
             {
                 if (hit.TryGetComponent<ISpottable>(out var spottable) &&
-                    hit.TryGetComponent<IDamageable>(out var damageable))
+                    hit.TryGetComponent<IHitResponder>(out var hitResponder))
                 {
-                    if (VisibleSpottables.Contains(spottable) && damageable != null)
+                    if (VisibleSpottables.Contains(spottable) && hitResponder != null)
                     {
                         testTarget = spottable;
                         if (attack && attack.RequireDistanceFromEnemyToSpottable)

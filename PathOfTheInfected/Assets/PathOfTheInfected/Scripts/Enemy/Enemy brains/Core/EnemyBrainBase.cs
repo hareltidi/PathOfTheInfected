@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PathOfTheInfected.Combat;
 using PathOfTheInfected.Damagable;
 using TidiPathFinding;
 using TidiTweening;
@@ -12,7 +13,7 @@ namespace PathOfTheInfected.Enemy
     /// This class manages the enemy's movement, state transitions, health, and interactions with other game entities.
     /// It also includes functionality for detecting targets, handling line-of-sight checks, and managing attack behaviors.
     /// </summary>
-    public class EnemyBrainBase : MonoBehaviour, IDamageable, IEnemyMoveable
+    public class EnemyBrainBase : MonoBehaviour, IEnemyMoveable
     {
         #region Interface Variables
 
@@ -33,19 +34,6 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region Damage
-        public void TakeDamage(DamageData damageData)
-        {
-            if (CurrentHealth > 0)
-            {
-                CurrentHealth -= damageData.Damage;
-                FlashDamage();
-                HitStop(damageData.HitStopTime);
-            }
-            else if (!IsDead)
-            {
-                Die();
-            }
-        }
 
         public void Die()
         {
@@ -196,7 +184,6 @@ namespace PathOfTheInfected.Enemy
         protected BoxCollider2D BoxCollider;
 
         protected Vector2 CurrentTargetVelocity;
-        private TidiTween<float> _velocityTween;
 
         protected Material[] Materials;
 
@@ -435,9 +422,9 @@ namespace PathOfTheInfected.Enemy
             foreach (Collider2D hit in hits)
             {
                 if (hit.TryGetComponent<ISpottable>(out var spottable) &&
-                    hit.TryGetComponent<IDamageable>(out var damageable))
+                    hit.TryGetComponent<IHitResponder>(out var hitResponder))
                 {
-                    if (VisibleSpottables.Contains(spottable) && damageable != null)
+                    if (VisibleSpottables.Contains(spottable) && hitResponder != null)
                     {
                         testTarget = spottable;
                         if (attack && attack.RequireDistanceFromEnemyToSpottable)

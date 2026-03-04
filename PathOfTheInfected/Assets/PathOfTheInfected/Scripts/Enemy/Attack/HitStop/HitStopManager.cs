@@ -27,6 +27,10 @@ namespace PathOfTheInfected.Enemy
             DontDestroyOnLoad(gameObject);
         }
 
+
+        /// <summary>
+        /// Initializes the <see cref="HitStopManager"/> instance if it doesn't already exist.
+        /// </summary>
         public static void Initialize()
         {
             if (!Instance)
