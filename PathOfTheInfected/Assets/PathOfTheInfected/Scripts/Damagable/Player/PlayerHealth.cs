@@ -33,7 +33,7 @@ namespace PathOfTheInfected.Damagable
         }
 
         /// <summary>
-        ///     Apply hit stop
+        ///  Apply hit stop
         /// </summary>
         /// <param name="duration">How long should we freeze time?</param>
         public void HitStop(float duration)
