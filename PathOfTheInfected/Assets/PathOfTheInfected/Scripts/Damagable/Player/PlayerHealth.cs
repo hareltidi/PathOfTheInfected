@@ -61,13 +61,12 @@ namespace PathOfTheInfected.Damagable
 
         public void TakeDamage(int finalDamage, float hitStopTime)
         {
-            if (CurrentHealth > 0)
-            {
-                CurrentHealth -= finalDamage;
-                FlashDamage();
-                HitStop(hitStopTime);
-            }
-            else if (!IsDead)
+            if (IsDead) return;
+            CurrentHealth -= finalDamage;
+            FlashDamage();
+            HitStop(hitStopTime);
+
+            if (CurrentHealth <= 0)
             {
                 Die();
             }

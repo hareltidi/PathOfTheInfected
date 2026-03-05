@@ -156,12 +156,12 @@ namespace TidiMovementComponent2D.Animation
 
         void Update()
         {
-            SetAnimationFlags();
             AnimationUpdate();
         }
 
         private void FixedUpdate()
         {
+            SetAnimationFlags();
             AnimationFixedUpdate();
         }
     }
