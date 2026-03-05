@@ -154,6 +154,11 @@ namespace PathOfTheInfected.Animation
             inAirIsWallSliding =  Player.IsWallSliding;
 
             // Request jump animation restart only on actual jump starts.
+            CheckForJumpAnimResets();
+        }
+
+        private void CheckForJumpAnimResets()
+        {
             bool isJumpingOrWallJumping = Player.IsJumping || Player.IsWallJumping;
             bool startedNewJumpState = isJumpingOrWallJumping && !_wasJumpingOrWallJumping;
             bool consumedAirJump = Player.NumberOfAirJumpsUsed > _lastAirJumpsUsed;

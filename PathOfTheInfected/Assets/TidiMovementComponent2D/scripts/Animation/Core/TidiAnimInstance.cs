@@ -13,11 +13,11 @@ namespace TidiMovementComponent2D.Animation
         [field: SerializeField] protected Animator Animator { get; private set; }
         public PlayerSm Player { get; private set; }
         protected bool IsCurrentAnimationLocked { get; set; }
+        protected int PreviousAnimationHash { get; set; }
+
         ///<summary>
         /// <para>The current animation we need to play</para>
         ///</summary>
-
-        protected int PreviousAnimationHash { get; set; }
         protected int CurrentAnimationHash { get; set; }
 
         protected readonly TidiAnimStateMachine StateMachine = new();
