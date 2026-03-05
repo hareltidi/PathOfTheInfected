@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TidiMovementComponent2D.Core;
 using UnityEngine;
 
@@ -15,9 +16,11 @@ namespace TidiMovementComponent2D.Animation
         ///<summary>
         /// <para>The current animation we need to play</para>
         ///</summary>
-        protected int CurrentAnimation { get; set; }
 
-        protected TidiAnimStateMachine stateMachine = new();
+        protected int PreviousAnimationHash { get; set; }
+        protected int CurrentAnimationHash { get; set; }
+
+        protected readonly TidiAnimStateMachine StateMachine = new();
 
         #endregion
 
@@ -54,20 +57,60 @@ namespace TidiMovementComponent2D.Animation
 
         #region Playing the animation
         /// <summary>
-        /// This function plays the animation with the given hash.
+        /// This function plays the animation with the given hash as long as the hash given
+        /// isn't equal to the hash of the current animation being played
         /// </summary>
         /// <param name="hash">The animation to play</param>
-        /// <param name="crossfadeDuration">The transition time between the current animation that is playing to the new animation we want to play</param>
+        /// <param name="crossfadeDuration">The transition time between the current animation that is playing to the new animation we want to play
+        /// (if crossfade duration is less or equal to 0, we use <c>Animator.Play()</c>  so we can play the animation right away without waiting)</param>
         /// <param name="canOverrideLockedAnimations">If true, the new animation will override any locked animations</param>
-        /// <param name="isAnimationLocked">If true, the current animation will be locked and cannot be overridden by other animations unless canOverrideLockedAnimations is true</param>
-        public void PlayAnimation(int hash, float crossfadeDuration = 0.2f, bool isAnimationLocked = false, bool canOverrideLockedAnimations = false)
+        /// <param name="isAnimationLocked">If true, the current animation will be locked and cannot be overridden by
+        /// other animations unless canOverrideLockedAnimations is true</param>
+        public void PlayAnimationIfNotCurrent(int hash, float crossfadeDuration = 0.2f, bool isAnimationLocked = false, bool canOverrideLockedAnimations = false)
         {
-            if (isAnimationLocked && !canOverrideLockedAnimations) return;
-            if (hash != CurrentAnimation)
+            if (IsCurrentAnimationLocked && !canOverrideLockedAnimations) return;
+            if (hash != CurrentAnimationHash)
             {
                 IsCurrentAnimationLocked = isAnimationLocked;
-                CurrentAnimation = hash;
-                Animator?.CrossFade(CurrentAnimation, crossfadeDuration);
+                PreviousAnimationHash = CurrentAnimationHash;
+                CurrentAnimationHash = hash;
+                if (crossfadeDuration > 0f)
+                {
+                    Animator?.CrossFade(CurrentAnimationHash, crossfadeDuration);
+                }
+                else
+                {
+                    Animator?.Play(CurrentAnimationHash, -1, 0);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// This function plays the animation with the given hash without checking if the
+        /// given hash is equal to the hash of the current animation that is being played
+        /// </summary>
+        /// <param name="hash">The animation to play</param>
+        /// <param name="crossfadeDuration">The transition time between the current animation that is playing to the new animation we want to play
+        /// (if crossfade duration is less or equal to 0, we use <c>Animator.Play()</c>  so we can play the animation right away without waiting)</param>
+        /// <param name="isAnimationLocked">If true, the new animation will override any locked animations</param>
+        /// <param name="canOverrideLockedAnimations">If true, the current animation will be locked and cannot be overridden by
+        /// other animations unless canOverrideLockedAnimations is true</param>
+        public void PlayAnimationForced(int hash, float crossfadeDuration = 0.2f, bool isAnimationLocked = false,
+            bool canOverrideLockedAnimations = false)
+        {
+            if (IsCurrentAnimationLocked && !canOverrideLockedAnimations) return;
+
+            IsCurrentAnimationLocked = isAnimationLocked;
+            PreviousAnimationHash = CurrentAnimationHash;
+            CurrentAnimationHash = hash;
+            if (crossfadeDuration > 0f)
+            {
+                Animator?.CrossFade(CurrentAnimationHash, crossfadeDuration);
+            }
+            else
+            {
+                Animator?.Play(CurrentAnimationHash, -1, 0);
             }
         }
 
@@ -80,7 +123,7 @@ namespace TidiMovementComponent2D.Animation
         /// <param name="newState">The new state we should switch to</param>
         public void SetAnimState(TidiAnimBaseState newState)
         {
-            stateMachine.RequestStateChange(newState);
+            StateMachine.RequestStateChange(newState);
         }
 
         /// <summary>
@@ -89,7 +132,12 @@ namespace TidiMovementComponent2D.Animation
         /// <returns>The current animation state were in</returns>
         public TidiAnimBaseState GetAnimState()
         {
-            return stateMachine.CurrentState;
+            return StateMachine.CurrentState;
+        }
+
+        public void StopAllPlayingAnimations()
+        {
+            Animator.Play("EmptyState"); // should stop all playing animations
         }
 
         #endregion

@@ -42,6 +42,11 @@ namespace PathOfTheInfected.Enemy.Projectiles
             }
         }
 
+        protected virtual void ReactToHitResult(HitResult result)
+        {
+
+        }
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             IHitResponder test = other.gameObject.GetComponent<IHitResponder>();
@@ -62,7 +67,9 @@ namespace PathOfTheInfected.Enemy.Projectiles
                 };
                 if (other.gameObject == data.source) return; // if the bullet hits the one who shot, ignore it
 
-                HitDispatcher.ProcessHit(data);
+                var result = HitDispatcher.ProcessHit(data);
+
+                ReactToHitResult(result);
 
                 Destroy(gameObject);
             }

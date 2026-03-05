@@ -1,18 +1,18 @@
-using UnityEngine;
+﻿using TidiMovementComponent2D.Animation;
 
-namespace TidiMovementComponent2D.Animation
+namespace PathOfTheInfected.Animation
 {
-    public class StandingAnimState : TidiAnimBaseState
+    public class POIStandingAnimState : TidiAnimBaseState
     {
-       protected AnimatorManager AnimatorManagerInstance;
-        public StandingAnimState(AnimatorManager animInstance, TidiAnimStateMachine stateMachine)
+        protected POIAnimInstance AnimatorManagerInstance;
+        public POIStandingAnimState(POIAnimInstance animInstance, TidiAnimStateMachine stateMachine)
         {
             this.animInstance = animInstance;
             this.stateMachine = stateMachine;
         }
         public override void StateEnter()
         {
-            AnimatorManagerInstance = (AnimatorManager)animInstance;
+            AnimatorManagerInstance = (POIAnimInstance)animInstance;
         }
 
         public override void StateExit()
@@ -35,21 +35,21 @@ namespace TidiMovementComponent2D.Animation
             // Keyboard movement
             if (AnimatorManagerInstance.standingIsRunning)
             {
-                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingRunAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingRunAnim, 0f);
             }
             else if (AnimatorManagerInstance.standingIsWalking)
             {
-                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingWalkAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingWalkAnim, 0f);
             }
             else
             {
-                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingIdleAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingIdleAnim, 0f);
             }
 
             // Other
             if (AnimatorManagerInstance.standingIsJumping)
             {
-                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingJumpAnim);
+                AnimatorManagerInstance.PlayAnimationForced(AnimatorManagerInstance.StandingJumpAnim, 0f);
             }
 
             if (AnimatorManagerInstance.standingIsInAir)
@@ -59,7 +59,7 @@ namespace TidiMovementComponent2D.Animation
 
             if (AnimatorManagerInstance.standingIsDashing)
             {
-                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingDashAnim, 0.2f, true, true);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingDashAnim, 0f);
             }
 
             if (AnimatorManagerInstance.standingIsWallSliding)
@@ -67,22 +67,19 @@ namespace TidiMovementComponent2D.Animation
                 AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingWallslideAnim);
             }
 
-            if (AnimatorManagerInstance.standingIsAirDashFalling)
-            {
-                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingIdleAnim);
-            }
-
             if (AnimatorManagerInstance.standingIsSliding)
             {
                 AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingSlideAnim);
             }
+
+            // combat
         }
 
         protected override void TransitionChecks()
         {
-            if (AnimatorManagerInstance.isCrouching)
+            if (!AnimatorManagerInstance.Player.IsGrounded)
             {
-                stateMachine.RequestStateChange(AnimatorManagerInstance.CrouchingState);
+                stateMachine.RequestStateChange(AnimatorManagerInstance.InAirState);
             }
         }
     }

@@ -9,12 +9,7 @@ namespace TidiMovementComponent2D.Misc
 
         private void Awake()
         {
-            PlayerInput = GetComponent<PlayerInput>();
-            _moveAction = PlayerInput.actions["Move"];
-            _jumpAction = PlayerInput.actions["Jump"];
-            _runAction = PlayerInput.actions["Run"];
-            _dashAction = PlayerInput.actions["Dash"];
-            _crouchAction = PlayerInput.actions["Crouch"];
+            InputAwake();
         }
 
         private void Update()
@@ -22,28 +17,38 @@ namespace TidiMovementComponent2D.Misc
             ConsumeInput();
         }
 
-        private void ConsumeInput()
+        protected virtual void ConsumeInput()
         {
-            Movement = _moveAction.ReadValue<Vector2>();
-            JumpWasPressed = _jumpAction.WasPressedThisFrame();
-            JumpIsHeld = _jumpAction.IsPressed();
-            JumpWasReleased = _jumpAction.WasReleasedThisFrame();
-            RunIsHeld = _runAction.IsPressed();
-            DashWasPressed = _dashAction.WasPressedThisFrame();
-            CrouchIsHeld = _crouchAction.IsPressed();
+            Movement = MoveAction.ReadValue<Vector2>();
+            JumpWasPressed = JumpAction.WasPressedThisFrame();
+            JumpIsHeld = JumpAction.IsPressed();
+            JumpWasReleased = JumpAction.WasReleasedThisFrame();
+            RunIsHeld = RunAction.IsPressed();
+            DashWasPressed = DashAction.WasPressedThisFrame();
+            CrouchIsHeld = CrouchAction.IsPressed();
+        }
+
+        protected virtual void InputAwake()
+        {
+            PlayerInput = GetComponent<PlayerInput>();
+            MoveAction = PlayerInput.actions["Move"];
+            JumpAction = PlayerInput.actions["Jump"];
+            RunAction = PlayerInput.actions["Run"];
+            DashAction = PlayerInput.actions["Dash"];
+            CrouchAction = PlayerInput.actions["Crouch"];
         }
 
 
         #region Input Actions
 
-        private InputAction _moveAction;
+        protected InputAction MoveAction;
 
-        private InputAction _jumpAction;
+        protected InputAction JumpAction;
 
-        private InputAction _runAction;
+        protected InputAction RunAction;
 
-        private InputAction _dashAction;
-        private InputAction _crouchAction;
+        protected InputAction DashAction;
+        protected InputAction CrouchAction;
 
         #endregion
 

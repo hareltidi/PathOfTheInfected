@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Combat
 {
+    /// <summary>
+    /// The Hit Dispatcher is responsible for Telling any GameObject that was
+    /// </summary>
     public class HitDispatcher
     {
         /// <summary>
@@ -23,7 +26,7 @@ namespace PathOfTheInfected.Combat
 
             foreach (var responder in responders)
             {
-                var response = responder.OnHit(hitData);
+                var response = responder.OnHit(hitData); // process the hit and get the response
 
                 hitResult.Merge(response);
 

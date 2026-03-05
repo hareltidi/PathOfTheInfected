@@ -101,5 +101,10 @@ namespace PathOfTheInfected.Enemy
                 ctx.Phase = AttackPhase.WindUp;
             }
         }
+
+        public virtual void ReactToHitResult(HitResult hitResult)
+        {
+
+        }
     }
 }

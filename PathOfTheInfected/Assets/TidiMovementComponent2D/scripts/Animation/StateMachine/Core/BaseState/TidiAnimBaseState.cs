@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace TidiMovementComponent2D.Animation
 {
+    /// <summary>
+    /// The base state for our animation states.
+    /// </summary>
     public abstract class TidiAnimBaseState
     {
         protected TidiAnimStateMachine stateMachine;

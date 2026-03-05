@@ -8,6 +8,11 @@ namespace TidiMovementComponent2D.Animation
         public TidiAnimBaseState PreviousState { get; private set; }
         public TidiAnimBaseState NextState { get; private set; }
 
+        /// <summary>
+        /// Initializes the first state of theAnimation instance. Call this method in the awake/Start method
+        /// In your Anim instance.
+        /// </summary>
+        /// <param name="startState">The first animation state we should be in</param>
         public void InitializeDefaultState(TidiAnimBaseState startState)
         {
             CurrentState = startState;

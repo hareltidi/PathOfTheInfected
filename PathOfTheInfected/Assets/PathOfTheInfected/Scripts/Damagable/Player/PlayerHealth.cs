@@ -80,7 +80,7 @@ namespace PathOfTheInfected.Damagable
         }
 
         /// <summary>
-        ///     Make the player flash.
+        /// Make the player flash.
         /// </summary>
         private void FlashDamage()
         {
@@ -100,12 +100,15 @@ namespace PathOfTheInfected.Damagable
         }
 
         /// <summary>
-        ///     Set the flash color when we need to flash
+        /// Set the flash color when we need to flash
         /// </summary>
         /// <param name="color">The color the flash should be in</param>
         private void SetFlashColor(Color color)
         {
-            for (var i = 0; i < _materials.Length; i++) _materials[i].SetColor("_FlashColor", color);
+            for (var i = 0; i < _materials.Length; i++)
+            {
+                _materials[i].SetColor("_FlashColor", color);
+            }
         }
 
         public HitResponse OnHit(HitData damageData)
@@ -121,7 +124,7 @@ namespace PathOfTheInfected.Damagable
             );
         }
 
-        #region IDamageable members
+        #region Health members
 
         [field: SerializeField] public bool IsDead { get; set; }
         [field: SerializeField] public int MaxHealth { get; set; }
@@ -144,7 +147,8 @@ namespace PathOfTheInfected.Damagable
         private float _hitStopTimer;
         [SerializeField] private float flashTime;
 
-        [ColorUsage(true, true)] [SerializeField]
+        [ColorUsage(true, true)]
+        [SerializeField]
         private Color flashColor;
 
         [SerializeField] private EaseType damageFlashEaseType;

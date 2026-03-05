@@ -36,7 +36,7 @@
             HitOutcome incomingOutcome = response.Response switch
             {
                 Response.None => HitOutcome.None,
-                Response.GenericHit => HitOutcome.Damaged,    // a "hit happened" without explicit damage data
+                Response.GenericHit => HitOutcome.Damaged,
                 Response.DamageEnemy => HitOutcome.Damaged,
                 Response.DamagePlayer => HitOutcome.Damaged,
                 Response.Invincible => HitOutcome.Invincible,
