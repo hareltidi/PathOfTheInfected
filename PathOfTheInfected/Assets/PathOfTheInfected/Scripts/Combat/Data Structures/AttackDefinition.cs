@@ -14,7 +14,7 @@ namespace PathOfTheInfected.Combat
     /// the attack interacts with the game world and characters during combat.
     /// </remarks>
     /// <seealso cref="PathOfTheInfected.Combat.AttackType"/>
-    [CreateAssetMenu(fileName = "AttackDefinition", menuName = "Attacks/AttackDefinition", order = 0)]
+    [CreateAssetMenu(fileName = "AttackDefinition", menuName = "Attacks/Base/AttackDefinition", order = 0)]
     public class AttackDefinition : ScriptableObject
     {
         public int baseDamage = 1;

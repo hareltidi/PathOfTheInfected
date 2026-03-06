@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Animation
 {
+    /// <summary>
+    /// The animation state for when the player is in the air. here all the In-Air animations will
+    /// be evaluated and played.
+    /// </summary>
     public class POIInAirAnimState : TidiAnimBaseState
     {
         protected POIAnimInstance AnimatorManagerInstance;

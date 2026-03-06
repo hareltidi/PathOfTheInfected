@@ -2314,6 +2314,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 724985943210959047, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: inAirPunchAnim
+      value: 
+      objectReference: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
+    - target: {fileID: 724985943210959047, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: standingPunchAnim
+      value: 
+      objectReference: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
     - target: {fileID: 1887671414283325526, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: m_LocalPosition.x
       value: -48.29

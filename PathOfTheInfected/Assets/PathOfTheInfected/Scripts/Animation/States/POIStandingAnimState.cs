@@ -1,7 +1,12 @@
 ﻿using TidiMovementComponent2D.Animation;
+using UnityEngine;
 
 namespace PathOfTheInfected.Animation
 {
+    /// <summary>
+    /// The animation state for standing. Here all the standing animations will
+    /// be evaluated and played.
+    /// </summary>
     public class POIStandingAnimState : TidiAnimBaseState
     {
         protected POIAnimInstance AnimatorManagerInstance;
@@ -71,8 +76,6 @@ namespace PathOfTheInfected.Animation
             {
                 AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingSlideAnim);
             }
-
-            // combat
         }
 
         protected override void TransitionChecks()

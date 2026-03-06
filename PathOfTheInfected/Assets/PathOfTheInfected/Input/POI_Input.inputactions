@@ -74,7 +74,7 @@
                 {
                     "name": "",
                     "id": "42468f33-9ae2-4c6b-9339-5daa289f9dbe",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard",
@@ -151,7 +151,7 @@
                 {
                     "name": "",
                     "id": "d700a9e7-cfe5-434e-9490-2755ba025ba2",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard",
@@ -426,7 +426,7 @@
                 {
                     "name": "",
                     "id": "03e76db6-3645-4910-9200-20be57c86926",
-                    "path": "<Keyboard>/v",
+                    "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard",
@@ -437,7 +437,7 @@
                 {
                     "name": "",
                     "id": "340403e9-84df-4377-90d0-72502a525033",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Controller",

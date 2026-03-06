@@ -37,6 +37,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 169560879173738866}
   - {fileID: 4981986705210761568}
   - {fileID: 1383982849655153484}
   - {fileID: 6837148435072316309}
@@ -195,6 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Animation.POIAnimInstance
   <Animator>k__BackingField: {fileID: 5416479168150096257}
+  playerCombat: {fileID: 724985943210959047}
   idleAnimClip: {fileID: 7400000, guid: e77007229bf8ce040aec854ac7b97e75, type: 2}
   walkAnimClip: {fileID: 7400000, guid: eb4467f2d84f2e24d8922cfc09307474, type: 2}
   runAnimClip: {fileID: 7400000, guid: 20e593406254d864292a03c08723ad8c, type: 2}
@@ -205,7 +207,7 @@ MonoBehaviour:
   takeOffAnimClip: {fileID: 7400000, guid: e300480c53dd8324ba99978da2427973, type: 2}
   wallSlideAnimClip: {fileID: 7400000, guid: 52fa701e48cbe9d40a2422ed8ca9ff06, type: 2}
   fallingAnimClip: {fileID: 7400000, guid: 01bee17eefbfa4e458ff5e90bd74d2ef, type: 2}
-  standingPunchClip: {fileID: 7400000, guid: 39ed5f4bfb412c64d9cd94ae2f76d336, type: 2}
+  standingPunchClip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
   standingIsRunning: 0
   standingIsWalking: 0
   standingIsWallSliding: 0
@@ -218,7 +220,7 @@ MonoBehaviour:
   inAirFallClip: {fileID: 7400000, guid: 01bee17eefbfa4e458ff5e90bd74d2ef, type: 2}
   inAirDashFallClip: {fileID: 7400000, guid: 01bee17eefbfa4e458ff5e90bd74d2ef, type: 2}
   inAirJumpClip: {fileID: 7400000, guid: f3685f01ed4fc6548a2ec01ebd9b88cc, type: 2}
-  inAirPunchClip: {fileID: 7400000, guid: 39ed5f4bfb412c64d9cd94ae2f76d336, type: 2}
+  inAirPunchClip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
   inAirIsJumping: 0
   inAirIsDashing: 0
   inAirIsPunching: 0
@@ -254,6 +256,100 @@ MonoBehaviour:
   flashColor: {r: 4, g: 0, b: 0, a: 1}
   damageFlashEaseType: 26
   visuals: {fileID: 5744188244262479377}
+--- !u!1 &3852370424410727733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 169560879173738866}
+  - component: {fileID: 2488137844649478116}
+  - component: {fileID: 5912102297594768566}
+  m_Layer: 8
+  m_Name: PunchHitBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &169560879173738866
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3852370424410727733}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1887671414283325526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &2488137844649478116
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3852370424410727733}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &5912102297594768566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3852370424410727733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50822196ac7e4361a7360e0a98f6ba05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Player.Combat.PlayerPunchHitBox
+  playerCombat: {fileID: 724985943210959047}
+  playerPunchHitBox: {fileID: 2488137844649478116}
+  playerHitBox: {fileID: 7911110498829762674}
 --- !u!1 &5243345907230391907
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,6 +405,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4981986705210761568}
   - component: {fileID: 5416479168150096257}
+  - component: {fileID: 724985943210959047}
   m_Layer: 8
   m_Name: VISUALS
   m_TagString: Untagged
@@ -357,6 +454,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &724985943210959047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5744188244262479377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dcac41bde7547b98c78ed1cc73fbd0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Player.Combat.PlayerCombat
+  playerPunchHitBox: {fileID: 5912102297594768566}
+  punchAttack: {fileID: 11400000, guid: 396f0f0fad5c0a04fa32bd71a7e65973, type: 2}
 --- !u!1001 &694961943405559616
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -6,8 +6,7 @@
     public enum AttackType
     {
         None,
-        Light,
-        Heavy,
-        Slash
+       Punch,
+       Projectile
     }
 }

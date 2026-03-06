@@ -1,12 +1,17 @@
-﻿using TidiMovementComponent2D.Animation;
+﻿using PathOfTheInfected.Player.Combat;
+using TidiMovementComponent2D.Animation;
 using TidiMovementComponent2D.Misc;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace PathOfTheInfected.Animation
 {
+    /// <summary>
+    /// The animation instance for the player
+    /// </summary>
     public class POIAnimInstance : TidiAnimInstance
     {
+        public PlayerCombat playerCombat;
+        public static POIAnimInstance Instance;
         #region States
         public POIStandingAnimState StandingState { get; private set; }
         public POIInAirAnimState InAirState { get; private set; }
@@ -28,7 +33,6 @@ namespace PathOfTheInfected.Animation
                 public AnimationClip takeOffAnimClip;
                 public AnimationClip wallSlideAnimClip;
                 public AnimationClip fallingAnimClip;
-                public AnimationClip standingPunchClip;
 
                 #endregion
 
@@ -53,11 +57,6 @@ namespace PathOfTheInfected.Animation
 
 
                 public bool standingIsInAir;
-
-                public bool standingIsLanding = false;
-
-                public bool standingIsPunching = false;
-
                 #endregion
 
           #region AnimHashes - Standing
@@ -71,8 +70,6 @@ namespace PathOfTheInfected.Animation
                 public int StandingSlideAnim { get; private set; }
                 public int StandingTakeoffAnim { get; private set; }
                 public int StandingWallslideAnim { get; private set; }
-
-                public int StandingPunchAnim { get; private set; }
 
                 #endregion
 
@@ -97,16 +94,11 @@ namespace PathOfTheInfected.Animation
         #region AnimationFlags - InAir
         public bool inAirIsJumping;
         public bool inAirIsDashing;
-        public bool inAirIsPunching;
         public bool inAirIsAirDashFalling;
         public bool inAirIsWallSliding;
         #endregion
         #endregion
         #endregion
-
-        private bool _jumpAnimationRestartRequested;
-        private bool _wasJumpingOrWallJumping;
-        private int _lastAirJumpsUsed;
 
         #region AnimHashes - Setter
         protected override void SetAnimHashes()
@@ -121,7 +113,6 @@ namespace PathOfTheInfected.Animation
             StandingSlideAnim = Animator.StringToHash(slideAnimClip.name);
             StandingTakeoffAnim = Animator.StringToHash(takeOffAnimClip.name);
             StandingWallslideAnim = Animator.StringToHash(wallSlideAnimClip.name);
-            StandingPunchAnim = Animator.StringToHash(standingPunchClip.name);
             // InAir
             InAirFallAnim = Animator.StringToHash(inAirFallClip.name);
             InAirJumpAnim = Animator.StringToHash(inAirJumpClip.name);
@@ -132,7 +123,6 @@ namespace PathOfTheInfected.Animation
         #endregion
 
         #region Animation Parameters
-
         protected override void SetAnimationFlags()
         {
             // Standing states
@@ -145,32 +135,13 @@ namespace PathOfTheInfected.Animation
             standingIsSliding = Player.IsSliding;
             standingIsJumping = Player.IsJumping;
             standingIsInAir = !Player.IsGrounded && !Player.IsJumping;
-            standingIsLanding = CurrentAnimationHash == StandingLandAnim;
-
             // InAir states
             inAirIsJumping = Player.IsJumping;
             inAirIsDashing = Player.IsDashing;
             inAirIsAirDashFalling = Player.IsDashFastFalling && !Player.IsDashing;
             inAirIsWallSliding =  Player.IsWallSliding;
 
-            // Request jump animation restart only on actual jump starts.
-            CheckForJumpAnimResets();
         }
-
-        private void CheckForJumpAnimResets()
-        {
-            bool isJumpingOrWallJumping = Player.IsJumping || Player.IsWallJumping;
-            bool startedNewJumpState = isJumpingOrWallJumping && !_wasJumpingOrWallJumping;
-            bool consumedAirJump = Player.NumberOfAirJumpsUsed > _lastAirJumpsUsed;
-            if (startedNewJumpState || consumedAirJump)
-            {
-                _jumpAnimationRestartRequested = true;
-            }
-
-            _wasJumpingOrWallJumping = isJumpingOrWallJumping;
-            _lastAirJumpsUsed = Player.NumberOfAirJumpsUsed;
-        }
-
         #endregion
 
 
@@ -179,6 +150,10 @@ namespace PathOfTheInfected.Animation
             // Initialize states
             StandingState = new POIStandingAnimState(this, StateMachine);
             InAirState = new POIInAirAnimState(this, StateMachine);
+            if (!Instance)
+            {
+                Instance = this;
+            }
         }
 
         protected override void AnimationStart()
@@ -198,17 +173,6 @@ namespace PathOfTheInfected.Animation
             StateMachine.CurrentState.StateFixedUpdate();
             StateMachine.ApplyQueuedStateChange();
             StateMachine.CurrentState.EvaluateStateAnimations();
-        }
-
-        public bool ConsumeJumpAnimationRestartRequest()
-        {
-            if (!_jumpAnimationRestartRequested)
-            {
-                return false;
-            }
-
-            _jumpAnimationRestartRequested = false;
-            return true;
         }
     }
 }
