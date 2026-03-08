@@ -303,7 +303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6209501577205635293, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.57642245
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6209501577205635293, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
       propertyPath: m_LocalPosition.z
@@ -337,20 +337,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
-      propertyPath: facingFlipDeadzone
-      value: 3
+    - target: {fileID: 6323272201396192146, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6323272201396192146, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6323272201396192146, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
-      propertyPath: movementPersonality.maxSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
-      propertyPath: movementPersonality.acceleration
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 7866450650063010081, guid: ec7fd2c7b19e15f48b79946cfb560bec, type: 3}
-      propertyPath: movementPersonality.movementEase
+      propertyPath: <IsFacingRight>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2013,13 +2013,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8375289714726922157, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: flashColor.b
+      value: 5.3403134
+      objectReference: {fileID: 0}
+    - target: {fileID: -8375289714726922157, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: flashColor.g
+      value: 5.3403134
+      objectReference: {fileID: 0}
+    - target: {fileID: -8375289714726922157, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
+      propertyPath: flashColor.r
+      value: 5.3403134
+      objectReference: {fileID: 0}
     - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
-      propertyPath: spottableDetectedState
-      value: 
-      objectReference: {fileID: 11400000, guid: bd3889502d7fa874a80948dfee3aed6e, type: 2}
-    - target: {fileID: 64289677223417128, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
-      propertyPath: movementPersonality.movementEase
-      value: 0
+      propertyPath: <IsFacingRight>k__BackingField
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3085813784086349589, guid: e2a44d6f876d5aa41936d4f93c542058, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2314,14 +2322,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 724985943210959047, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
-      propertyPath: inAirPunchAnim
-      value: 
-      objectReference: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
-    - target: {fileID: 724985943210959047, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
-      propertyPath: standingPunchAnim
-      value: 
-      objectReference: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
     - target: {fileID: 1887671414283325526, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: m_LocalPosition.x
       value: -48.29
@@ -2365,6 +2365,18 @@ PrefabInstance:
     - target: {fileID: 3065070694002184037, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: m_Name
       value: player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5912102297594768566, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: hitboxHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5912102297594768566, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: hitboxOffset.x
+      value: 2.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291985434116240427, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: fadeTime
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8759513332165125027, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: RespawnPoint

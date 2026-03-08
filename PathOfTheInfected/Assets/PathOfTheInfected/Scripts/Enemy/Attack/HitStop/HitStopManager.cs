@@ -1,19 +1,13 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
-    /// <summary>
-    /// Hit stop manager.
-    /// </summary>
     public class HitStopManager : MonoBehaviour
     {
-        /// <summary>
-        /// Singleton instance of the <see cref="HitStopManager"/> class.
-        /// </summary>
         public static HitStopManager Instance;
 
-        private Coroutine _hitStopRoutine;
+        private readonly List<float> _hitStops = new();
 
         private void Awake()
         {
@@ -27,10 +21,6 @@ namespace PathOfTheInfected.Enemy
             DontDestroyOnLoad(gameObject);
         }
 
-
-        /// <summary>
-        /// Initializes the <see cref="HitStopManager"/> instance if it doesn't already exist.
-        /// </summary>
         public static void Initialize()
         {
             if (!Instance)
@@ -41,20 +31,30 @@ namespace PathOfTheInfected.Enemy
 
         public void HitStop(float duration)
         {
-            if (_hitStopRoutine != null)
-            {
-                StopCoroutine(_hitStopRoutine);
-            }
-            _hitStopRoutine = StartCoroutine(HitStopRoutine(duration));
+            _hitStops.Add(duration);
         }
 
-        private IEnumerator HitStopRoutine(float duration)
+        private void Update()
         {
-            float originalTimeScale = Time.timeScale;
+            if (_hitStops.Count == 0)
+            {
+                Time.timeScale = 1f;
+                return;
+            }
 
-            Time.timeScale = 0f;
-            yield return new WaitForSecondsRealtime(duration);
-            Time.timeScale = originalTimeScale;
+            float dt = Time.unscaledDeltaTime;
+
+            for (int i = _hitStops.Count - 1; i >= 0; i--)
+            {
+                _hitStops[i] -= dt;
+
+                if (_hitStops[i] <= 0f)
+                {
+                    _hitStops.RemoveAt(i);
+                }
+            }
+
+            Time.timeScale = _hitStops.Count > 0 ? 0f : 1f;
         }
     }
 }

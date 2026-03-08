@@ -42,7 +42,7 @@ namespace PathOfTheInfected.Player.Combat.Attacks
             PlayerCombat.LastHitResult = hitResult;
             if (debugHit)
             {
-                Debug.Log($"{hitResult.FinalDamage} was inflicted onto the target with the outcome being: {hitResult.Outcome}");
+                Debug.Log($"{hitResult.FinalDamage} Damage was inflicted onto the target with the outcome being: {hitResult.Outcome}");
             }
         }
     }

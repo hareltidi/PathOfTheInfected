@@ -1,76 +1,76 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using PathOfTheInfected.Combat;
+using TidiMovementComponent2D.Core;
+using TidiMovementComponent2D.Misc;
 using UnityEngine;
 
 namespace PathOfTheInfected.Player.Combat
 {
-    [RequireComponent(typeof(BoxCollider2D))]
     public class PlayerPunchHitBox : MonoBehaviour
     {
         [SerializeField] private PlayerCombat playerCombat;
-        [SerializeField] private BoxCollider2D playerPunchHitBox;
-        [SerializeField] private BoxCollider2D playerHitBox;
-        private bool _active = true;
+        [SerializeField] private LayerMask enemyLayer;
+        [SerializeField] private float hitboxHeight;
+        [SerializeField] private Vector2 hitboxOffset;
+        private Vector2 _lastAttackDirection = Vector2.right;
+        private readonly HashSet<Collider2D> _alreadyHit = new();
 
-        private void OnEnable()
+        public void BeginAttack()
         {
-            if (!playerPunchHitBox)
-            {
-                playerPunchHitBox = GetComponent<BoxCollider2D>();
-            }
-
-            if (!playerHitBox || !playerPunchHitBox || !playerCombat || !playerCombat.punchAttack || !playerCombat.punchAttack.attackDef)
-            {
-                return;
-            }
-
-            Bounds baseBounds = playerHitBox.bounds;
-            Vector2 baseCenter = baseBounds.center;
-            Vector2 baseSize = baseBounds.size;
-
-            float range = Mathf.Max(0f, playerCombat.punchAttack.attackDef.attackRange);
-            int facingDirection = transform.lossyScale.x >= 0f ? 1 : -1;
-            float forwardOffset = range * 0.5f * facingDirection;
-
-            Vector2 center = baseCenter + (Vector2.right * forwardOffset);
-            Vector2 size = new Vector2(baseSize.x + range, baseSize.y);
-
-            Vector2 localCenter = transform.InverseTransformPoint(center);
-            playerPunchHitBox.offset = localCenter;
-            playerPunchHitBox.size = size;
+            _alreadyHit.Clear();
         }
 
-
-        public void EnableHitBox()
+        public void PerformHitCheck()
         {
-            _active = true;
-        }
+            Vector2 dir = GetAttackDirection().normalized;
 
-        public void DisableHitBox()
-        {
-            _active = false;
-        }
+            float range = playerCombat.punchAttack.attackDef.attackRange;
 
+            Vector2 size = new Vector2(range, hitboxHeight);
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (!_active) return;
-            // Build the hit data
-            IHitResponder responder = other.GetComponent<IHitResponder>();
-            if (responder != null)
+            Vector2 center =
+                (Vector2)transform.position +
+                dir * (range * 0.5f);
+
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            var hits = Physics2D.OverlapBoxAll(center, size, angle, enemyLayer);
+
+            foreach (var hit in hits)
             {
-                HitData hitData = BuildHitData(other);
-                // Dispatch
-                HitResult result = HitDispatcher.ProcessHit(hitData);
-                // react
-                OnPunchFinished(result);
+                if (!_alreadyHit.Add(hit)) continue;
+
+                if (hit.TryGetComponent<IHitResponder>(out var responder))
+                {
+                    HitData data = BuildHitData(hit);
+
+                    HitResult result = HitDispatcher.ProcessHit(data);
+
+                    OnPunchFinished(result);
+                }
+            }
+        }
+
+        private Vector2 GetAttackDirection()
+        {
+            Vector2 input = InputManager.Movement;
+
+            if (input.sqrMagnitude > 0.01f)
+            {
+                _lastAttackDirection = input.normalized;
             }
 
+            return _lastAttackDirection;
+        }
+
+        public void EndAttack()
+        {
+            _alreadyHit.Clear();
         }
 
         private HitData BuildHitData(Collider2D target)
         {
-            HitData data = new HitData()
+            var data = new HitData
             {
                 source = gameObject,
                 target = target.gameObject,
@@ -85,8 +85,25 @@ namespace PathOfTheInfected.Player.Combat
 
         private void OnPunchFinished(HitResult hitResult)
         {
-            _active = false;
             playerCombat.CurrentAttack.ReactToHitResult(hitResult);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (!playerCombat || !playerCombat.punchAttack || !playerCombat.punchAttack.attackDef) return;
+
+            Vector2 dir = _lastAttackDirection.normalized;
+            float range = playerCombat.punchAttack.attackDef.attackRange;
+
+            Vector2 center = (Vector2)transform.position + dir * (range * 0.5f);
+            Vector2 size = new Vector2(range, hitboxHeight);
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            Gizmos.color = new Color(1f, 0f, 0f, 0.3f); // semi-transparent red
+            Matrix4x4 rotationMatrix = Matrix4x4.TRS(center, Quaternion.Euler(0, 0, angle), Vector3.one);
+            Gizmos.matrix = rotationMatrix;
+            Gizmos.DrawCube(Vector3.zero, new Vector3(size.x, size.y, 1f));
+            Gizmos.matrix = Matrix4x4.identity;
         }
     }
 }

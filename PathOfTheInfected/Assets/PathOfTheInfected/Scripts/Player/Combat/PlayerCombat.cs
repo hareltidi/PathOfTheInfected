@@ -10,7 +10,7 @@ namespace PathOfTheInfected.Player.Combat
     public class PlayerCombat : MonoBehaviour
     {
         #region Serialized Members
-        [SerializeField] private PlayerPunchHitBox playerPunchHitBox;
+        [field: SerializeField] public PlayerPunchHitBox PlayerPunchHitBox { get; private set; }
         public PlayerAttackSoBase punchAttack;
 
         [Header("Animation")]
@@ -78,7 +78,8 @@ namespace PathOfTheInfected.Player.Combat
                 ClearCombatIntentState(CombatIntentFlags.WantsToPunch);
                 ActivateAttack(punchAttack, CombatFlags.Punching);
                 ActivateCombatState(CombatFlags.Punching);
-                POIAnimInstance.Instance.PlayAnimationIfNotCurrent(_punchAnim, 0, true, true);
+                POIAnimInstance.Instance.PlayAnimationIfNotCurrent(_punchAnim, 0, 0,
+                    true, true);
                 return;
             }
         }

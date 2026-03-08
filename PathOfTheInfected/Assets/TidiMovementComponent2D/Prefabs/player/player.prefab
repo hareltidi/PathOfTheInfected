@@ -207,7 +207,6 @@ MonoBehaviour:
   takeOffAnimClip: {fileID: 7400000, guid: e300480c53dd8324ba99978da2427973, type: 2}
   wallSlideAnimClip: {fileID: 7400000, guid: 52fa701e48cbe9d40a2422ed8ca9ff06, type: 2}
   fallingAnimClip: {fileID: 7400000, guid: 01bee17eefbfa4e458ff5e90bd74d2ef, type: 2}
-  standingPunchClip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
   standingIsRunning: 0
   standingIsWalking: 0
   standingIsWallSliding: 0
@@ -215,15 +214,12 @@ MonoBehaviour:
   standingIsSliding: 0
   standingIsJumping: 0
   standingIsInAir: 0
-  standingIsLanding: 0
-  standingIsPunching: 0
   inAirFallClip: {fileID: 7400000, guid: 01bee17eefbfa4e458ff5e90bd74d2ef, type: 2}
   inAirDashFallClip: {fileID: 7400000, guid: 01bee17eefbfa4e458ff5e90bd74d2ef, type: 2}
   inAirJumpClip: {fileID: 7400000, guid: f3685f01ed4fc6548a2ec01ebd9b88cc, type: 2}
   inAirPunchClip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
   inAirIsJumping: 0
   inAirIsDashing: 0
-  inAirIsPunching: 0
   inAirIsAirDashFalling: 0
   inAirIsWallSliding: 0
 --- !u!114 &3003456726444111312
@@ -265,7 +261,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 169560879173738866}
-  - component: {fileID: 2488137844649478116}
   - component: {fileID: 5912102297594768566}
   m_Layer: 8
   m_Name: PunchHitBox
@@ -289,52 +284,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1887671414283325526}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2488137844649478116
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3852370424410727733}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &5912102297594768566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,8 +297,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Player.Combat.PlayerPunchHitBox
   playerCombat: {fileID: 724985943210959047}
-  playerPunchHitBox: {fileID: 2488137844649478116}
-  playerHitBox: {fileID: 7911110498829762674}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  hitboxSize: {x: 3.01, y: 0.83}
+  hitboxOffset: {x: 1.6, y: 0}
 --- !u!1 &5243345907230391907
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,8 +418,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcac41bde7547b98c78ed1cc73fbd0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Player.Combat.PlayerCombat
-  playerPunchHitBox: {fileID: 5912102297594768566}
+  <PlayerPunchHitBox>k__BackingField: {fileID: 5912102297594768566}
   punchAttack: {fileID: 11400000, guid: 396f0f0fad5c0a04fa32bd71a7e65973, type: 2}
+  standingPunchAnim: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
+  inAirPunchAnim: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
 --- !u!1001 &694961943405559616
 PrefabInstance:
   m_ObjectHideFlags: 0

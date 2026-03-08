@@ -59,7 +59,8 @@ namespace TidiMovementComponent2D.Animation
 
             if (AnimatorManagerInstance.standingIsDashing)
             {
-                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingDashAnim, 0.2f, true, true);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingDashAnim,
+                    0.2f, 0,true, true);
             }
 
             if (AnimatorManagerInstance.standingIsWallSliding)

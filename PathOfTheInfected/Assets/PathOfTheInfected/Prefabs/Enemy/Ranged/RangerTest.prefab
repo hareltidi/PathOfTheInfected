@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3408081767801535820}
   - component: {fileID: 8259263020966537812}
   - component: {fileID: 7866450650063010081}
+  - component: {fileID: 8882620546561058701}
   m_Layer: 7
   m_Name: RangerTest
   m_TagString: Untagged
@@ -86,7 +87,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_Sprite: {fileID: 4334783836991956000, guid: 3582ec5e354e1d74ea0d65e603a91185, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -161,13 +162,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 3.18, y: 4.95}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 3.18, y: 4.95}
   m_EdgeRadius: 0
 --- !u!114 &7866450650063010081
 MonoBehaviour:
@@ -181,7 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88e491932d234d70a091658842cf20ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.RangedEnemy
-  <CurrentHealth>k__BackingField: 2
   <IsFacingRight>k__BackingField: 0
   noSpottableDetectedState: {fileID: 11400000, guid: d14407899ba6b074bb80a17f98ab1d17, type: 2}
   spottableDetectedState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
@@ -189,17 +189,17 @@ MonoBehaviour:
   <CurrentState>k__BackingField: {fileID: 0}
   movementPersonality:
     maxSpeed: 5
-    acceleration: 3
-    turnSpeed: 5
-    burstMultiplier: 2
+    acceleration: 300
     movementEase: 0
   waypointTolerance: 0.1
   repathInterval: 1
+  facingFlipDeadzone: 3
   <SpottableMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 256
   max: {fileID: 1097756811225222640}
   min: {fileID: 7565596375646536435}
+  requireObjectsToBeInCameraView: 1
   requiresLos: 1
   losBlockMask:
     serializedVersion: 2
@@ -212,6 +212,23 @@ MonoBehaviour:
   <CurrentPoise>k__BackingField: 10
   attack: {fileID: 11400000, guid: 36f030bb1135909439293f54f5f9b5ab, type: 2}
   maxPoise: 10
+--- !u!114 &8882620546561058701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492288752486394173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fb9af5b070b47d4ab550235ef7e3dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.Health.EnemyHealth
+  <CurrentHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 2
+  flashColor: {r: 5.3403134, g: 5.3403134, b: 5.3403134, a: 1}
+  flashTime: 0.25
+  damageFlashEaseType: 30
 --- !u!1 &2896338765570997556
 GameObject:
   m_ObjectHideFlags: 0

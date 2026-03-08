@@ -15,4 +15,4 @@ MonoBehaviour:
   baseDamage: 1
   hitStopTime: 0.1
   recoveryTime: 0.3
-  attackType: 1
+  attackType: 2

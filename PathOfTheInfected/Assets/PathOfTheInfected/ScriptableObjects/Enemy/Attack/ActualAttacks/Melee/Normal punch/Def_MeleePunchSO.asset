@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46fb194e06aa4ab688b65b52e5e833aa, type: 3}
   m_Name: Def_MeleePunchSO
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Combat.AttackDefinition
-  damage: 0
+  baseDamage: 1
   hitStopTime: 0
   recoveryTime: 0
-  attackType: 0
+  attackType: 1
