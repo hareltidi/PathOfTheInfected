@@ -18,3 +18,4 @@ MonoBehaviour:
   attackType: 1
   attackBufferTime: 0.15
   attackRange: 5
+  firstHitDamageBoost: 0
