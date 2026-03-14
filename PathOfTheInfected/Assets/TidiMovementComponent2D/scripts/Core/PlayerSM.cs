@@ -11,7 +11,7 @@ namespace TidiMovementComponent2D.Core
 {
     [RequireComponent(typeof(Rigidbody2D)), RequireComponent(typeof(BoxCollider2D)),
      RequireComponent(typeof(MovementControllerSm)), RequireComponent(typeof(GhostTrail)),
-     RequireComponent(typeof(AnimatorManager))]
+     RequireComponent(typeof(TidiAnimInstance))]
     public class PlayerSm : MonoBehaviour
     {
         public enum BufferedJumpType
@@ -23,7 +23,6 @@ namespace TidiMovementComponent2D.Core
 
         public static PlayerSm Instance;
 
-        public AnimatorManager AnimManager { get; set; }
 
         public BoxCollider2D BoxCollider { get; private set; }
 
@@ -215,7 +214,6 @@ namespace TidiMovementComponent2D.Core
             StandingBoxSize = BoxCollider.size;
             StandingBoxOffset = BoxCollider.offset;
             Anim = GetComponentInChildren<Animator>();
-            AnimManager = GetComponent<AnimatorManager>();
             GhostTrail = GetComponent<GhostTrail>();
             Controller = GetComponent<MovementControllerSm>();
             Controller.OnCrush += HandleCrush;

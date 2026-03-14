@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
@@ -7,11 +7,11 @@ namespace PathOfTheInfected.Enemy
     {
         public static HitStopManager Instance;
 
-        private Coroutine _hitStopRoutine;
+        private readonly List<float> _hitStops = new();
 
         private void Awake()
         {
-            if (Instance != null)
+            if (Instance)
             {
                 Destroy(gameObject);
                 return;
@@ -23,7 +23,7 @@ namespace PathOfTheInfected.Enemy
 
         public static void Initialize()
         {
-            if (Instance == null)
+            if (!Instance)
             {
                 new GameObject("HitStopManager").AddComponent<HitStopManager>();
             }
@@ -31,20 +31,30 @@ namespace PathOfTheInfected.Enemy
 
         public void HitStop(float duration)
         {
-            if (_hitStopRoutine != null)
-            {
-                StopCoroutine(_hitStopRoutine);
-            }
-            _hitStopRoutine = StartCoroutine(HitStopRoutine(duration));
+            _hitStops.Add(duration);
         }
 
-        private IEnumerator HitStopRoutine(float duration)
+        private void Update()
         {
-            float originalTimeScale = Time.timeScale;
+            if (_hitStops.Count == 0)
+            {
+                Time.timeScale = 1f;
+                return;
+            }
 
-            Time.timeScale = 0f;
-            yield return new WaitForSecondsRealtime(duration);
-            Time.timeScale = originalTimeScale;
+            float dt = Time.unscaledDeltaTime;
+
+            for (int i = _hitStops.Count - 1; i >= 0; i--)
+            {
+                _hitStops[i] -= dt;
+
+                if (_hitStops[i] <= 0f)
+                {
+                    _hitStops.RemoveAt(i);
+                }
+            }
+
+            Time.timeScale = _hitStops.Count > 0 ? 0f : 1f;
         }
     }
 }

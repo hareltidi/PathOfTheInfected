@@ -5,7 +5,7 @@ namespace TidiMovementComponent2D.Animation
     public class CrouchingAnimState : TidiAnimBaseState
     {
 
-        AnimatorManager animatorManagerInstance;
+        protected AnimatorManager AnimatorManagerInstance;
 
 
         public CrouchingAnimState(AnimatorManager animInstance, TidiAnimStateMachine stateMachine)
@@ -15,7 +15,7 @@ namespace TidiMovementComponent2D.Animation
         }
         public override void StateEnter()
         {
-            animatorManagerInstance = (AnimatorManager)animInstance;
+            AnimatorManagerInstance = (AnimatorManager)animInstance;
         }
 
         public override void StateExit()
@@ -35,21 +35,21 @@ namespace TidiMovementComponent2D.Animation
 
         public override void EvaluateStateAnimations()
         {
-            if (animatorManagerInstance.crouchingIsWalking)
+            if (AnimatorManagerInstance.crouchingIsWalking)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.CrouchingWalkAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.CrouchingWalkAnim);
             }
             else
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.CrouchingIdleAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.CrouchingIdleAnim);
             }
         }
 
         protected override void TransitionChecks()
         {
-            if (!animatorManagerInstance.isCrouching)
+            if (!AnimatorManagerInstance.isCrouching)
             {
-                stateMachine.RequestStateChange(animatorManagerInstance.StandingState);
+                stateMachine.RequestStateChange(AnimatorManagerInstance.StandingState);
             }
         }
     }

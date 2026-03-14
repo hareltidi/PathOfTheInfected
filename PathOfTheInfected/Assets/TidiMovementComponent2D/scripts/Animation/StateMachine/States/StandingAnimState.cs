@@ -4,7 +4,7 @@ namespace TidiMovementComponent2D.Animation
 {
     public class StandingAnimState : TidiAnimBaseState
     {
-        AnimatorManager animatorManagerInstance;
+       protected AnimatorManager AnimatorManagerInstance;
         public StandingAnimState(AnimatorManager animInstance, TidiAnimStateMachine stateMachine)
         {
             this.animInstance = animInstance;
@@ -12,8 +12,7 @@ namespace TidiMovementComponent2D.Animation
         }
         public override void StateEnter()
         {
-            animatorManagerInstance = (AnimatorManager)animInstance;
-
+            AnimatorManagerInstance = (AnimatorManager)animInstance;
         }
 
         public override void StateExit()
@@ -34,56 +33,57 @@ namespace TidiMovementComponent2D.Animation
         public override void EvaluateStateAnimations()
         {
             // Keyboard movement
-            if (animatorManagerInstance.standingIsRunning)
+            if (AnimatorManagerInstance.standingIsRunning)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingRunAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingRunAnim);
             }
-            else if (animatorManagerInstance.standingIsWalking)
+            else if (AnimatorManagerInstance.standingIsWalking)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingWalkAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingWalkAnim);
             }
             else
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingIdleAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingIdleAnim);
             }
 
             // Other
-            if (animatorManagerInstance.standingIsJumping)
+            if (AnimatorManagerInstance.standingIsJumping)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingJumpAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingJumpAnim);
             }
 
-            if (animatorManagerInstance.standingIsInAir)
+            if (AnimatorManagerInstance.standingIsInAir)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingIdleAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingIdleAnim);
             }
 
-            if (animatorManagerInstance.standingIsDashing)
+            if (AnimatorManagerInstance.standingIsDashing)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingDashAnim, 0.2f, true, true);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingDashAnim,
+                    0.2f, 0,true, true);
             }
 
-            if (animatorManagerInstance.standingIsWallSliding)
+            if (AnimatorManagerInstance.standingIsWallSliding)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingWallslideAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingWallslideAnim);
             }
 
-            if (animatorManagerInstance.standingIsAirDashFalling)
+            if (AnimatorManagerInstance.standingIsAirDashFalling)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingIdleAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingIdleAnim);
             }
 
-            if (animatorManagerInstance.standingIsSliding)
+            if (AnimatorManagerInstance.standingIsSliding)
             {
-                animatorManagerInstance.PlayAnimation(animatorManagerInstance.StandingSlideAnim);
+                AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingSlideAnim);
             }
         }
 
         protected override void TransitionChecks()
         {
-            if (animatorManagerInstance.isCrouching)
+            if (AnimatorManagerInstance.isCrouching)
             {
-                stateMachine.RequestStateChange(animatorManagerInstance.CrouchingState);
+                stateMachine.RequestStateChange(AnimatorManagerInstance.CrouchingState);
             }
         }
     }

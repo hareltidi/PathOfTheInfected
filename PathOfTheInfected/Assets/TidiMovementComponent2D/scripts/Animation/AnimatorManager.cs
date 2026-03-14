@@ -38,7 +38,7 @@ namespace TidiMovementComponent2D.Animation
 
         #region AnimationFlags - Crouching
 
-        [Header("Animation flags")] [FormerlySerializedAs("IsCrouching")]
+        [Header("Animation flags")]
         public bool isCrouching;
 
         [FormerlySerializedAs("CROUCHING_isWalking")]
@@ -55,28 +55,28 @@ namespace TidiMovementComponent2D.Animation
 
         #region AnimationFlags - Standing
 
-        [FormerlySerializedAs("STANDING_isRunning")]
+
         public bool standingIsRunning;
 
-        [FormerlySerializedAs("STANDING_isWalking")]
+
         public bool standingIsWalking;
 
-        [FormerlySerializedAs("STANDING_isWallSliding")]
+
         public bool standingIsWallSliding;
 
-        [FormerlySerializedAs("STANDING_isDashing")]
+
         public bool standingIsDashing;
 
-        [FormerlySerializedAs("STANDING_isAirDashFalling")]
+
         public bool standingIsAirDashFalling;
 
-        [FormerlySerializedAs("STANDING_isSliding")]
+
         public bool standingIsSliding;
 
-        [FormerlySerializedAs("STANDING_isJumping")]
+
         public bool standingIsJumping;
 
-        [FormerlySerializedAs("STANDING_IsInAir")]
+
         public bool standingIsInAir;
 
         public bool standingIsLanding = false;
@@ -123,21 +123,21 @@ namespace TidiMovementComponent2D.Animation
         protected override void SetAnimationFlags()
         {
             // Standing states
-            standingIsRunning = Mathf.Abs(InputManager.Movement.x) > Player.moveStats.MoveThreshold &&
-                                Player.IsRunning;
-            standingIsWalking = Mathf.Abs(InputManager.Movement.x) > Player.moveStats.MoveThreshold &&
-                                !Player.IsRunning && !Player.IsCrouching;
-            standingIsWallSliding = Player.StateMachine.CurrentState == Player.WallSlideState;
-            standingIsDashing = Player.IsDashing;
-            standingIsAirDashFalling = Player.IsDashFastFalling;
-            standingIsSliding = Player.IsSliding;
-            standingIsJumping = Player.IsJumping;
-            standingIsInAir = !Player.IsGrounded && !Player.IsJumping;
-            standingIsLanding = CurrentAnimation == StandingLandAnim;
+            standingIsRunning = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
+                                OwnerPlayer.IsRunning;
+            standingIsWalking = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
+                                !OwnerPlayer.IsRunning && !OwnerPlayer.IsCrouching;
+            standingIsWallSliding = OwnerPlayer.StateMachine.CurrentState == OwnerPlayer.WallSlideState;
+            standingIsDashing = OwnerPlayer.IsDashing;
+            standingIsAirDashFalling = OwnerPlayer.IsDashFastFalling;
+            standingIsSliding = OwnerPlayer.IsSliding;
+            standingIsJumping = OwnerPlayer.IsJumping;
+            standingIsInAir = !OwnerPlayer.IsGrounded && !OwnerPlayer.IsJumping;
+            standingIsLanding = CurrentAnimationHash == StandingLandAnim;
 
             // crouching states
-            isCrouching = Player.IsCrouching;
-            crouchingIsWalking = isCrouching && Mathf.Abs(InputManager.Movement.x) > Player.moveStats.MoveThreshold;
+            isCrouching = OwnerPlayer.IsCrouching;
+            crouchingIsWalking = isCrouching && Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold;
         }
 
         #endregion
@@ -146,27 +146,27 @@ namespace TidiMovementComponent2D.Animation
         protected override void AnimationInitialize()
         {
             // Initialize states
-            StandingState = new StandingAnimState(this, stateMachine);
-            CrouchingState = new CrouchingAnimState(this, stateMachine);
+            StandingState = new StandingAnimState(this, StateMachine);
+            CrouchingState = new CrouchingAnimState(this, StateMachine);
         }
 
         protected override void AnimationStart()
         {
             // Set default state
-            stateMachine.InitializeDefaultState(StandingState);
+            StateMachine.InitializeDefaultState(StandingState);
         }
 
 
         protected override void AnimationUpdate()
         {
-            stateMachine.CurrentState.StateUpdate();
+            StateMachine.CurrentState.StateUpdate();
         }
 
         protected override void AnimationFixedUpdate()
         {
-            stateMachine.CurrentState.StateFixedUpdate();
-            stateMachine.ApplyQueuedStateChange();
-            stateMachine.CurrentState.EvaluateStateAnimations();
+            StateMachine.CurrentState.StateFixedUpdate();
+            StateMachine.ApplyQueuedStateChange();
+            StateMachine.CurrentState.EvaluateStateAnimations();
         }
     }
 }

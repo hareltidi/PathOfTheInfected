@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: SO_ExamplePlayerStats
   m_EditorClassIdentifier: 
   movementCapabilities:
-    canRun: 1
+    canRun: 0
     canWallSlide: 1
     canWallJump: 1
     canJump: 1
     canDash: 1
-    canCrouch: 1
+    canCrouch: 0
     canVault: 1
   MoveThreshold: 0.25
   MaxWalkSpeed: 20

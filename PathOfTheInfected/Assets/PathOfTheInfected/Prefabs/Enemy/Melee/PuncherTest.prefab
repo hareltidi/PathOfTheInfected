@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3408081767801535820}
   - component: {fileID: 8259263020966537812}
   - component: {fileID: 4910819071904536229}
+  - component: {fileID: 7934975879287634552}
   m_Layer: 7
   m_Name: PuncherTest
   m_TagString: Untagged
@@ -181,19 +182,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0c69efa7604409e86f80a648e835cf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.Puncher
-  <CurrentHealth>k__BackingField: 1
   <IsFacingRight>k__BackingField: 0
   noSpottableDetectedState: {fileID: 11400000, guid: d14407899ba6b074bb80a17f98ab1d17, type: 2}
   spottableDetectedState: {fileID: 11400000, guid: aceb54cd8b1425c4eaf5accf824d0f94, type: 2}
   spottableInAttackRangeState: {fileID: 11400000, guid: fd0825611c5cee6499d38a53e749d3f8, type: 2}
   <CurrentState>k__BackingField: {fileID: 0}
+  movementPersonality:
+    maxSpeed: 0
+    acceleration: 0
+    movementEase: 0
+  waypointTolerance: 0.1
+  repathInterval: 1
+  facingFlipDeadzone: 1
   <SpottableMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 256
-  <CurrentPoise>k__BackingField: 0
   max: {fileID: 1097756811225222640}
   min: {fileID: 7565596375646536435}
-  requiresLOS: 1
+  requireObjectsToBeInCameraView: 1
+  requiresLos: 0
   losBlockMask:
     serializedVersion: 2
     m_Bits: 64
@@ -202,10 +209,26 @@ MonoBehaviour:
   trackSpotRange: 1
   trackAttackRange: 1
   maxSpotRange: 8
+  <CurrentPoise>k__BackingField: 0
   attack: {fileID: 11400000, guid: 2ab4bcd3230da154cb4add1136e64b7b, type: 2}
   maxPoise: 10
-  moveSpeed: 15
-  acceleration: 1
+--- !u!114 &7934975879287634552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492288752486394173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fb9af5b070b47d4ab550235ef7e3dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.Health.EnemyHealth
+  <CurrentHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 1
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashTime: 0.1
+  damageFlashEaseType: 29
 --- !u!1 &2896338765570997556
 GameObject:
   m_ObjectHideFlags: 0

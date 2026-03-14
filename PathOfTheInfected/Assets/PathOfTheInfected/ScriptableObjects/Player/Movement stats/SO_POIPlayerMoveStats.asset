@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8138243455ec77c47afbad14b86e327b, type: 3}
+  m_Name: SO_POIPlayerMoveStats
+  m_EditorClassIdentifier: 
+  movementCapabilities:
+    canRun: 0
+    canWallSlide: 1
+    canWallJump: 1
+    canJump: 1
+    canDash: 1
+    canCrouch: 0
+    canVault: 1
+  MoveThreshold: 0.25
+  MaxWalkSpeed: 20
+  GroundAcceleration: 5
+  GroundDeceleration: 20
+  AirAcceleration: 5
+  AirDeceleration: 5
+  WallJumpMoveAcceleration: 5
+  WallJumpMoveDeceleration: 5
+  MaxRunSpeed: 35
+  SpeedLimit: 100
+  MaxCrouchSpeed: 5
+  CrouchedBoxOffset: {x: 0, y: 0}
+  CrouchedBoxSize: {x: 0, y: 0}
+  InheritPlatformMomentum: 1
+  PlatformMomentumRetentionTime: 0.15
+  PlatformHorizontalMomentumMultiplier: 1
+  PlatformVerticalMomentumMultiplier: 1
+  MaxVerticalBoost: 10
+  VerticalLaunchMultiplierOnLaunchExit: 2
+  DashDirectionMatchesSlopeDirection: 1
+  CanJumpOnMaxSlopes: 1
+  JumpFollowSlopesWhenHeadTouching: 1
+  DashFollowSlopesWhenHeadTouching: 1
+  MaxSlopeAngle: 70
+  SlideSpeed: 30
+  MatchVisualsToSlope: 1
+  SlopeAveragedNormalsRayLength: 1
+  VisualRaycastWidth: 1.5
+  SlopeRotationSpeed: 20
+  MaxVisualRotationAngle: 45
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  KillVerticalVelocityOnHeadBump: 1
+  EnableCornerCorrection: 1
+  CornerCorrectionWidth: 0.4
+  HorizontalCornerCorrectionHeight: 0.7
+  LandingGraceTime: 0.15
+  MinFallDistanceForLand: 0.5
+  JumpHeight: 6.5
+  JumpHeightCompensationFactor: 1.054
+  TimeTillJumpApex: 0.35
+  GravityOnReleaseMultiplier: 2
+  MaxFallSpeed: 26
+  NumberOfAirJumpsAllowed: 1
+  ResetJumpsOnWallSlide: 1
+  ResetAirJumpsOnMaxSlopeLand: 0
+  TimeForUpwardsCancel: 0.027
+  ApexThreshold: 0.97
+  ApexHangTime: 0.075
+  JumpBufferTime: 0.125
+  JumpCoyoteTime: 0.1
+  CanWallSlideFacingAwayFromWall: 1
+  WallSlideSpeed: 5
+  WallSlideDecelerationSpeed: 50
+  MinAngleForWallSlide: 85
+  MaxAngleForWallSlide: 95
+  WallJumpDirection: {x: -20, y: 6.5}
+  WallJumpCoyoteTime: 0.125
+  WallJumpInputBufferDistance: 0.3
+  WallJumpGravityOnReleaseMultiplier: 1
+  CancelDashWhenYouHitCeiling: 1
+  DashTime: 0.11
+  DashSpeed: 40
+  TimeBtwDashesOnGround: 0.167
+  ResetDashOnWallSlide: 1
+  NumberOfDashes: 2
+  DashDiagonallyBias: 0.4
+  DashBufferTime: 0.125
+  DashFreezeTime: 0.01
+  DashCoyoteTime: 0.125
+  DashGravityOnReleaseMultiplier: 1
+  DashTimeForUpwardsCancel: 0.027
+  MaxAngleDeltaForRunOff: 10
+  MinAngleDeltaForRunOff: 5
+  SpeedForRunOff: 5
+  SlopeCurveDecayRate: 10
+  MaxSlopeCurveAccumulation: 45
+  StepMaxHeight: 0.5
+  StepDetectionRayWidth: 0.1
+  VaultMinHeight: 0.2
+  OnlyVaultWhenRunning: 0
+  HorizontalPushDownMaximum: 0.2
+  TrackJumpHeight: 0
+  TrackDashHeight: 0
+  DebugShowIsGrounded: 0
+  DebugShowHeadRays: 0
+  DebugShowCornerCorrectionRays: 0
+  DebugShowWallHit: 0
+  DebugShowWallJumpBufferBox: 0
+  DebugShowDescendSlopeRay: 0
+  DebugShowSlopeNormal: 0
+  DebugShowDashAngle: 0
+  ExtraRayDebugDistance: 0.25
+  TimeScale: 1
+  ShowWalkJumpArc: 0
+  ShowRunJumpArc: 0
+  StopOnCollision: 0
+  DrawRight: 0
+  ArcResolution: 20
+  VisualizationSteps: 90

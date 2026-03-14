@@ -1,0 +1,19 @@
+﻿flowchart TD
+    A["Attack Occurs<br/>Player or Enemy"] --> B["Physics Check<br/>Overlap / Raycast / Collider"]
+
+    B --> X{"Attack Handling Mode?"}
+
+    X -->|"Instant attack (punch, projectile, etc.)"| C["Build HitData"]
+    C --> D["HitDispatcher.ProcessHit(HitData)"]
+
+    X -->|"Tagged attack (Fire, poison, etc.)"| T["HitDispatcher.ProcessHit(AttackDefinition)"]
+    T --> D
+
+    D --> E["Get IHitResponders<br/>from Target"]
+    E --> F["Sort Responders<br/>by HitPriority"]
+    F --> G["Call responder.OnHit(HitData)"]
+    G --> H["Responder Returns HitResponse"]
+    H --> I["HitResult.Merge(HitResponse)"]
+    I -->|If Not Stopped| G
+    I -->|PropagationStopped| J["Return HitResult"]
+    J --> K["Attacker Reacts<br/>VFX / SFX / Future Combo"]

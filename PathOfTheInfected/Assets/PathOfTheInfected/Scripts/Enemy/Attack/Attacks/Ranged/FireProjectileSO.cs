@@ -1,6 +1,4 @@
-﻿using PathOfTheInfected.Damagable;
-using PathOfTheInfected.Enemy.Projectiles;
-using TidiGenericObjectPooling;
+﻿using PathOfTheInfected.Enemy.Projectiles;
 
 using UnityEngine;
 
@@ -19,12 +17,6 @@ namespace PathOfTheInfected.Enemy
 
             float signedMargin = ctx.Owner.IsFacingRight ? spawnMargin : -spawnMargin;
 
-            DamageData data = new DamageData
-            {
-                Damage = damage,
-                HitStopTime = hitStopTime,
-                Instigator = ctx.Owner,
-            };
 
             Vector2 spawnPos = new Vector2(
                 ctx.Owner.transform.position.x + signedMargin,
@@ -34,7 +26,7 @@ namespace PathOfTheInfected.Enemy
             GameObject projectileToSpawn = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
 
             ProjectileBase projectileLogic = projectileToSpawn.GetComponent<ProjectileBase>();
-            projectileLogic?.InitProjectileValuesFromAttack(ctx, data, dir, spawnPos);
+            projectileLogic?.InitProjectileValuesFromAttack(ctx, attackDef, dir, spawnPos);
         }
     }
 }

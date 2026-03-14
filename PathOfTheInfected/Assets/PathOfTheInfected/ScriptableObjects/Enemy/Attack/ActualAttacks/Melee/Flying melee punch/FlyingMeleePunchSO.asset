@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9a002dfc90ea342845c09e853a368a, type: 3}
   m_Name: FlyingMeleePunchSO
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FlyingMeleePunch
-  damage: 1
+  attackDef: {fileID: 11400000, guid: a322ed78315490048b659a7bc3d845a7, type: 2}
   <RequireDistanceFromEnemyToSpottable>k__BackingField: 1
   <DistanceThreshold>k__BackingField: 5
-  hitStopTime: 0.1
   <MaxAttackRange>k__BackingField: 5
   <PoiseConsumed>k__BackingField: 0.5
   windupDuration: 0.5
-  recoveryTime: 0.7

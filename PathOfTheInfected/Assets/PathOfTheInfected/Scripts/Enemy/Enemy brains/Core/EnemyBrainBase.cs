@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PathOfTheInfected.Combat;
 using PathOfTheInfected.Damagable;
 using TidiPathFinding;
 using TidiTweening;
@@ -12,39 +13,17 @@ namespace PathOfTheInfected.Enemy
     /// This class manages the enemy's movement, state transitions, health, and interactions with other game entities.
     /// It also includes functionality for detecting targets, handling line-of-sight checks, and managing attack behaviors.
     /// </summary>
-    public class EnemyBrainBase : MonoBehaviour, IDamageable, IEnemyMoveable
+    public class EnemyBrainBase : MonoBehaviour, IEnemyMoveable
     {
         #region Interface Variables
 
-        #region IDamageble
 
-        public bool IsDead { get; set; }
-        [field: SerializeField] public int CurrentHealth { get; set; }
-
-        public GameObject GameObject { get; set; }
-
-        public int MaxHealth { get; set; }
-
-        #endregion
 
         #region IEnemyMoveable
         public Rigidbody2D RB { get; set; }
         [field: SerializeField] public bool IsFacingRight { get; set; } = true;
 
         #endregion
-
-        #endregion
-
-        #region Damage
-        public void TakeDamage(DamageData damageaData)
-        {
-            CurrentHealth -= damageaData.Damage;
-        }
-
-        public void Die()
-        {
-            Destroy(gameObject);
-        }
 
         #endregion
 
@@ -95,7 +74,6 @@ namespace PathOfTheInfected.Enemy
         [field: SerializeField] public float CurrentPoise { get; set; }
         public AttackSOBase attack;
         public float maxPoise = 10f;
-
         #endregion
 
         #region Protected and non-serialized members
@@ -129,18 +107,14 @@ namespace PathOfTheInfected.Enemy
         public bool HasLastKnownTarget { get; set; } = false;
         protected float BestDistSq = float.MaxValue;
 
-        protected List<Vector2> currentPath;
-        protected int currentIndex;
-        protected float nextRepath;
-        protected Vector2 lastTargetPosition;
+        protected List<Vector2> CurrentPath;
+        protected int CurrentIndex;
+        protected float NextRepath;
+        protected Vector2 LastTargetPosition;
 
-        protected BoxCollider2D boxCollider;
+        protected BoxCollider2D BoxCollider;
 
-        protected Vector2 currentTargetVelocity;
-        private TidiTween<float> _velocityTween;
-
-        protected Material[] Materials;
-
+        protected Vector2 CurrentTargetVelocity;
         #endregion
 
         #region Virtual logic gate Methods
@@ -151,7 +125,7 @@ namespace PathOfTheInfected.Enemy
         protected virtual void EnemyAwake()
         {
             RB = GetComponent<Rigidbody2D>();
-            boxCollider = GetComponent<BoxCollider2D>();
+            BoxCollider = GetComponent<BoxCollider2D>();
             StateMachine = new EnemyStateMachine();
             noSpottableDetectedState = Instantiate(noSpottableDetectedState);
             spottableDetectedState = Instantiate(spottableDetectedState);
@@ -163,7 +137,6 @@ namespace PathOfTheInfected.Enemy
         /// </summary>
         protected virtual void EnemyStart()
         {
-            InitMaterials();
             noSpottableDetectedState.StateInit(this, StateMachine);
             spottableDetectedState.StateInit(this, StateMachine);
             spottableInAttackRangeState.StateInit(this, StateMachine);
@@ -376,9 +349,9 @@ namespace PathOfTheInfected.Enemy
             foreach (Collider2D hit in hits)
             {
                 if (hit.TryGetComponent<ISpottable>(out var spottable) &&
-                    hit.TryGetComponent<IDamageable>(out var damageable))
+                    hit.TryGetComponent<IHitResponder>(out var hitResponder))
                 {
-                    if (VisibleSpottables.Contains(spottable) && damageable != null)
+                    if (VisibleSpottables.Contains(spottable) && hitResponder != null)
                     {
                         testTarget = spottable;
                         if (attack && attack.RequireDistanceFromEnemyToSpottable)
@@ -543,23 +516,23 @@ namespace PathOfTheInfected.Enemy
             if (AStarPathFinder.CurrentGraph == null || !RB) return;
 
             // --- Recalculate path on timer ---
-            if (Time.timeSinceLevelLoad >= nextRepath)
+            if (Time.timeSinceLevelLoad >= NextRepath)
             {
                 List<Vector2> newPath =
                     AStarPathFinder.FindPath_CurrentGraph(transform.position, target);
 
-                nextRepath = Time.timeSinceLevelLoad + repathInterval;
+                NextRepath = Time.timeSinceLevelLoad + repathInterval;
 
                 if (newPath != null && newPath.Count > 0)
                 {
-                    currentPath = newPath;
+                    CurrentPath = newPath;
 
                     float bestDistance = float.MaxValue;
                     int bestIndex = 0;
 
-                    for (int i = 0; i < currentPath.Count; i++)
+                    for (int i = 0; i < CurrentPath.Count; i++)
                     {
-                        float dist = Vector2.Distance(transform.position, currentPath[i]);
+                        float dist = Vector2.Distance(transform.position, CurrentPath[i]);
                         if (dist < bestDistance)
                         {
                             bestDistance = dist;
@@ -567,19 +540,19 @@ namespace PathOfTheInfected.Enemy
                         }
                     }
 
-                    currentIndex = bestIndex;
+                    CurrentIndex = bestIndex;
                 }
             }
 
-            if (currentPath == null || currentIndex >= currentPath.Count)
+            if (CurrentPath == null || CurrentIndex >= CurrentPath.Count)
             {
                 MoveEnemy(Vector2.zero);
                 return;
             }
 
             // --- Look-ahead ---
-            int targetIndex = Mathf.Min(currentIndex + 1, currentPath.Count - 1);
-            Vector2 waypoint = currentPath[targetIndex];
+            int targetIndex = Mathf.Min(CurrentIndex + 1, CurrentPath.Count - 1);
+            Vector2 waypoint = CurrentPath[targetIndex];
 
             Vector2 toWaypoint = waypoint - (Vector2)transform.position;
 
@@ -591,7 +564,7 @@ namespace PathOfTheInfected.Enemy
             // Advance waypoint if close enough (horizontal check only because this is a grounded enemy)
             if (Mathf.Abs(toWaypoint.x) <= waypointTolerance)
             {
-                currentIndex++;
+                CurrentIndex++;
             }
         }
 
@@ -616,26 +589,11 @@ namespace PathOfTheInfected.Enemy
         #endregion
 
         #region Misc methods
-
-        /// <summary>
-        /// Create a runtime instance of our materials
-        /// </summary>
-        protected virtual void InitMaterials()
-        {
-            SpriteRenderer[] spriteRenderers = GetComponents<SpriteRenderer>();
-            Materials = new Material[spriteRenderers.Length];
-            for (int i = 0; i < spriteRenderers.Length; i++)
-            {
-                Material instance = Instantiate(spriteRenderers[i].sharedMaterial);
-                spriteRenderers[i].material = instance;
-                Materials[i] = instance;
-            }
-        }
-
         public static bool IsObjectInCameraView(GameObject obj, Camera cam)
         {
             Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
-            return GeometryUtility.TestPlanesAABB(planes, obj.GetComponent<Renderer>().bounds);
+            Renderer r = obj.GetComponent<Renderer>();
+            return GeometryUtility.TestPlanesAABB(planes, r.bounds);
         }
 
         #endregion
