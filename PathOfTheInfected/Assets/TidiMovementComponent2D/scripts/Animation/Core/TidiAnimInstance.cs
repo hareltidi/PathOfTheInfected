@@ -4,20 +4,46 @@ using UnityEngine;
 namespace TidiMovementComponent2D.Animation
 {
     /// <summary>
-    ///   <para>Base class for code-driven animation management. A solid replacement to the animator graph...</para>
+    ///   <para>Base class for code-driven animation management.</para>
     /// </summary>
     public abstract class TidiAnimInstance : MonoBehaviour
     {
         #region InitialProperties
+        [field:Tooltip("The Animator component that will be used for animation.")]
         [field: SerializeField] protected Animator Animator { get; private set; }
-        public PlayerSm Player { get; private set; }
+        /// <summary>
+        /// The player that owns this animation instance.
+        /// </summary>
+        public PlayerSm OwnerPlayer { get; private set; }
+
+        /// <summary>
+        /// Is the current animation locked?
+        /// </summary>
         protected bool IsCurrentAnimationLocked { get; set; }
+        /// <summary>
+        /// The hash of the previous animation that was played.
+        /// </summary>
+        protected int PreviousAnimationHash { get; set; }
+
+        /// <summary>
+        /// The layer of the previous animation that was played.
+        /// </summary>
+        protected int PreviousAnimationLayer { get; set; }
+
         ///<summary>
         /// <para>The current animation we need to play</para>
         ///</summary>
-        protected int CurrentAnimation { get; set; }
+        protected int CurrentAnimationHash { get; set; }
 
-        protected TidiAnimStateMachine stateMachine = new();
+        /// <summary>
+        /// The layer of the current animation we need to play
+        /// </summary>
+        protected int CurrentAnimationLayer { get; set; }
+
+        /// <summary>
+        /// The state machine for this animation instance.
+        /// </summary>
+        protected readonly TidiAnimStateMachine StateMachine = new();
 
         #endregion
 
@@ -53,22 +79,121 @@ namespace TidiMovementComponent2D.Animation
         #endregion
 
         #region Playing the animation
+
         /// <summary>
-        /// This function plays the animation with the given hash.
+        /// This function plays the animation with the given hash as long as the hash given
+        /// isn't equal to the hash of the current animation being played
         /// </summary>
         /// <param name="hash">The animation to play</param>
-        /// <param name="crossfadeDuration">The transition time between the current animation that is playing to the new animation we want to play</param>
+        /// <param name="crossfadeDuration">The transition time between the current animation that is playing to the new animation we want to play
+        /// (if crossfade duration is less or equal to 0, we use <c>Animator.Play()</c>  so we can play the animation right away without waiting)</param>
         /// <param name="canOverrideLockedAnimations">If true, the new animation will override any locked animations</param>
-        /// <param name="isAnimationLocked">If true, the current animation will be locked and cannot be overridden by other animations unless canOverrideLockedAnimations is true</param>
-        public void PlayAnimation(int hash, float crossfadeDuration = 0.2f, bool isAnimationLocked = false, bool canOverrideLockedAnimations = false)
+        /// <param name="layer">The layer of the animation</param>
+        /// <param name="isAnimationLocked">If true, the current animation will be locked and cannot be overridden by
+        /// other animations unless canOverrideLockedAnimations is true</param>
+        public void PlayAnimationIfNotCurrent(int hash, float crossfadeDuration = 0.2f, int layer = 0, bool isAnimationLocked = false, bool canOverrideLockedAnimations = false)
         {
-            if (isAnimationLocked && !canOverrideLockedAnimations) return;
-            if (hash != CurrentAnimation)
+            if (IsCurrentAnimationLocked && !canOverrideLockedAnimations && IsCurrentAnimationPlaying()) return;
+            if (hash != CurrentAnimationHash)
             {
                 IsCurrentAnimationLocked = isAnimationLocked;
-                CurrentAnimation = hash;
-                Animator?.CrossFade(CurrentAnimation, crossfadeDuration);
+                PreviousAnimationHash = CurrentAnimationHash;
+                PreviousAnimationLayer = CurrentAnimationLayer;
+                CurrentAnimationHash = hash;
+                CurrentAnimationLayer = layer;
+                if (crossfadeDuration > 0f)
+                {
+                    Animator?.CrossFade(CurrentAnimationHash, crossfadeDuration, layer);
+                }
+                else
+                {
+                    Animator?.Play(CurrentAnimationHash, layer, 0);
+                }
             }
+        }
+
+
+        /// <summary>
+        /// This function plays the animation with the given hash without checking if the
+        /// given hash is equal to the hash of the current animation that is being played
+        /// </summary>
+        /// <param name="hash">The animation to play</param>
+        /// <param name="crossfadeDuration">The transition time between the current animation that is playing to the new animation we want to play
+        /// (if crossfade duration is less or equal to 0, we use <c>Animator.Play()</c>  so we can play the animation right away without waiting)</param>
+        /// <param name="isAnimationLocked">If true, the new animation will override any locked animations</param>
+        /// <param name="layer">The layer of the animation</param>
+        /// <param name="canOverrideLockedAnimations">If true, the current animation will be locked and cannot be overridden by
+        /// other animations unless canOverrideLockedAnimations is true</param>
+        public void PlayAnimationForced(int hash, float crossfadeDuration = 0.2f, bool isAnimationLocked = false, int layer = 0,
+            bool canOverrideLockedAnimations = false)
+        {
+            if (IsCurrentAnimationLocked && !canOverrideLockedAnimations && IsCurrentAnimationPlaying()) return;
+
+            IsCurrentAnimationLocked = isAnimationLocked;
+            PreviousAnimationHash = CurrentAnimationHash;
+            PreviousAnimationLayer = CurrentAnimationLayer;
+            CurrentAnimationHash = hash;
+            CurrentAnimationLayer = layer;
+            if (crossfadeDuration > 0f)
+            {
+                Animator?.CrossFade(CurrentAnimationHash, crossfadeDuration, layer);
+            }
+            else
+            {
+                Animator?.Play(CurrentAnimationHash, layer, 0);
+            }
+        }
+
+
+        /// <summary>
+        /// Checks if the specified animation, identified by its hash, is currently playing on the given animator layer.
+        /// </summary>
+        /// <param name="hash">The hash of the animation clip to check, generated using Animator.StringToHash.</param>
+        /// <param name="layer">The layer index of the animator to check. Defaults to 0 if not specified.</param>
+        /// <returns>True if the specified animation is currently playing on the given layer and if the animation
+        /// hasn't finished; otherwise, false.</returns>
+        public bool IsAnimationPlaying(int hash, int layer = 0)
+        {
+            if (Animator.IsInTransition(layer))
+            {
+                return Animator.GetNextAnimatorStateInfo(layer).shortNameHash == hash;
+            }
+
+            return Animator.GetCurrentAnimatorStateInfo(layer).shortNameHash == hash && !IsAnimationFinished(hash, layer);
+        }
+
+        /// <summary>
+        /// Checks if the current animation is running on the specified animator layer.
+        /// This method evaluates whether the current animation state matches the assigned `CurrentAnimationHash`
+        /// and ensures it is not considered finished. If a transition is occurring, it will verify
+        /// the next animation state instead.
+        /// </summary>
+        /// <returns>True if the current animation is playing on the specified layer, otherwise false.</returns>
+        public bool IsCurrentAnimationPlaying()
+        {
+            if (Animator.IsInTransition(CurrentAnimationLayer))
+            {
+                return Animator.GetNextAnimatorStateInfo(CurrentAnimationLayer).shortNameHash == CurrentAnimationHash;
+            }
+
+            return Animator.GetCurrentAnimatorStateInfo(CurrentAnimationLayer).shortNameHash == CurrentAnimationHash &&
+                   !IsAnimationFinished(CurrentAnimationHash, CurrentAnimationLayer);
+        }
+
+
+        /// <summary>
+        /// Checks if the specified animation has finished playing on the given layer.
+        /// </summary>
+        /// <param name="stateHash">The hash of the animation state to check.</param>
+        /// <param name="layer">The animator layer where the animation is playing. Default is 0.</param>
+        /// <returns>True if the animation has finished playing and the animator is not in a transition; otherwise, false.</returns>
+        public bool IsAnimationFinished(int stateHash, int layer = 0)
+        {
+            AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(layer);
+
+            return stateInfo.shortNameHash == stateHash &&
+                   stateInfo.normalizedTime >= 0.98f &&
+                   !Animator.IsInTransition(layer);
         }
 
         #endregion
@@ -80,7 +205,7 @@ namespace TidiMovementComponent2D.Animation
         /// <param name="newState">The new state we should switch to</param>
         public void SetAnimState(TidiAnimBaseState newState)
         {
-            stateMachine.RequestStateChange(newState);
+            StateMachine.RequestStateChange(newState);
         }
 
         /// <summary>
@@ -89,7 +214,12 @@ namespace TidiMovementComponent2D.Animation
         /// <returns>The current animation state were in</returns>
         public TidiAnimBaseState GetAnimState()
         {
-            return stateMachine.CurrentState;
+            return StateMachine.CurrentState;
+        }
+
+        public void StopAllPlayingAnimations()
+        {
+            Animator.Play("EmptyState"); // should stop all playing animations
         }
 
         #endregion
@@ -103,17 +233,17 @@ namespace TidiMovementComponent2D.Animation
         {
             AnimationStart();
             SetAnimHashes();
-            Player = PlayerSm.Instance;
+            OwnerPlayer = PlayerSm.Instance;
         }
 
         void Update()
         {
-            SetAnimationFlags();
             AnimationUpdate();
         }
 
         private void FixedUpdate()
         {
+            SetAnimationFlags();
             AnimationFixedUpdate();
         }
     }

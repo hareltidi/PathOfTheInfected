@@ -6,41 +6,32 @@ namespace TidiMovementComponent2D.Misc
 {
     public class InputCommandManager : MonoBehaviour
     {
-        private static PlayerInput _playerInput;
+        protected static PlayerInput PlayerInput;
 
-        private InputAction _crouchAction;
+        protected InputAction CrouchAction;
 
-        private InputAction _dashAction;
+        protected InputAction DashAction;
 
-        private InputAction _jumpAction;
+        protected InputAction JumpAction;
 
         public static Queue<InputCommand> CommandQueue { get; } = new();
 
         private void Awake()
         {
-            _playerInput = GetComponent<PlayerInput>();
-            _jumpAction = _playerInput.actions["Jump"];
-            _dashAction = _playerInput.actions["Dash"];
-            _crouchAction = _playerInput.actions["Crouch"];
+           InputAwake();
         }
 
         private void OnEnable()
         {
-            _jumpAction.performed += OnJumpPerformed;
-            _jumpAction.canceled += OnJumpCanceled;
-            _dashAction.performed += OnDashPerformed;
-            _crouchAction.performed += OnCrouchPerformed;
+            OnInputEnabled();
         }
 
         private void OnDisable()
         {
-            _jumpAction.performed -= OnJumpPerformed;
-            _jumpAction.canceled -= OnJumpCanceled;
-            _dashAction.performed -= OnDashPerformed;
-            _crouchAction.performed -= OnCrouchPerformed;
+            OnInputDisabled();
         }
 
-        private void OnJumpPerformed(InputAction.CallbackContext context)
+        protected virtual void OnJumpPerformed(InputAction.CallbackContext context)
         {
             var item = new InputCommand
             {
@@ -50,7 +41,7 @@ namespace TidiMovementComponent2D.Misc
             CommandQueue.Enqueue(item);
         }
 
-        private void OnJumpCanceled(InputAction.CallbackContext context)
+        protected virtual void OnJumpCanceled(InputAction.CallbackContext context)
         {
             var item = new InputCommand
             {
@@ -60,7 +51,7 @@ namespace TidiMovementComponent2D.Misc
             CommandQueue.Enqueue(item);
         }
 
-        private void OnDashPerformed(InputAction.CallbackContext context)
+        protected virtual void OnDashPerformed(InputAction.CallbackContext context)
         {
             var item = new InputCommand
             {
@@ -70,7 +61,7 @@ namespace TidiMovementComponent2D.Misc
             CommandQueue.Enqueue(item);
         }
 
-        private void OnCrouchPerformed(InputAction.CallbackContext context)
+        protected virtual void OnCrouchPerformed(InputAction.CallbackContext context)
         {
             var item = new InputCommand
             {
@@ -78,6 +69,30 @@ namespace TidiMovementComponent2D.Misc
                 timestamp = (float)context.time
             };
             CommandQueue.Enqueue(item);
+        }
+
+        protected virtual void OnInputDisabled()
+        {
+            JumpAction.performed -= OnJumpPerformed;
+            JumpAction.canceled -= OnJumpCanceled;
+            DashAction.performed -= OnDashPerformed;
+            CrouchAction.performed -= OnCrouchPerformed;
+        }
+
+        protected virtual void OnInputEnabled()
+        {
+            JumpAction.performed += OnJumpPerformed;
+            JumpAction.canceled += OnJumpCanceled;
+            DashAction.performed += OnDashPerformed;
+            CrouchAction.performed += OnCrouchPerformed;
+        }
+
+        protected virtual void InputAwake()
+        {
+            PlayerInput = GetComponent<PlayerInput>();
+            JumpAction = PlayerInput.actions["Jump"];
+            DashAction = PlayerInput.actions["Dash"];
+            CrouchAction = PlayerInput.actions["Crouch"];
         }
     }
 }

@@ -1,0 +1,52 @@
+﻿using UnityEngine;
+
+namespace PathOfTheInfected.Enemy
+{
+    [CreateAssetMenu(fileName = "SpottableDetected", menuName = "Enemy/States/Core/BaseStates/SpottableDetected", order = 0)]
+    public abstract  class SpottableDetectedSOBase : EnemyBaseState
+    {
+
+        public override void StateExit()
+        {
+            base.StateExit();
+        }
+
+        public override void StateFixedUpdate()
+        {
+            base.StateFixedUpdate();
+        }
+
+        public override void StateEnter()
+        {
+            base.StateEnter();
+        }
+
+        public override void DrawGizmosOnSelected(EnemyBrainBase en)
+        {
+            base.DrawGizmosOnSelected(en);
+        }
+
+        public override void StateUpdate()
+        {
+            base.StateUpdate();
+        }
+
+        public override void StateInit(EnemyBrainBase enemyBrainBase, EnemyStateMachine stateMachine)
+        {
+            base.StateInit(enemyBrainBase, stateMachine);
+        }
+
+        public override void TransitionChecks()
+        {
+            if (CurrentEnemyBrain.isSpottableInAttackRange)
+            {
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.spottableInAttackRangeState);
+            }
+
+            if (!CurrentEnemyBrain.isSpottableDetected)
+            {
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.noSpottableDetectedState);
+            }
+        }
+    }
+}

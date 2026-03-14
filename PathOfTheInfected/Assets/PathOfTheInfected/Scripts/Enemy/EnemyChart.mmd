@@ -1,0 +1,300 @@
+﻿classDiagram
+direction TB
+
+%% =========================
+%% Core "Brain" + State Machine
+%% =========================
+class EnemyBrainBase {
+  <<MonoBehaviour>>
+  +bool IsDead
+  +int CurrentHealth
+  +Rigidbody2D RB
+  +bool IsFacingRight
+  +LayerMask SpottableMask
+  +float CurrentPoise
+  +float maxSpotRange
+  +AttackSOBase attack
+  +float maxPoise
+  +List~ISpottable~ VisibleSpottables
+  +Transform ClosestTarget
+  +ISpottable AttackTarget
+  +Vector3 InitialPosition
+  +Vector3 LastKnownTargetPosition
+  +bool HasLastKnownTarget
+  +bool isSpottableDetected
+  +bool isSpottableInAttackRange
+
+  +void TakeDamage(DamageData)
+  +void Die()
+  +void MoveEnemy(Vector2,bool)
+  +void MoveTo(Transform)
+  +void MoveTo(GameObject)
+  +void MoveTo(Vector2)
+  +void CheckForLeftOrRightFacing(Vector2)
+}
+
+class EnemyFlyingBrainBase {
+  <<MonoBehaviour>>
+  %% overrides detection + movement to be "circle-based" + 2D flight movement
+}
+
+class EnemyStateMachine {
+  +EnemyBaseState CurrentState
+  +EnemyBaseState PreviousState
+  +EnemyBaseState NextState
+  +void InitializeDefaultState(EnemyBaseState)
+  +void RequestStateChange(EnemyBaseState,string)
+  +void ApplyQueuedStateChange()
+}
+
+class EnemyBaseState {
+  <<ScriptableObject>>
+  #EnemyBrainBase EnemyBrainBase
+  #EnemyStateMachine StateMachine
+  +void StateInit(EnemyBrainBase,EnemyStateMachine)
+  +void StateEnter()
+  +void StateExit()
+  +void StateUpdate()
+  +void StateFixedUpdate()
+  +void TransitionChecks()
+  +void DrawGizmosOnSelected(EnemyBrainBase)
+}
+
+EnemyBrainBase o-- EnemyStateMachine : owns
+EnemyStateMachine --> EnemyBaseState : Current/Next/Prev
+EnemyBrainBase "1" -- "3" EnemyBaseState : plug-in states\n(noSpot/detected/inRange)
+EnemyBaseState ..> EnemyBrainBase : reads flags + commands movement
+
+EnemyFlyingBrainBase --|> EnemyBrainBase : extends
+
+%% =========================
+%% Concrete State ScriptableObjects (Grounded/Flying)
+%% =========================
+class NoSpottableDetectedStateSOBase {
+  <<ScriptableObject>>
+  +TransitionChecks()
+}
+class SpottableDetectedSOBase {
+  <<ScriptableObject>>
+  +TransitionChecks()
+}
+class SpottableInAttackRangeSOBase {
+  <<ScriptableObject>>
+  +TransitionChecks()
+}
+
+class EnemyWanderSo {
+  <<ScriptableObject>>
+  +float WanderRange
+  +StateEnter()
+  +StateFixedUpdate()
+  +TransitionChecks()
+}
+class EnemyAggroSO {
+  <<ScriptableObject>>
+  +Transform target
+  +StateFixedUpdate()
+  +TransitionChecks()
+}
+class EnemyAttackSOBase {
+  <<ScriptableObject>>
+  -AttackContext context
+  +StateEnter()
+  +StateFixedUpdate()
+  +TransitionChecks()
+}
+
+class FlyingEnemyWanderSO {
+  <<ScriptableObject>>
+  +float WanderRadius
+  +Vector2 CurrentWanderTarget
+  +StateEnter()
+  +StateFixedUpdate()
+  +StateUpdate()
+  +TransitionChecks()
+}
+
+NoSpottableDetectedStateSOBase --|> EnemyBaseState
+SpottableDetectedSOBase --|> EnemyBaseState
+SpottableInAttackRangeSOBase --|> EnemyBaseState
+EnemyWanderSo --|> EnemyBaseState
+EnemyAggroSO --|> EnemyBaseState
+EnemyAttackSOBase --|> EnemyBaseState
+FlyingEnemyWanderSO --|> EnemyBaseState
+
+EnemyStateMachine ..> NoSpottableDetectedStateSOBase: transitions to
+EnemyStateMachine ..> SpottableDetectedSOBase : transitions to
+EnemyStateMachine ..> SpottableInAttackRangeSOBase : transitions to
+EnemyAttackSOBase ..> AttackSOBase : drives attack
+
+%% =========================
+%% Attack System (ScriptableObject-driven)
+%% =========================
+class AttackContext {
+  +EnemyBrainBase Owner
+  +Transform Target
+  +float Timer
+  +AttackPhase Phase
+  +bool HasHit
+  +bool IsFinished
+}
+
+class AttackSOBase {
+  <<ScriptableObject>>
+  #int damage
+  #float hitStopTime
+  +float MaxAttackRange
+  +float PoiseConsumed
+  +float windupDuration
+  +float recoveryTime
+  +void InitAttack(AttackContext,EnemyBrainBase,Transform)
+  +void AttackLogic(AttackContext)
+  +void PerformAttack(AttackContext)
+  +void RecoverPoise(AttackContext)
+}
+
+class MeleePunchSO {
+  <<ScriptableObject>>
+  +PerformAttack(AttackContext)
+}
+
+class FireProjectileSO {
+  <<ScriptableObject>>
+  -GameObject projectilePrefab
+  -float spawnMargin
+  +PerformAttack(AttackContext)
+}
+
+AttackSOBase --> AttackContext : mutates
+EnemyAttackSOBase ..> AttackContext : owns per-state context
+EnemyBrainBase --> AttackSOBase : has current attack
+
+MeleePunchSO --|> AttackSOBase
+FireProjectileSO --|> AttackSOBase
+
+%% =========================
+%% Projectile + Damage
+%% =========================
+class ProjectileBase {
+  <<MonoBehaviour>>
+  #float projectileSpeed
+  #float projectileLifeTime
+  #DamageData Data
+  #AttackContext Context
+  #Rigidbody2D rb
+  #Vector2 direction
+  +void InitProjectileValuesFromAttack(AttackContext,DamageData,Vector2,Vector3)
+}
+
+class DamageData {
+  <<struct>>
+  +int Damage
+  +float HitStopTime
+  +EnemyBrainBase Instigator
+  +IDamageable DamagedObject
+}
+
+class IDamageable {
+  <<interface>>
+  +void TakeDamage(DamageData)
+  +void Die()
+  +GameObject GameObject
+  +bool IsDead
+  +int CurrentHealth
+  +int MaxHealth
+}
+
+class ISpottable {
+  <<interface>>
+  +Transform Transform
+}
+
+class IEnemyMoveable {
+  <<interface>>
+  +Rigidbody2D RB
+  +bool IsFacingRight
+  +void MoveEnemy(Vector2,bool)
+  +void CheckForLeftOrRightFacing(Vector2)
+}
+
+ProjectileBase ..> IDamageable : damages on collision
+FireProjectileSO ..> ProjectileBase : spawns + initializes
+MeleePunchSO ..> IDamageable : damages via overlap box
+
+EnemyBrainBase ..|> IDamageable
+EnemyBrainBase ..|> IEnemyMoveable
+EnemyBrainBase ..> ISpottable : detects targets
+
+%% =========================
+%% Utility: Hit Stop
+%% =========================
+class HitStopManager {
+  <<MonoBehaviour>>
+  +static HitStopManager Instance
+  +static void Initialize()
+  +void HitStop(float)
+}
+
+class IHitStoppable {
+  <<interface>>
+  +void HitStop(float)
+}
+
+HitStopManager ..> IHitStoppable : provides hit-stop service
+DamageData ..> HitStopManager : carries HitStopTime
+
+    class EnemyBrain {
+        <<MonoBehaviour>>
+        +Senses (Vision/Hearing)
+        +CurrentState
+        ---
+        "The Headquarters (המפקדה)"
+        Responsible for Senses
+        Manages Transitions
+    }
+
+    class EnemyStateBase {
+        <<ScriptableObject>>
+        +Execute(brain)
+        +CheckTransitions(brain)
+        ---
+        "Independent Logic (עצמאי)"
+        Decides WHAT to do
+        Creates AttackContext
+    }
+
+    class EnemyAttackBase {
+        <<ScriptableObject>>
+        +Attack(brain, context)
+        ---
+        "Independent Action (עצמאי)"
+        Decides HOW to attack
+    }
+
+    class AttackContext {
+        <<Data>>
+        +TargetInfo
+        +PositionData
+        ---
+        "The Snapshot"
+        Created by State
+        Consumed by Attack
+    }
+
+    %% --- RELATIONSHIPS ---
+
+    %% The Brain holds the active state
+    EnemyBrain "1" -- "1" EnemyStateBase : Holds Current
+
+    %% The State depends on the Brain for data
+    EnemyStateBase ..> EnemyBrain : Depends on (Senses/Data)
+
+    %% The State references specific Attacks
+    EnemyStateBase "1" --> "*" EnemyAttackBase : Has List of
+
+    %% The State creates the Context
+    EnemyStateBase ..> AttackContext : Creates
+
+    %% The Attack depends on everything
+    EnemyAttackBase ..> EnemyBrain : Depends on
+    EnemyAttackBase ..> AttackContext : Uses
