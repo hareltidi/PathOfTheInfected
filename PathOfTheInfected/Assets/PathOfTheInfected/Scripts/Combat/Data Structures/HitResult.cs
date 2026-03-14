@@ -20,7 +20,7 @@
         /// Represents the total amount of damage dealt after all calculations, including modifiers, resistances,
         /// and other adjustments, have been applied to the base damage value.
         /// </summary>
-        public int FinalDamage;
+        public float FinalDamage;
 
 
         /// <summary>

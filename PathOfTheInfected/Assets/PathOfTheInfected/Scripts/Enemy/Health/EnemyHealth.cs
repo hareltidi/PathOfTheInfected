@@ -9,8 +9,8 @@ namespace PathOfTheInfected.Enemy.Health
     {
         public bool IsDead { get; set; }
         [Header("Health and damage")]
-        [field: SerializeField] public int CurrentHealth { get; private set; }
-        [field: SerializeField] public int MaxHealth { get; private set; }
+        [field: SerializeField] public float CurrentHealth { get; private set; }
+        [field: SerializeField] public float MaxHealth { get; private set; }
         [ColorUsage(true, true)]
         public Color flashColor = Color.red;
         [SerializeField] public float flashTime = 0.1f;
@@ -34,7 +34,7 @@ namespace PathOfTheInfected.Enemy.Health
             Destroy(gameObject, flashTime + 0.1f);
         }
 
-        public void TakeDamage(int finalDamage, float hitStopTime)
+        public void TakeDamage(float finalDamage, float hitStopTime)
         {
             if (IsDead) return;
             CurrentHealth -= finalDamage;
@@ -117,7 +117,7 @@ namespace PathOfTheInfected.Enemy.Health
 
         public HitResponse OnHit(HitData damageData)
         {
-            int finalDamage = DamageCalculator.CalculateDamage(damageData);
+            float finalDamage = DamageCalculator.CalculateDamage(damageData);
 
             TakeDamage(finalDamage, damageData.attackDefinition.hitStopTime);
 

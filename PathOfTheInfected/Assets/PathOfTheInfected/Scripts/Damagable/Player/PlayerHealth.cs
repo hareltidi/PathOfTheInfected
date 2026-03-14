@@ -64,7 +64,7 @@ namespace PathOfTheInfected.Damagable
         }
 
 
-        public void TakeDamage(int finalDamage, float hitStopTime)
+        public void TakeDamage(float finalDamage, float hitStopTime)
         {
             if (IsDead) return;
             CurrentHealth -= finalDamage;
@@ -122,7 +122,7 @@ namespace PathOfTheInfected.Damagable
 
         public HitResponse OnHit(HitData damageData)
         {
-            int finalDamage = DamageCalculator.CalculateDamage(damageData);
+            float finalDamage = DamageCalculator.CalculateDamage(damageData);
 
             TakeDamage(finalDamage, damageData.attackDefinition.hitStopTime);
 
@@ -136,9 +136,9 @@ namespace PathOfTheInfected.Damagable
         #region Health members
 
         [field: SerializeField] public bool IsDead { get; set; }
-        [field: SerializeField] public int MaxHealth { get; set; }
+        [field: SerializeField] public float MaxHealth { get; set; }
         public GameObject GameObject { get; set; }
-        public int CurrentHealth { get; set; }
+        public float CurrentHealth { get; set; }
 
         #endregion
 

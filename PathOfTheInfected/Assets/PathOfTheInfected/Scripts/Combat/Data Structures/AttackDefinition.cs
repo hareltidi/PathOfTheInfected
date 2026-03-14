@@ -17,7 +17,7 @@ namespace PathOfTheInfected.Combat
     [CreateAssetMenu(fileName = "AttackDefinition", menuName = "Attacks/Base/AttackDefinition", order = 0)]
     public class AttackDefinition : ScriptableObject
     {
-        public int baseDamage = 1;
+        public float baseDamage = 1;
         public float hitStopTime;
         public float recoveryTime;
         public AttackType attackType;
