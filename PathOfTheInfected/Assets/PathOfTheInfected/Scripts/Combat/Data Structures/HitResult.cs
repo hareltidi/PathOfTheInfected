@@ -1,4 +1,6 @@
-﻿namespace PathOfTheInfected.Combat
+﻿using UnityEngine;
+
+namespace PathOfTheInfected.Combat
 {
     public struct HitResult
     {
@@ -21,6 +23,8 @@
         /// and other adjustments, have been applied to the base damage value.
         /// </summary>
         public float FinalDamage;
+
+        public GameObject Target;
 
 
         /// <summary>

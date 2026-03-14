@@ -29,6 +29,7 @@ namespace PathOfTheInfected.Combat
                 var response = responder.OnHit(hitData); // process the hit and get the response
 
                 hitResult.Merge(response);
+                hitResult.Target = hitData.target;
 
                 if (hitResult.PropagationStopped) break; // make sure we stop if we're stopped.
             }

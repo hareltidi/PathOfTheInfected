@@ -26,7 +26,7 @@ namespace PathOfTheInfected.Combat
             damage += hitData.firstHitDamageBoost;
 
             // Round the damage
-            return Mathf.Round(damage * 10f) / 10f;
+            return Mathf.Round(damage * 100f) / 100f;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using PathOfTheInfected.Player.Combat;
+using TidiMovementComponent2D.Core;
 
 namespace PathOfTheInfected.Combat
 {
@@ -8,8 +9,8 @@ namespace PathOfTheInfected.Combat
     public abstract class CombatSubsystem
     {
         #region Properties
-
-        protected PlayerCombat Owner;
+        public PlayerCombat Owner { get; protected set; }
+        public PlayerSm PlayerOwner => Owner.PlayerOwner;
         public bool IsInDebugMode { get; protected set; }
 
         #endregion

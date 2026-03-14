@@ -19,9 +19,7 @@ namespace PathOfTheInfected.Combat
                       $"Attack Definition: {(context.AttackDefinition != null ? context.AttackDefinition.name : "None")}\n" +
                       $"Outcome: {context.Outcome}\n" +
                       $"Final Damage: {context.FinalDamage}\n" +
-                      $"Combo Scaling Level: {context.ComboScalingLevel}\n" +
-                      $"Attacker Is Airborne: {context.AttackerIsAirborne}\n" +
-                      $"Target Killed: {context.TargetKilled}");
+                      $"Attacker Is Airborne: {context.AttackerIsAirborne}\n");
         }
     }
 }

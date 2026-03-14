@@ -17,6 +17,7 @@ namespace PathOfTheInfected.Player.Combat
             PlayerOwner = PlayerSm.Instance;
             _standingPunchAnim = Animator.StringToHash(standingPunchAnim.name);
             _inAirPunchAnim = Animator.StringToHash(inAirPunchAnim.name);
+            InitializeSubsystems();
         }
 
         private void Update()
@@ -77,9 +78,11 @@ namespace PathOfTheInfected.Player.Combat
         public HitResult LastHitResult;
         public PlayerAttackSoBase CurrentAttack { get; private set; }
 
-        private List<CombatSubsystem> _subsystems;
+        private List<CombatSubsystem> _subsystems = new();
 
         public PlayerSm PlayerOwner { get; private set; }
+
+        public PlayerRBCSubsystem RbcSubsystem { get; private set; }
 
         #region Combat flags
 
@@ -96,18 +99,37 @@ namespace PathOfTheInfected.Player.Combat
         {
             if (_subsystems == null || _subsystems.Count <= 0) return;
 
-            foreach (var subsystem in _subsystems) subsystem.Update(Time.deltaTime);
+            foreach (var subsystem in _subsystems)
+            {
+                subsystem.Update(Time.deltaTime);
+            }
         }
 
         private void CallFixedUpdateOnSubsystems()
         {
             if (_subsystems == null || _subsystems.Count <= 0) return;
 
-            foreach (var subsystem in _subsystems) subsystem.FixedUpdate(Time.fixedDeltaTime);
+            foreach (var subsystem in _subsystems)
+            {
+                subsystem.FixedUpdate(Time.fixedDeltaTime);
+            }
         }
 
         private void InitializeSubsystems()
         {
+            RbcSubsystem = new PlayerRBCSubsystem();
+            RbcSubsystem.Initialize(this, debugRbcSubsystem);
+            _subsystems.Add(RbcSubsystem);
+        }
+
+        public void RegisterHitsOnSubsystems(CombatHitContext context)
+        {
+            if (_subsystems == null || _subsystems.Count <= 0) return;
+
+            foreach (var subsystem in _subsystems)
+            {
+                subsystem.RegisterHit(context);
+            }
         }
 
         #endregion

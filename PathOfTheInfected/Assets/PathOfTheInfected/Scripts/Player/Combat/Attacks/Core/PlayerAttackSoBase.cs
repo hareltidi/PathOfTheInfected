@@ -45,5 +45,19 @@ namespace PathOfTheInfected.Player.Combat.Attacks
                 Debug.Log($"{hitResult.FinalDamage} Damage was inflicted onto the target with the outcome being: {hitResult.Outcome}");
             }
         }
+
+        public CombatHitContext BuildCombatHitContext(HitResult hitResult)
+        {
+            CombatHitContext context = new CombatHitContext
+            {
+                Source = PlayerCombat.gameObject,
+                Target = hitResult.Target,
+                AttackDefinition = attackDef,
+                AttackerIsAirborne = !PlayerCombat.PlayerOwner.IsGrounded,
+                Outcome = hitResult.Outcome,
+                FinalDamage = hitResult.FinalDamage,
+            };
+            return context;
+        }
     }
 }

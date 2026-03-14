@@ -607,6 +607,11 @@ namespace TidiMovementComponent2D.Core
             NumberOfDashesUsed = 0;
         }
 
+        public void HalfResetDashes()
+        {
+            NumberOfDashesUsed = Mathf.Max(0, NumberOfDashesUsed - 1);
+        }
+
         public bool CanUnCrouch()
         {
             float crouchTopY = moveStats.CrouchedBoxOffset.y + (moveStats.CrouchedBoxSize.y / 2);

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PathOfTheInfected.Combat;
+using UnityEngine;
 
 namespace PathOfTheInfected.Player.Combat.Attacks
 {
@@ -24,6 +25,13 @@ namespace PathOfTheInfected.Player.Combat.Attacks
         {
             PlayerCombat.PlayerPunchHitBox.EndAttack();
             base.EndAttack();
+        }
+
+        public override void ReactToHitResult(HitResult hitResult)
+        {
+            base.ReactToHitResult(hitResult);
+            CombatHitContext context = BuildCombatHitContext(hitResult);
+            PlayerCombat.RegisterHitsOnSubsystems(context);
         }
     }
 }
