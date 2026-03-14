@@ -16,6 +16,8 @@ namespace PathOfTheInfected.Enemy.Health
         [SerializeField] public float flashTime = 0.1f;
         [SerializeField] public EaseType damageFlashEaseType = EaseType.Linear;
         protected Material[] Materials;
+        private Color _originalColor;
+        private  TidiTween<float> _flashTween;
 
         private void Awake()
         {
@@ -51,15 +53,22 @@ namespace PathOfTheInfected.Enemy.Health
             int i = 0;
             foreach (var t in Materials)
             {
+                if (_flashTween != null)
+                {
+                    _flashTween.FullKill();
+                }
+
                 Material localMat = t;
                 localMat.name += $"Hit Flash Material_{i}";
                 float currentAmount = localMat.GetFloat("_FlashAmount");
-                TidiTweenManager
+                _flashTween = TidiTweenManager
                     .TweenFloat(localMat, currentAmount, 1, flashTime,
                         (value) => { localMat.SetFloat("_FlashAmount", value); }).SetPingPong(2)
                     .SetEase(damageFlashEaseType);
                 i++;
             }
+            SetFlashColor(_originalColor);
+
         }
 
         ///<summary>
@@ -95,6 +104,7 @@ namespace PathOfTheInfected.Enemy.Health
         {
             SpriteRenderer[] spriteRenderers = GetComponents<SpriteRenderer>();
             Materials = new Material[spriteRenderers.Length];
+            _originalColor = spriteRenderers[0].color;
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
                 Material instance = Instantiate(spriteRenderers[i].sharedMaterial);

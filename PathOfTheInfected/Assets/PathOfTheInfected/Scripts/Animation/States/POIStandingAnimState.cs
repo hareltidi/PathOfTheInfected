@@ -80,7 +80,7 @@ namespace PathOfTheInfected.Animation
 
         protected override void TransitionChecks()
         {
-            if (!AnimatorManagerInstance.Player.IsGrounded)
+            if (!AnimatorManagerInstance.OwnerPlayer.IsGrounded)
             {
                 stateMachine.RequestStateChange(AnimatorManagerInstance.InAirState);
             }

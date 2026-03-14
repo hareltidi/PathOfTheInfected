@@ -1,4 +1,4 @@
-﻿using PathOfTheInfected.Player.Combat;
+using PathOfTheInfected.Player.Combat;
 using TidiMovementComponent2D.Animation;
 using TidiMovementComponent2D.Misc;
 using UnityEngine;
@@ -10,97 +10,117 @@ namespace PathOfTheInfected.Animation
     /// </summary>
     public class POIAnimInstance : TidiAnimInstance
     {
+        [Tooltip("The combat component that will be used for animation.")]
         public PlayerCombat playerCombat;
+
+        /// <summary>
+        ///     The singleton instance of the animation manager.
+        /// </summary>
         public static POIAnimInstance Instance;
+
         #region States
+
         public POIStandingAnimState StandingState { get; private set; }
         public POIInAirAnimState InAirState { get; private set; }
+
         #endregion
 
         #region Animation Data
+
         #region Standing Anim Data
 
-          #region AnimClipsRefs - Standing
+        #region AnimClipsRefs - Standing
 
-                [Header("Animation clips references - Standing")]
-                public AnimationClip idleAnimClip;
-                public AnimationClip walkAnimClip;
-                public AnimationClip runAnimClip;
-                public AnimationClip landAnimClip;
-                public AnimationClip slideAnimClip;
-                public AnimationClip jumpAnimClip;
-                public AnimationClip dashAnimClip;
-                public AnimationClip takeOffAnimClip;
-                public AnimationClip wallSlideAnimClip;
-                public AnimationClip fallingAnimClip;
+        [Header("Animation clips references - Standing")]
+        public AnimationClip idleAnimClip;
 
-                #endregion
+        public AnimationClip walkAnimClip;
+        public AnimationClip runAnimClip;
+        public AnimationClip landAnimClip;
+        public AnimationClip slideAnimClip;
+        public AnimationClip jumpAnimClip;
+        public AnimationClip dashAnimClip;
+        public AnimationClip takeOffAnimClip;
+        public AnimationClip wallSlideAnimClip;
 
-          #region AnimationFlags - Standing
+        #endregion
 
+        #region AnimationFlags - Standing
 
-                public bool standingIsRunning;
-
-
-                public bool standingIsWalking;
+        public bool standingIsRunning;
 
 
-                public bool standingIsWallSliding;
+        public bool standingIsWalking;
 
 
-                public bool standingIsDashing;
-
-                public bool standingIsSliding;
+        public bool standingIsWallSliding;
 
 
-                public bool standingIsJumping;
+        public bool standingIsDashing;
+
+        public bool standingIsSliding;
 
 
-                public bool standingIsInAir;
-                #endregion
+        public bool standingIsJumping;
 
-          #region AnimHashes - Standing
 
-                public int StandingJumpAnim { get; private set; }
-                public int StandingDashAnim { get; private set; }
-                public int StandingIdleAnim { get; private set; }
-                public int StandingWalkAnim { get; private set; }
-                public int StandingRunAnim { get; private set; }
-                public int StandingLandAnim { get; private set; }
-                public int StandingSlideAnim { get; private set; }
-                public int StandingTakeoffAnim { get; private set; }
-                public int StandingWallslideAnim { get; private set; }
+        public bool standingIsInAir;
 
-                #endregion
+        #endregion
+
+        #region AnimHashes - Standing
+
+        public int StandingJumpAnim { get; private set; }
+        public int StandingDashAnim { get; private set; }
+        public int StandingIdleAnim { get; private set; }
+        public int StandingWalkAnim { get; private set; }
+        public int StandingRunAnim { get; private set; }
+        public int StandingLandAnim { get; private set; }
+        public int StandingSlideAnim { get; private set; }
+        public int StandingTakeoffAnim { get; private set; }
+        public int StandingWallslideAnim { get; private set; }
+
+        #endregion
 
         #endregion
 
         #region In Air Anim Data
+
         #region AnimClipRefs - InAir
+
         [Header("Animation clips references - In Air")]
         public AnimationClip inAirFallClip;
+
         public AnimationClip inAirDashFallClip;
         public AnimationClip inAirJumpClip;
         public AnimationClip inAirPunchClip;
+
         #endregion
 
         #region AnimHashes - InAir
+
         public int InAirJumpAnim { get; private set; }
         public int InAirFallAnim { get; private set; }
         public int InAirDashFallAnim { get; private set; }
         public int InAirPunchAnim { get; private set; }
+
         #endregion
 
         #region AnimationFlags - InAir
+
         public bool inAirIsJumping;
         public bool inAirIsDashing;
         public bool inAirIsAirDashFalling;
         public bool inAirIsWallSliding;
+
         #endregion
+
         #endregion
+
         #endregion
 
         #region AnimHashes - Setter
+
         protected override void SetAnimHashes()
         {
             // standing state
@@ -123,25 +143,26 @@ namespace PathOfTheInfected.Animation
         #endregion
 
         #region Animation Parameters
+
         protected override void SetAnimationFlags()
         {
             // Standing states
-            standingIsRunning = Mathf.Abs(InputManager.Movement.x) > Player.moveStats.MoveThreshold &&
-                                Player.IsRunning;
-            standingIsWalking = Mathf.Abs(InputManager.Movement.x) > Player.moveStats.MoveThreshold &&
-                                !Player.IsRunning && !Player.IsCrouching;
-            standingIsWallSliding = Player.IsWallSliding;
-            standingIsDashing = Player.IsDashing;
-            standingIsSliding = Player.IsSliding;
-            standingIsJumping = Player.IsJumping;
-            standingIsInAir = !Player.IsGrounded && !Player.IsJumping;
+            standingIsRunning = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
+                                OwnerPlayer.IsRunning;
+            standingIsWalking = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
+                                !OwnerPlayer.IsRunning && !OwnerPlayer.IsCrouching;
+            standingIsWallSliding = OwnerPlayer.IsWallSliding;
+            standingIsDashing = OwnerPlayer.IsDashing;
+            standingIsSliding = OwnerPlayer.IsSliding;
+            standingIsJumping = OwnerPlayer.IsJumping;
+            standingIsInAir = !OwnerPlayer.IsGrounded && !OwnerPlayer.IsJumping;
             // InAir states
-            inAirIsJumping = Player.IsJumping;
-            inAirIsDashing = Player.IsDashing;
-            inAirIsAirDashFalling = Player.IsDashFastFalling && !Player.IsDashing;
-            inAirIsWallSliding =  Player.IsWallSliding;
-
+            inAirIsJumping = OwnerPlayer.IsJumping;
+            inAirIsDashing = OwnerPlayer.IsDashing;
+            inAirIsAirDashFalling = OwnerPlayer.IsDashFastFalling && !OwnerPlayer.IsDashing;
+            inAirIsWallSliding = OwnerPlayer.IsWallSliding;
         }
+
         #endregion
 
 

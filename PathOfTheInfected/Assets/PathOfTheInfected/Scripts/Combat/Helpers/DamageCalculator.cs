@@ -18,7 +18,7 @@ namespace PathOfTheInfected.Combat
         public static int CalculateDamage(HitData hitData)
         {
             // Get the base damage
-            int damage = hitData.attackDefinition.baseDamage;
+            float damage = hitData.attackDefinition.baseDamage;
 
             // Apply damage scaling and damage boosts
             damage *= hitData.comboDamageScalingLevel;

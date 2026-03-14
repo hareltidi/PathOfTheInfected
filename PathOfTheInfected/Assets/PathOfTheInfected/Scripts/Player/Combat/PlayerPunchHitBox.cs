@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using PathOfTheInfected.Combat;
-using TidiMovementComponent2D.Core;
 using TidiMovementComponent2D.Misc;
 using UnityEngine;
 
@@ -77,7 +76,10 @@ namespace PathOfTheInfected.Player.Combat
                 attackDefinition = playerCombat.punchAttack.attackDef,
                 comboDamageScalingLevel = 1,
                 isFirstHit = false,
-                firstHitDamageBoost = 0
+                firstHitDamageBoost = playerCombat.punchAttack.attackDef.firstHitDamageBoost,
+                isPlayerDamage = true,
+                isAttackerInAir = playerCombat.PlayerOwner.IsGrounded,
+                timeStamp = Time.timeSinceLevelLoad
             };
             return data;
         }

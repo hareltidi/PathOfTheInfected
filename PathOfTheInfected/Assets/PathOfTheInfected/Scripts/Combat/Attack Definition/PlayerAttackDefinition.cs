@@ -7,5 +7,6 @@ namespace PathOfTheInfected.Combat
     {
         public float attackBufferTime = 0;
         public float attackRange;
+        public float firstHitDamageBoost;
     }
 }

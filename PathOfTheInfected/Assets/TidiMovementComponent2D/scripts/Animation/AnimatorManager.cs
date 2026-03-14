@@ -123,21 +123,21 @@ namespace TidiMovementComponent2D.Animation
         protected override void SetAnimationFlags()
         {
             // Standing states
-            standingIsRunning = Mathf.Abs(InputManager.Movement.x) > Player.moveStats.MoveThreshold &&
-                                Player.IsRunning;
-            standingIsWalking = Mathf.Abs(InputManager.Movement.x) > Player.moveStats.MoveThreshold &&
-                                !Player.IsRunning && !Player.IsCrouching;
-            standingIsWallSliding = Player.StateMachine.CurrentState == Player.WallSlideState;
-            standingIsDashing = Player.IsDashing;
-            standingIsAirDashFalling = Player.IsDashFastFalling;
-            standingIsSliding = Player.IsSliding;
-            standingIsJumping = Player.IsJumping;
-            standingIsInAir = !Player.IsGrounded && !Player.IsJumping;
+            standingIsRunning = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
+                                OwnerPlayer.IsRunning;
+            standingIsWalking = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
+                                !OwnerPlayer.IsRunning && !OwnerPlayer.IsCrouching;
+            standingIsWallSliding = OwnerPlayer.StateMachine.CurrentState == OwnerPlayer.WallSlideState;
+            standingIsDashing = OwnerPlayer.IsDashing;
+            standingIsAirDashFalling = OwnerPlayer.IsDashFastFalling;
+            standingIsSliding = OwnerPlayer.IsSliding;
+            standingIsJumping = OwnerPlayer.IsJumping;
+            standingIsInAir = !OwnerPlayer.IsGrounded && !OwnerPlayer.IsJumping;
             standingIsLanding = CurrentAnimationHash == StandingLandAnim;
 
             // crouching states
-            isCrouching = Player.IsCrouching;
-            crouchingIsWalking = isCrouching && Mathf.Abs(InputManager.Movement.x) > Player.moveStats.MoveThreshold;
+            isCrouching = OwnerPlayer.IsCrouching;
+            crouchingIsWalking = isCrouching && Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold;
         }
 
         #endregion

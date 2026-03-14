@@ -4,7 +4,7 @@ using UnityEngine;
 namespace PathOfTheInfected.Animation
 {
     /// <summary>
-    /// The animation state for when the player is in the air. here all the In-Air animations will
+    /// The animation state for when the player is in the air. Here all the In-Air animations will
     /// be evaluated and played.
     /// </summary>
     public class POIInAirAnimState : TidiAnimBaseState
@@ -62,7 +62,7 @@ namespace PathOfTheInfected.Animation
 
         protected override void TransitionChecks()
         {
-            if (AnimatorManagerInstance.Player.IsGrounded)
+            if (AnimatorManagerInstance.OwnerPlayer.IsGrounded)
             {
                 stateMachine.RequestStateChange(AnimatorManagerInstance.StandingState);
             }

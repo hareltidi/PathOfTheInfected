@@ -24,7 +24,7 @@ namespace PathOfTheInfected.Combat
         /// <summary>
         /// How much damage should we add to the first hit? (only applicable to player attacks)
         /// </summary>
-        public int firstHitDamageBoost;
+        public float firstHitDamageBoost;
 
         /// <summary>
         /// Reference to the definition of the attack, detailing its properties and behavior.

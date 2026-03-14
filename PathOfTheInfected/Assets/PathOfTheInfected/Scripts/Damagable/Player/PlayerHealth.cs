@@ -7,6 +7,7 @@ namespace PathOfTheInfected.Damagable
 {
     public class PlayerHealth : MonoBehaviour, IHitResponder, IHitStoppable
     {
+        private TidiTween<float> _flashTween;
         private void Awake()
         {
             _spriteRenderers = visuals.GetComponentsInChildren<SpriteRenderer>();
@@ -38,7 +39,10 @@ namespace PathOfTheInfected.Damagable
         /// <param name="duration">How long should we freeze time?</param>
         public void HitStop(float duration)
         {
-            if (!HitStopManager.Instance) HitStopManager.Initialize();
+            if (!HitStopManager.Instance)
+            {
+                HitStopManager.Initialize();
+            }
 
             HitStopManager.Instance?.HitStop(duration);
         }
@@ -50,6 +54,7 @@ namespace PathOfTheInfected.Damagable
         private void InitMaterials()
         {
             _materials = new Material[_spriteRenderers.Length];
+            _originalColor = _spriteRenderers[0].color;
             for (var i = 0; i < _spriteRenderers.Length; i++)
             {
                 var instance = Instantiate(_spriteRenderers[i].sharedMaterial);
@@ -85,17 +90,22 @@ namespace PathOfTheInfected.Damagable
         {
             SetFlashColor(flashColor);
             var i = 0;
+            if (_flashTween != null)
+            {
+                _flashTween.FullKill();
+            }
             foreach (var t in _materials)
             {
                 var localMat = t;
                 localMat.name += $"Hit Flash Material_{i}";
                 var currentAmount = localMat.GetFloat("_FlashAmount");
-                TidiTweenManager
+                _flashTween = TidiTweenManager
                     .TweenFloat(localMat, currentAmount, 1, flashTime,
                         value => { localMat.SetFloat("_FlashAmount", value); }).SetPingPong(2)
                     .SetEase(damageFlashEaseType);
                 i++;
             }
+            SetFlashColor(_originalColor);
         }
 
         /// <summary>
@@ -152,6 +162,7 @@ namespace PathOfTheInfected.Damagable
 
         [SerializeField] private EaseType damageFlashEaseType;
         [SerializeField] private GameObject visuals;
+        private Color _originalColor;
 
         #endregion
     }

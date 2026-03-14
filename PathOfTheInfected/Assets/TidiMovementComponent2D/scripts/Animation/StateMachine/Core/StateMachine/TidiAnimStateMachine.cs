@@ -1,15 +1,26 @@
-using UnityEngine;
 
 namespace TidiMovementComponent2D.Animation
 {
     public class TidiAnimStateMachine
     {
+
+        /// <summary>
+        /// The current animation state wer'e in
+        /// </summary>
         public TidiAnimBaseState CurrentState { get; private set; }
+
+        /// <summary>
+        /// The previous animation state we wer'e in
+        /// </summary>
         public TidiAnimBaseState PreviousState { get; private set; }
+
+        /// <summary>
+        /// The animation state we want to switch to from our current state.
+        /// </summary>
         public TidiAnimBaseState NextState { get; private set; }
 
         /// <summary>
-        /// Initializes the first state of theAnimation instance. Call this method in the awake/Start method
+        /// Initializes the first state of the Animation instance. Call this method in the awake/Start method
         /// In your Anim instance.
         /// </summary>
         /// <param name="startState">The first animation state we should be in</param>
@@ -32,6 +43,9 @@ namespace TidiMovementComponent2D.Animation
             }
         }
 
+        /// <summary>
+        /// Applies our requests to switch states and initializes the new state.
+        /// </summary>
         public void ApplyQueuedStateChange()
         {
             if (NextState != null)

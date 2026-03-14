@@ -1,27 +1,48 @@
-using System.Collections.Generic;
 using TidiMovementComponent2D.Core;
 using UnityEngine;
 
 namespace TidiMovementComponent2D.Animation
 {
     /// <summary>
-    ///   <para>Base class for code-driven animation management. A solid replacement to the animator graph...</para>
+    ///   <para>Base class for code-driven animation management.</para>
     /// </summary>
     public abstract class TidiAnimInstance : MonoBehaviour
     {
         #region InitialProperties
+        [field:Tooltip("The Animator component that will be used for animation.")]
         [field: SerializeField] protected Animator Animator { get; private set; }
-        public PlayerSm Player { get; private set; }
+        /// <summary>
+        /// The player that owns this animation instance.
+        /// </summary>
+        public PlayerSm OwnerPlayer { get; private set; }
+
+        /// <summary>
+        /// Is the current animation locked?
+        /// </summary>
         protected bool IsCurrentAnimationLocked { get; set; }
+        /// <summary>
+        /// The hash of the previous animation that was played.
+        /// </summary>
         protected int PreviousAnimationHash { get; set; }
+
+        /// <summary>
+        /// The layer of the previous animation that was played.
+        /// </summary>
         protected int PreviousAnimationLayer { get; set; }
 
         ///<summary>
         /// <para>The current animation we need to play</para>
         ///</summary>
         protected int CurrentAnimationHash { get; set; }
+
+        /// <summary>
+        /// The layer of the current animation we need to play
+        /// </summary>
         protected int CurrentAnimationLayer { get; set; }
 
+        /// <summary>
+        /// The state machine for this animation instance.
+        /// </summary>
         protected readonly TidiAnimStateMachine StateMachine = new();
 
         #endregion
@@ -212,7 +233,7 @@ namespace TidiMovementComponent2D.Animation
         {
             AnimationStart();
             SetAnimHashes();
-            Player = PlayerSm.Instance;
+            OwnerPlayer = PlayerSm.Instance;
         }
 
         void Update()
