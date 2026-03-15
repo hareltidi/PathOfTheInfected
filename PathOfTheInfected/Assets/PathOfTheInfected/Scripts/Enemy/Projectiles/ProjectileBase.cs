@@ -73,6 +73,7 @@ namespace PathOfTheInfected.Enemy.Projectiles
 
                 Destroy(gameObject);
             }
+            Destroy(gameObject);
         }
     }
 }

@@ -105,7 +105,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0014877319, y: 0.08877468}
+  m_Offset: {x: 0.0014877319, y: 0.12501192}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -115,7 +115,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.8219299, y: 2.9734802}
+  m_Size: {x: 1.8219299, y: 2.9010057}
   m_EdgeRadius: 0
 --- !u!114 &8759513332165125027
 MonoBehaviour:
@@ -177,7 +177,7 @@ MonoBehaviour:
   testGhost: {fileID: 1937055770074379, guid: 1f1a5f2b203519246ba99a0661c2f5f9, type: 3}
   numberOfTrails: 4
   cabFade: 1
-  fadeTime: 1
+  fadeTime: 0.5
   playerSpriteRenderers:
   - {fileID: 3660354679852897772}
   - {fileID: 8104701598857259675}
@@ -206,7 +206,6 @@ MonoBehaviour:
   dashAnimClip: {fileID: 7400000, guid: 39ed5f4bfb412c64d9cd94ae2f76d336, type: 2}
   takeOffAnimClip: {fileID: 7400000, guid: e300480c53dd8324ba99978da2427973, type: 2}
   wallSlideAnimClip: {fileID: 7400000, guid: 52fa701e48cbe9d40a2422ed8ca9ff06, type: 2}
-  fallingAnimClip: {fileID: 7400000, guid: 01bee17eefbfa4e458ff5e90bd74d2ef, type: 2}
   standingIsRunning: 0
   standingIsWalking: 0
   standingIsWallSliding: 0
@@ -300,8 +299,8 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  hitboxSize: {x: 3.01, y: 0.83}
-  hitboxOffset: {x: 1.6, y: 0}
+  hitboxHeight: 1
+  hitboxOffset: {x: 2.64, y: 0}
 --- !u!1 &5243345907230391907
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,6 +421,8 @@ MonoBehaviour:
   punchAttack: {fileID: 11400000, guid: 396f0f0fad5c0a04fa32bd71a7e65973, type: 2}
   standingPunchAnim: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
   inAirPunchAnim: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
+  debugComboSubsystem: 0
+  debugRbcSubsystem: 0
 --- !u!1001 &694961943405559616
 PrefabInstance:
   m_ObjectHideFlags: 0

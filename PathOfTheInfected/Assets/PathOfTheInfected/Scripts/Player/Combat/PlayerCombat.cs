@@ -95,6 +95,11 @@ namespace PathOfTheInfected.Player.Combat
 
         #region Subsystems
 
+        /// <summary>
+        /// Invokes the Update method on all registered combat subsystems, enabling them to perform their
+        /// per-frame logic. This ensures that each subsystem processes game logic like timers, state
+        /// updates, or other functionality during the frame update cycle.
+        /// </summary>
         private void CallUpdateOnSubsystems()
         {
             if (_subsystems == null || _subsystems.Count <= 0) return;
@@ -105,6 +110,10 @@ namespace PathOfTheInfected.Player.Combat
             }
         }
 
+        /// <summary>
+        /// Invokes the FixedUpdate method on all registered combat subsystems, enabling them to perform their
+        /// per-fixed frame logic.
+        /// </summary>
         private void CallFixedUpdateOnSubsystems()
         {
             if (_subsystems == null || _subsystems.Count <= 0) return;
@@ -115,6 +124,11 @@ namespace PathOfTheInfected.Player.Combat
             }
         }
 
+        /// <summary>
+        /// Initializes and registers combat-related subsystems for the player.
+        /// This includes setting up the Reset Based Combat (RBC) subsystem
+        /// and adding it to the internal list of active subsystems.
+        /// </summary>
         private void InitializeSubsystems()
         {
             RbcSubsystem = new PlayerRBCSubsystem();
@@ -122,6 +136,14 @@ namespace PathOfTheInfected.Player.Combat
             _subsystems.Add(RbcSubsystem);
         }
 
+
+        /// <summary>
+        /// Registers the given combat hit context on all active combat subsystems for further processing.
+        /// </summary>
+        /// <param name="context">
+        /// The context of the combat hit, containing details such as the source, target, attack definition, outcome,
+        /// and additional information relevant to the hit.
+        /// </param>
         public void RegisterHitsOnSubsystems(CombatHitContext context)
         {
             if (_subsystems == null || _subsystems.Count <= 0) return;
@@ -146,8 +168,8 @@ namespace PathOfTheInfected.Player.Combat
             {
                 ClearCombatIntentState(CombatIntentFlags.WantsToPunch);
                 ActivateAttack(punchAttack, CombatFlags.Punching);
-                ActivateCombatState(CombatFlags.Punching);
-                POIAnimInstance.Instance.PlayAnimationIfNotCurrent(_punchAnim, 0, 0,
+                int animToPlay = PlayerOwner.IsGrounded ? _punchAnim : _inAirPunchAnim;
+                POIAnimInstance.Instance.PlayAnimationIfNotCurrent(animToPlay, 0, 0,
                     true, true);
             }
         }
@@ -155,6 +177,7 @@ namespace PathOfTheInfected.Player.Combat
         private void ActivateAttack(PlayerAttackSoBase attack, CombatFlags flag)
         {
             CurrentAttack = attack;
+            ActivateCombatState(flag);
             CurrentAttack.InitAttack(this, flag);
             _bufferTimer = 0f;
         }
@@ -163,6 +186,7 @@ namespace PathOfTheInfected.Player.Combat
         public void StartRecovery(float time)
         {
             _recoveryTimer = time;
+            Debug.Log("Recovery started");
         }
 
         /// <summary>
