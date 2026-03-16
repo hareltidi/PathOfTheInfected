@@ -1231,6 +1231,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -834189760841606244, guid: ca9efcb046694314292e0337e7a5ab40, type: 3}
+      propertyPath: drawNodes
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -834189760841606244, guid: ca9efcb046694314292e0337e7a5ab40, type: 3}
       propertyPath: maxNodesToDraw
       value: 10000
       objectReference: {fileID: 0}
@@ -1241,7 +1245,7 @@ PrefabInstance:
     - target: {fileID: -834189760841606244, guid: ca9efcb046694314292e0337e7a5ab40, type: 3}
       propertyPath: nextGraphBakedData
       value: 
-      objectReference: {fileID: 11400000, guid: 6e0df73cfc4ca35478ac70840fceb083, type: 2}
+      objectReference: {fileID: 11400000, guid: 0251619d91b84824e8456d864112fb4b, type: 2}
     - target: {fileID: 105681654796408801, guid: ca9efcb046694314292e0337e7a5ab40, type: 3}
       propertyPath: m_Name
       value: GraphSwitcher
@@ -2328,7 +2332,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 724985943210959047, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: debugRbcSubsystem
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1887671414283325526, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2374,17 +2378,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: player
       objectReference: {fileID: 0}
-    - target: {fileID: 5912102297594768566, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
-      propertyPath: hitboxHeight
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5912102297594768566, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
-      propertyPath: hitboxOffset.x
-      value: 2.64
-      objectReference: {fileID: 0}
-    - target: {fileID: 8291985434116240427, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
-      propertyPath: fadeTime
-      value: 0.5
+    - target: {fileID: 3756509103328068699, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.176
       objectReference: {fileID: 0}
     - target: {fileID: 8759513332165125027, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: RespawnPoint

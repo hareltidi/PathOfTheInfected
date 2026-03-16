@@ -2,6 +2,7 @@
 using PathOfTheInfected.Animation;
 using PathOfTheInfected.Combat;
 using PathOfTheInfected.Player.Combat.Attacks;
+using TidiMovementComponent2D.Animation;
 using TidiMovementComponent2D.Core;
 using UnityEngine;
 
@@ -15,18 +16,21 @@ namespace PathOfTheInfected.Player.Combat
         private void Start()
         {
             PlayerOwner = PlayerSm.Instance;
+            AnimInstance = POIAnimInstance.Instance;
             _standingPunchAnim = Animator.StringToHash(standingPunchAnim.name);
             _inAirPunchAnim = Animator.StringToHash(inAirPunchAnim.name);
             InitializeSubsystems();
+            AnimInstance.AnimationEnded += OnAnimationEnded;
         }
+
 
         private void Update()
         {
             CaptureInput();
             TickTimers();
+            _punchAnim = PlayerOwner.IsGrounded ? _standingPunchAnim : _inAirPunchAnim;
             ResolveAttackIntents();
             CallUpdateOnSubsystems();
-            _punchAnim = PlayerOwner.IsGrounded ? _standingPunchAnim : _inAirPunchAnim;
         }
 
         private void FixedUpdate()
@@ -81,6 +85,8 @@ namespace PathOfTheInfected.Player.Combat
         private List<CombatSubsystem> _subsystems = new();
 
         public PlayerSm PlayerOwner { get; private set; }
+
+        public POIAnimInstance AnimInstance { get; private set; }
 
         public PlayerRBCSubsystem RbcSubsystem { get; private set; }
 
@@ -168,12 +174,17 @@ namespace PathOfTheInfected.Player.Combat
             {
                 ClearCombatIntentState(CombatIntentFlags.WantsToPunch);
                 ActivateAttack(punchAttack, CombatFlags.Punching);
-                int animToPlay = PlayerOwner.IsGrounded ? _punchAnim : _inAirPunchAnim;
-                POIAnimInstance.Instance.PlayAnimationIfNotCurrent(animToPlay, 0, 0,
+                POIAnimInstance.Instance.PlayAnimationIfNotCurrent(_punchAnim, 0, 0,
                     true, true);
             }
         }
 
+
+        /// <summary>
+        /// Activates a specific attack for the player and updates the combat state accordingly.
+        /// </summary>
+        /// <param name="attack">The attack to be activated, represented as a PlayerAttackSoBase instance.</param>
+        /// <param name="flag">The combat flag associated with the attack, used to control combat states.</param>
         private void ActivateAttack(PlayerAttackSoBase attack, CombatFlags flag)
         {
             CurrentAttack = attack;
@@ -186,11 +197,10 @@ namespace PathOfTheInfected.Player.Combat
         public void StartRecovery(float time)
         {
             _recoveryTimer = time;
-            Debug.Log("Recovery started");
         }
 
         /// <summary>
-        ///     A method for checking if the player can perform a punch
+        /// A method for checking if the player can perform a punch
         /// </summary>
         /// <returns>True if the player can perform a punch, otherwise, False</returns>
         private bool CanPunch()
@@ -199,12 +209,17 @@ namespace PathOfTheInfected.Player.Combat
         }
 
         /// <summary>
-        ///     This method is responsible for decrementing delta time from our timers
+        /// This method is responsible for decrementing delta time from our timers
         /// </summary>
         private void TickTimers()
         {
             _recoveryTimer = Mathf.Max(0, _recoveryTimer - Time.deltaTime);
             _bufferTimer = Mathf.Max(0, _bufferTimer - Time.deltaTime);
+
+            if (_bufferTimer <= 0f)
+            {
+                ClearCombatIntentState(CombatIntentFlags.WantsToPunch);
+            }
         }
 
 
@@ -218,6 +233,24 @@ namespace PathOfTheInfected.Player.Combat
                 case AnimationAttackMessageType.End:
                     CurrentAttack.EndAttack();
                     break;
+            }
+        }
+
+        private void OnAnimationEnded(int hash, int layer, AnimationEndReason reason)
+        {
+            if (hash == _punchAnim)
+            {
+                switch (reason)
+                {
+                    case AnimationEndReason.Completed:
+                        break;
+                    case AnimationEndReason.Stopped:
+                        OnAnimationAttackMessage(AnimationAttackMessageType.End);
+                        break;
+                    case AnimationEndReason.Replaced:
+                        OnAnimationAttackMessage(AnimationAttackMessageType.End);
+                        break;
+                }
             }
         }
 

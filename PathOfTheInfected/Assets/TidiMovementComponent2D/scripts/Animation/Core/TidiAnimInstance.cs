@@ -1,3 +1,4 @@
+using System;
 using TidiMovementComponent2D.Core;
 using UnityEngine;
 
@@ -44,6 +45,13 @@ namespace TidiMovementComponent2D.Animation
         /// The state machine for this animation instance.
         /// </summary>
         protected readonly TidiAnimStateMachine StateMachine = new();
+
+        public event Action<int, int, AnimationEndReason> AnimationEnded;
+
+        private bool _stopRequested;
+        private bool _animationWasObserved;
+        private bool _isTrackingAnimation;
+        private AnimationEndReason _lastAnimationEndReason = AnimationEndReason.None;
 
         #endregion
 
@@ -99,6 +107,16 @@ namespace TidiMovementComponent2D.Animation
                 IsCurrentAnimationLocked = isAnimationLocked;
                 PreviousAnimationHash = CurrentAnimationHash;
                 PreviousAnimationLayer = CurrentAnimationLayer;
+
+                if (PreviousAnimationHash != 0)
+                {
+                    AnimationEnded?.Invoke(
+                        PreviousAnimationHash,
+                        PreviousAnimationLayer,
+                        GetAnimationEndReason(PreviousAnimationHash, PreviousAnimationLayer));
+                }
+
+
                 CurrentAnimationHash = hash;
                 CurrentAnimationLayer = layer;
                 if (crossfadeDuration > 0f)
@@ -132,6 +150,15 @@ namespace TidiMovementComponent2D.Animation
             IsCurrentAnimationLocked = isAnimationLocked;
             PreviousAnimationHash = CurrentAnimationHash;
             PreviousAnimationLayer = CurrentAnimationLayer;
+
+            if (PreviousAnimationHash != 0)
+            {
+                AnimationEnded?.Invoke(
+                    PreviousAnimationHash,
+                    PreviousAnimationLayer,
+                    GetAnimationEndReason(PreviousAnimationHash, PreviousAnimationLayer));
+            }
+
             CurrentAnimationHash = hash;
             CurrentAnimationLayer = layer;
             if (crossfadeDuration > 0f)
@@ -198,6 +225,21 @@ namespace TidiMovementComponent2D.Animation
 
         #endregion
 
+        #region Animation End Detection
+
+        public AnimationEndReason GetAnimationEndReason(int hash, int layer = 0)
+        {
+
+            if (_stopRequested) return AnimationEndReason.Stopped;
+
+            if (IsAnimationFinished(hash, layer))
+            {
+                return AnimationEndReason.Completed;
+            }
+            return AnimationEndReason.Replaced;
+        }
+        #endregion
+
         #region Public Methods
         /// <summary>
         /// <para>Sets the current animation state to the new state provided.</para>
@@ -212,7 +254,7 @@ namespace TidiMovementComponent2D.Animation
         /// <para>Gets the current animation state.</para>
         /// </summary>
         /// <returns>The current animation state were in</returns>
-        public TidiAnimBaseState GetAnimState()
+        public TidiAnimBaseState GetCurrentAnimState()
         {
             return StateMachine.CurrentState;
         }
@@ -220,6 +262,7 @@ namespace TidiMovementComponent2D.Animation
         public void StopAllPlayingAnimations()
         {
             Animator.Play("EmptyState"); // should stop all playing animations
+            _stopRequested = true;
         }
 
         #endregion
