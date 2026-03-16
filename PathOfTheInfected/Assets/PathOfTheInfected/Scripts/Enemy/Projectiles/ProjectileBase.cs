@@ -67,7 +67,7 @@ namespace PathOfTheInfected.Enemy.Projectiles
                 };
                 if (other.gameObject == data.source) return; // if the bullet hits the one who shot, ignore it
 
-                var result = HitDispatcher.ProcessHit(data);
+                var result = HitDispatcher.ProcessHit(ref data);
 
                 ReactToHitResult(result);
 

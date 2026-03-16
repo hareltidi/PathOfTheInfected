@@ -14,7 +14,7 @@ namespace PathOfTheInfected.Combat
         /// </summary>
         /// <param name="hitData">The <see cref="HitData"/> describing the hit, including source, target, and attack details.</param>
         /// <returns>A HitResult containing information about the result of the hit, such as final damage and outcome.</returns>
-        public static HitResult ProcessHit(HitData hitData)
+        public static HitResult ProcessHit(ref HitData hitData)
         {
             HitResult hitResult = new HitResult();
             if (!hitData.target) return hitResult; // Validate hit data
@@ -26,7 +26,7 @@ namespace PathOfTheInfected.Combat
 
             foreach (var responder in responders)
             {
-                var response = responder.OnHit(hitData); // process the hit and get the response
+                var response = responder.OnHit(ref hitData); // process the hit and get the response
 
                 hitResult.Merge(response);
                 hitResult.Target = hitData.target;
@@ -43,7 +43,7 @@ namespace PathOfTheInfected.Combat
         /// </summary>
         /// <param name="attackDefinition">The <see cref="AttackDefinition"/> of the attack that includes damage, type, and other properties.</param>
         /// <returns>A HitResult containing the outcome of the hit, including the final damage and whether propagation was stopped.</returns>
-        public static HitResult ProcessHit(AttackDefinition attackDefinition)
+        public static HitResult ProcessHit(ref AttackDefinition attackDefinition)
         {
             HitData hitData = new HitData()
             {
@@ -55,7 +55,7 @@ namespace PathOfTheInfected.Combat
                 timeStamp = Time.timeSinceLevelLoad
             };
 
-            return ProcessHit(hitData);
+            return ProcessHit(ref hitData);
         }
     }
 }

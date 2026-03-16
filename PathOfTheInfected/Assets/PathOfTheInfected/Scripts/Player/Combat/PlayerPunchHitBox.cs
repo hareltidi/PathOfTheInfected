@@ -43,7 +43,7 @@ namespace PathOfTheInfected.Player.Combat
                 {
                     HitData data = BuildHitData(hit);
 
-                    HitResult result = HitDispatcher.ProcessHit(data);
+                    HitResult result = HitDispatcher.ProcessHit(ref data);
 
                     OnPunchFinished(result);
                 }

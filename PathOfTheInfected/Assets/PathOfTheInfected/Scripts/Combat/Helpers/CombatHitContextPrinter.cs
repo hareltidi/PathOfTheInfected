@@ -11,7 +11,7 @@ namespace PathOfTheInfected.Combat
         /// Logs the given <see cref="CombatHitContext"/> to the console.
         /// </summary>
         /// <param name="context">The <see cref="CombatHitContext"/> to log</param>
-        public static void LogCombatHitContext(CombatHitContext context)
+        public static void LogCombatHitContext(in CombatHitContext context)
         {
             Debug.Log($"=== Combat Hit Context ===\n" +
                       $"Source: {(context.Source != null ? context.Source.name : "None")}\n" +

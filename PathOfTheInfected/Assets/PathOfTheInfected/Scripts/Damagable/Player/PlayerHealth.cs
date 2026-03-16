@@ -120,9 +120,9 @@ namespace PathOfTheInfected.Damagable
             }
         }
 
-        public HitResponse OnHit(HitData damageData)
+        public HitResponse OnHit(ref HitData damageData)
         {
-            float finalDamage = DamageCalculator.CalculateDamage(damageData);
+            float finalDamage = DamageCalculator.CalculateDamage(in damageData);
 
             TakeDamage(finalDamage, damageData.attackDefinition.hitStopTime);
 

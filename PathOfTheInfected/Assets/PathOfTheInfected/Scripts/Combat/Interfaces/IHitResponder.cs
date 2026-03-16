@@ -24,7 +24,7 @@ namespace PathOfTheInfected.Combat
         /// such as the source, attack type, and state of the attacker.
         /// </param>
         /// <returns>A <see cref="HitResponse" /> object encapsulating the outcome or reaction to the hit event.</returns>
-        HitResponse OnHit(HitData damageData);
+        HitResponse OnHit(ref HitData damageData);
     }
 
     ///<summary>

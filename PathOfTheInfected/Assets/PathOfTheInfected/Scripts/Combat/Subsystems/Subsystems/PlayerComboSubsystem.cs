@@ -19,9 +19,9 @@ namespace PathOfTheInfected.Combat
             base.FixedUpdate(fixedDeltaTime);
         }
 
-        protected override void OnRegisterHit(CombatHitContext context)
+        protected override void OnRegisterHit(in CombatHitContext context)
         {
-            base.OnRegisterHit(context);
+            base.OnRegisterHit(in context);
         }
 
         public override void ClearStates()

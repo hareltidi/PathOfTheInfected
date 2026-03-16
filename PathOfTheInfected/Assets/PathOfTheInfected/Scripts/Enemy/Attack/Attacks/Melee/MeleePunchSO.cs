@@ -48,7 +48,7 @@ namespace PathOfTheInfected.Enemy
             };
 
             // process the hit
-            var result = HitDispatcher.ProcessHit(data);
+            var result = HitDispatcher.ProcessHit(ref data);
 
             ReactToHitResult(result);
 

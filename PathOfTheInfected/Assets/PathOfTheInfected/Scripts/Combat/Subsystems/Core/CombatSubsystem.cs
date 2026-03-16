@@ -52,7 +52,7 @@ namespace PathOfTheInfected.Combat
         {
             if (IsInDebugMode)
             {
-                CombatHitContextPrinter.LogCombatHitContext(context);
+                CombatHitContextPrinter.LogCombatHitContext(in context);
             }
             OnRegisterHit(context);
         }
@@ -61,7 +61,7 @@ namespace PathOfTheInfected.Combat
         /// Invoked when a combat hit is registered, allowing subclasses to handle specific logic related to the hit.
         /// </summary>
         /// <param name="context">The <see cref="CombatHitContext"/> instance containing details about the combat hit.</param>
-        protected virtual void OnRegisterHit(CombatHitContext context)
+        protected virtual void OnRegisterHit(in CombatHitContext context)
         {
         }
 

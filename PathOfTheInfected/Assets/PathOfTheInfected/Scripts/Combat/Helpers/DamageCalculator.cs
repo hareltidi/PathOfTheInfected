@@ -16,7 +16,7 @@ namespace PathOfTheInfected.Combat
         /// </summary>
         /// <param name="hitData">The <see cref="HitData"/> that was generated in early steps</param>
         /// <returns>The final damage we need to inflict to the target</returns>
-        public static float CalculateDamage(HitData hitData)
+        public static float CalculateDamage(in HitData hitData)
         {
             // Get the base damage
             float damage = hitData.attackDefinition.baseDamage;
