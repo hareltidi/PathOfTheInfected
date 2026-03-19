@@ -9,10 +9,15 @@ using UnityEngine;
 namespace PathOfTheInfected.Player.Combat
 {
     /// <summary>
-    ///     Combat manager of the player.
+    /// Combat manager of the player.
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
+        private void Awake()
+        {
+
+        }
+
         private void Start()
         {
             PlayerOwner = PlayerSm.Instance;
@@ -64,11 +69,19 @@ namespace PathOfTheInfected.Player.Combat
 
         [SerializeField] private AnimationClip inAirPunchAnim;
 
-        [Header("Subsystems")] [Tooltip("Enables the debug mode for the combo subsystem")]
+        [Header("Subsystems - General")] [Tooltip("Enables the debug mode for the combo subsystem")]
         public bool debugComboSubsystem;
 
         [Tooltip("Enables the debug mode for the RBC (Reset based combat) subsystem")]
         public bool debugRbcSubsystem;
+
+        [Space]
+
+        [Header("Combo system")]
+        public float maxComboHitMultiplier = 2f;
+        public float maxComboSpeedMultiplier = 3f;
+
+        [Header("RBC system")] public bool grantFullReset = false;
 
         #endregion
 
@@ -89,6 +102,7 @@ namespace PathOfTheInfected.Player.Combat
         public POIAnimInstance AnimInstance { get; private set; }
 
         public PlayerRBCSubsystem RbcSubsystem { get; private set; }
+        public PlayerComboSubsystem ComboSubsystem { get; private set; }
 
         #region Combat flags
 
@@ -137,9 +151,18 @@ namespace PathOfTheInfected.Player.Combat
         /// </summary>
         private void InitializeSubsystems()
         {
+            // RBC
             RbcSubsystem = new PlayerRBCSubsystem();
             RbcSubsystem.Initialize(this, debugRbcSubsystem);
+            RbcSubsystem.HasFullReset = grantFullReset;
             _subsystems.Add(RbcSubsystem);
+
+            //Combo
+            ComboSubsystem = new PlayerComboSubsystem();
+            ComboSubsystem.Initialize(this, debugComboSubsystem);
+            ComboSubsystem.MaxComboHitMultiplier = maxComboHitMultiplier;
+            ComboSubsystem.MaxComboSpeedMultiplier = maxComboSpeedMultiplier;
+            _subsystems.Add(ComboSubsystem);
         }
 
 
@@ -255,7 +278,6 @@ namespace PathOfTheInfected.Player.Combat
         }
 
         #endregion
-
 
         #region BitFlag Helpers - Intent
 

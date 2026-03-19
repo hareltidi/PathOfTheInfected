@@ -180,6 +180,8 @@ namespace TidiMovementComponent2D.Core
 
         public bool IsTouchingWall => Controller.State.IsAgainstWall;
 
+        public float ComboSpeedMultiplier { get; set; } = 1f;
+
         private void Awake()
         {
             if (Instance == null)
@@ -354,6 +356,7 @@ namespace TidiMovementComponent2D.Core
             if (IsDashing) return;
 
             float num = speedOverride > 0 ? speedOverride : moveStats.MaxWalkSpeed;
+            num *= ComboSpeedMultiplier;
             if (Mathf.Abs(moveInput.x) >= (double)moveStats.MoveThreshold)
             {
                 TurnCheck(moveInput);

@@ -5,6 +5,7 @@ namespace PathOfTheInfected.Combat
 {
     public class PlayerRBCSubsystem : CombatSubsystem
     {
+        public bool HasFullReset { get; set; }
         public override void Initialize(PlayerCombat owner, bool isInDebugMode)
         {
             base.Initialize(owner, isInDebugMode);
@@ -24,7 +25,7 @@ namespace PathOfTheInfected.Combat
         {
             if (context.AttackerIsAirborne)
             {
-                PlayerOwner.HalfResetDashes();
+                ResetDashes();
                 PlayerOwner.ReplenishJumps();
                 Debug.Log("Airborne hit, Resets granted!");
             }
@@ -33,6 +34,18 @@ namespace PathOfTheInfected.Combat
         public override void ClearStates()
         {
             base.ClearStates();
+        }
+
+        private void ResetDashes()
+        {
+            if (HasFullReset)
+            {
+                PlayerOwner.ResetDashes();
+            }
+            else
+            {
+                PlayerOwner.HalfResetDashes();
+            }
         }
     }
 }

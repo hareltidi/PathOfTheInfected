@@ -4,10 +4,15 @@ using UnityEngine;
 
 namespace TidiGameplayMessaging.Core
 {
+    /// <summary>
+    /// A singleton subsystem that manages the subscription and publication of typed gameplay messages.
+    /// </summary>
     public sealed class TidiGameplayMessagingSubsystem
     {
         private static readonly Lazy<TidiGameplayMessagingSubsystem> _instance =
             new(() => new TidiGameplayMessagingSubsystem());
+
+        private static readonly object NoPayload = new();
 
 
         private readonly Dictionary<Type, List<Action<object>>> _listeners = new();
@@ -78,6 +83,42 @@ namespace TidiGameplayMessaging.Core
             });
         }
 
+
+        public IDisposable Subscribe<TChannel>(Action callback)
+            where TChannel : TidiMessageChannel
+        {
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
+
+            var channelType = typeof(TChannel);
+
+            if (IsPayloadChannel(channelType))
+            {
+                throw new InvalidOperationException(
+                    $"{channelType.Name} is a payload channel. Use Subscribe<TChannel, TPayload>(Action<TPayload>) instead.");
+            }
+
+            if (!_listeners.TryGetValue(channelType, out var list))
+            {
+                list = new List<Action<object>>();
+                _listeners[channelType] = list;
+            }
+
+            Action<object> wrapper = _ => callback();
+            list.Add(wrapper);
+
+            return new Subscription(() =>
+            {
+                if (!_listeners.TryGetValue(channelType, out var currentList)) return;
+
+                currentList.Remove(wrapper);
+
+                if (currentList.Count == 0)
+                {
+                    _listeners.Remove(channelType);
+                }
+            });
+        }
+
         /// <summary>
         /// Publishes a payload to the specified channel.
         /// Messages are enqueued and drained in order to support safe re-entrant publishing.
@@ -98,6 +139,25 @@ namespace TidiGameplayMessaging.Core
             var channelType = typeof(TChannel);
 
             _pendingMessages.Enqueue(new QueuedMessage(channelType, payload));
+
+            if (!_isDrainingQueue)
+            {
+                DrainQueue();
+            }
+        }
+
+        public void Publish<TChannel>()
+            where TChannel : TidiMessageChannel
+        {
+            var channelType = typeof(TChannel);
+
+            if (IsPayloadChannel(channelType))
+            {
+                throw new InvalidOperationException(
+                    $"{channelType.Name} is a payload channel. Use Publish<TChannel, TPayload>(payload) instead.");
+            }
+
+            _pendingMessages.Enqueue(new QueuedMessage(channelType, NoPayload));
 
             if (!_isDrainingQueue)
             {
@@ -143,8 +203,27 @@ namespace TidiGameplayMessaging.Core
             }
         }
 
+
         /// <summary>
-        /// Represents a queued message entry containing the destination channel and payload.
+        /// Method to check if our channel must have a payload or not by checking if it inherits
+        /// from TidiMessageChannel generic type.
+        /// </summary>
+        /// <param name="channelType">The channel to check on</param>
+        /// <returns>If our channel must have a payload</returns>
+        private static bool IsPayloadChannel(Type channelType)
+        {
+            for (var current = channelType; current != null && current != typeof(object); current = current.BaseType)
+            {
+                if (current.IsGenericType && current.GetGenericTypeDefinition() == typeof(TidiMessageChannel<>))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Represents a queued message entry
+        /// containing the destination channel and payload for the message.
         /// </summary>
         private readonly struct QueuedMessage
         {

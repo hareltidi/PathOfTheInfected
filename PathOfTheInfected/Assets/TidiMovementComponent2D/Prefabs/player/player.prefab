@@ -421,8 +421,11 @@ MonoBehaviour:
   punchAttack: {fileID: 11400000, guid: 396f0f0fad5c0a04fa32bd71a7e65973, type: 2}
   standingPunchAnim: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
   inAirPunchAnim: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
-  debugComboSubsystem: 0
+  debugComboSubsystem: 1
   debugRbcSubsystem: 0
+  maxComboHitMultiplier: 1.25
+  maxComboSpeedMultiplier: 1.5
+  grantFullReset: 0
 --- !u!1001 &694961943405559616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -844,7 +847,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6898750184353699220, guid: 58ae461f07f793046949203f2aebfffb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.19
+      value: -0.176
       objectReference: {fileID: 0}
     - target: {fileID: 6898750184353699220, guid: 58ae461f07f793046949203f2aebfffb, type: 3}
       propertyPath: m_LocalPosition.y

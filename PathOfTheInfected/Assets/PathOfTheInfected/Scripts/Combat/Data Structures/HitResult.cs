@@ -2,6 +2,9 @@
 
 namespace PathOfTheInfected.Combat
 {
+    /// <summary>
+    /// A struct That represents The result of our hit attempt
+    /// </summary>
     public struct HitResult
     {
         /// <summary>

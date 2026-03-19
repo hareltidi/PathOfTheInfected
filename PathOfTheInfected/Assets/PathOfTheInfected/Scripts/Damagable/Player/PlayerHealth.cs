@@ -1,5 +1,7 @@
 ﻿using PathOfTheInfected.Combat;
+using PathOfTheInfected.Damagable.Messages;
 using PathOfTheInfected.Enemy;
+using TidiGameplayMessaging.Core;
 using TidiTweening;
 using UnityEngine;
 
@@ -67,6 +69,9 @@ namespace PathOfTheInfected.Damagable
         public void TakeDamage(float finalDamage, float hitStopTime)
         {
             if (IsDead) return;
+
+            TidiGameplayMessagingSubsystem.Instance.Publish<PlayerHitChannel>();
+
             CurrentHealth -= finalDamage;
             FlashDamage();
             HitStop(hitStopTime);
