@@ -15,7 +15,6 @@ namespace TidiGameplayMessaging.Core
         public void Dispose()
         {
             if (_disposed) return;
-
             _unsubscribe?.Invoke();
             _disposed = true;
         }
