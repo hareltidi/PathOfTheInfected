@@ -16,7 +16,7 @@ namespace PathOfTheInfected.Combat
         /// <returns>A HitResult containing information about the result of the hit, such as final damage and outcome.</returns>
         public static HitResult ProcessHit(ref HitData hitData)
         {
-            HitResult hitResult = new HitResult();
+            HitResult hitResult = new();
             if (!hitData.target) return hitResult; // Validate hit data
 
             var responders = hitData.target.GetComponents<IHitResponder>(); // find all our hit responders

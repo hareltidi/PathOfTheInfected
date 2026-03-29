@@ -29,6 +29,8 @@ namespace TidiMovementComponent2D.Core
         public Vector2 StandingBoxSize { get; private set; }
         public Vector2 StandingBoxOffset { get; private set; }
 
+        public Quaternion OriginalRot { get; private set; }
+
 
         [FormerlySerializedAs("MoveStats")][Header("References")] public PlayerMovementStatsSm moveStats;
 
@@ -207,6 +209,7 @@ namespace TidiMovementComponent2D.Core
             SlideState = new PlayerSlideStateSm(this, StateMachine);
             CrouchState = new PlayerCrouchState(this, StateMachine);
             IsFacingRight = true;
+            OriginalRot = transform.rotation;
         }
 
         private void Start()

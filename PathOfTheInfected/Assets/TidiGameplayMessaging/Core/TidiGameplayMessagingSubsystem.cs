@@ -52,7 +52,7 @@ namespace TidiGameplayMessaging.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="callback"/> is <see langword="null"/>.
         /// </exception>
-        public IDisposable Subscribe<TChannel, TPayload>(Action<TPayload> callback)
+        public IDisposable Listen<TChannel, TPayload>(Action<TPayload> callback)
             where TChannel : TidiMessageChannel<TPayload>
             where TPayload : struct, ITidiGameplayPayload
         {
@@ -84,14 +84,14 @@ namespace TidiGameplayMessaging.Core
         }
 
 
-        public IDisposable Subscribe<TChannel>(Action callback)
+        public IDisposable Listen<TChannel>(Action callback)
             where TChannel : TidiMessageChannel
         {
             if (callback == null) throw new ArgumentNullException(nameof(callback));
 
             var channelType = typeof(TChannel);
 
-            if (IsPayloadChannel(channelType))
+            if (IsPayloadChannel(in channelType))
             {
                 throw new InvalidOperationException(
                     $"{channelType.Name} is a payload channel. Use Subscribe<TChannel, TPayload>(Action<TPayload>) instead.");
@@ -132,7 +132,7 @@ namespace TidiGameplayMessaging.Core
         /// <param name="payload">
         /// The payload data sent to all current subscribers of the channel.
         /// </param>
-        public void Publish<TChannel, TPayload>(TPayload payload)
+        public void Broadcast<TChannel, TPayload>(in TPayload payload)
             where TChannel : TidiMessageChannel<TPayload>
             where TPayload : struct, ITidiGameplayPayload
         {
@@ -146,12 +146,12 @@ namespace TidiGameplayMessaging.Core
             }
         }
 
-        public void Publish<TChannel>()
+        public void Broadcast<TChannel>()
             where TChannel : TidiMessageChannel
         {
             var channelType = typeof(TChannel);
 
-            if (IsPayloadChannel(channelType))
+            if (IsPayloadChannel(in channelType))
             {
                 throw new InvalidOperationException(
                     $"{channelType.Name} is a payload channel. Use Publish<TChannel, TPayload>(payload) instead.");
@@ -210,7 +210,7 @@ namespace TidiGameplayMessaging.Core
         /// </summary>
         /// <param name="channelType">The channel to check on</param>
         /// <returns>If our channel must have a payload</returns>
-        private static bool IsPayloadChannel(Type channelType)
+        private static bool IsPayloadChannel(in Type channelType)
         {
             for (var current = channelType; current != null && current != typeof(object); current = current.BaseType)
             {

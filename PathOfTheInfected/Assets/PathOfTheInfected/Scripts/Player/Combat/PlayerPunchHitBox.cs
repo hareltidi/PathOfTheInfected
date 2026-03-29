@@ -50,7 +50,7 @@ namespace PathOfTheInfected.Player.Combat
             }
         }
 
-        private Vector2 GetAttackDirection()
+        public Vector2 GetAttackDirection()
         {
             Vector2 input = InputManager.Movement;
 

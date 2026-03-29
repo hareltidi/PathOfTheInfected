@@ -9,8 +9,13 @@ namespace PathOfTheInfected.Combat
     public abstract class CombatSubsystem
     {
         #region Properties
+
         public PlayerCombat Owner { get; protected set; }
         public PlayerSm PlayerOwner => Owner.PlayerOwner;
+
+        /// <summary>
+        /// Should we print debug messages?
+        /// </summary>
         public bool IsInDebugMode { get; protected set; }
 
         #endregion
@@ -32,7 +37,6 @@ namespace PathOfTheInfected.Combat
         /// <param name="deltaTime">The amount of time, in seconds, since the previous update.</param>
         public virtual void Update(float deltaTime)
         {
-
         }
 
         /// <summary>
@@ -41,7 +45,6 @@ namespace PathOfTheInfected.Combat
         /// <param name="fixedDeltaTime">The amount of time, in seconds, since the previous fixed update.</param>
         public virtual void FixedUpdate(float fixedDeltaTime)
         {
-
         }
 
         /// <summary>
@@ -54,6 +57,7 @@ namespace PathOfTheInfected.Combat
             {
                 CombatHitContextPrinter.LogCombatHitContext(in context);
             }
+
             OnRegisterHit(context);
         }
 
@@ -76,7 +80,6 @@ namespace PathOfTheInfected.Combat
         /// </remarks>
         public virtual void ClearStates()
         {
-
         }
     }
 }

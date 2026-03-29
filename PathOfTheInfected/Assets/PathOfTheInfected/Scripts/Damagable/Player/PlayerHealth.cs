@@ -70,7 +70,7 @@ namespace PathOfTheInfected.Damagable
         {
             if (IsDead) return;
 
-            TidiGameplayMessagingSubsystem.Instance.Publish<PlayerHitChannel>();
+            TidiGameplayMessagingSubsystem.Instance.Broadcast<PlayerHitChannel>();
 
             CurrentHealth -= finalDamage;
             FlashDamage();

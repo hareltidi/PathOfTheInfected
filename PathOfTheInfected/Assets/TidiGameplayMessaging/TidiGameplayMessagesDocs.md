@@ -103,7 +103,7 @@ When a message is published, the payload instance is passed to every listener th
 
 ## Subscribing to Messages
 
-Systems that want to react to messages register themselves using the `Subscribe` method of the messaging subsystem.
+Systems that want to react to messages register themselves using the `Listen` method of the messaging subsystem.
 
 When subscribing, the system specifies the channel it wants to listen to and provides a callback method that will be invoked whenever a message is published on that channel.
 
@@ -117,7 +117,7 @@ This approach prevents memory leaks and ensures that listeners can be removed cl
 
 ## Publishing Messages
 
-Messages are broadcast through the `Publish` method of the messaging subsystem.
+Messages are broadcast through the `Boradcast` method of the messaging subsystem.
 
 When a system publishes a message, the subsystem performs the following steps:
 

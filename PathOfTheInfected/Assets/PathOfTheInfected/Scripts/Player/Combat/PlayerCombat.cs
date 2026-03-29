@@ -80,6 +80,9 @@ namespace PathOfTheInfected.Player.Combat
         [Header("Combo system")]
         public float maxComboHitMultiplier = 2f;
         public float maxComboSpeedMultiplier = 3f;
+        [Tooltip("The amount of hits in a combo required to grant a full reset in our RBC system. " +
+                 "This only applies to aerial combos, grounded combos will NOT get this perk")]
+        public int aerialFullResetComboThreshold;
 
         [Header("RBC system")] public bool grantFullReset = false;
 
@@ -162,6 +165,7 @@ namespace PathOfTheInfected.Player.Combat
             ComboSubsystem.Initialize(this, debugComboSubsystem);
             ComboSubsystem.MaxComboHitMultiplier = maxComboHitMultiplier;
             ComboSubsystem.MaxComboSpeedMultiplier = maxComboSpeedMultiplier;
+            ComboSubsystem.FullResetComboThreshold = aerialFullResetComboThreshold;
             _subsystems.Add(ComboSubsystem);
         }
 
@@ -197,9 +201,28 @@ namespace PathOfTheInfected.Player.Combat
             {
                 ClearCombatIntentState(CombatIntentFlags.WantsToPunch);
                 ActivateAttack(punchAttack, CombatFlags.Punching);
-                POIAnimInstance.Instance.PlayAnimationIfNotCurrent(_punchAnim, 0, 0,
-                    true, true);
+                PlayAnimationAndRotatePlayer();
             }
+        }
+
+        private void PlayAnimationAndRotatePlayer()
+        {
+            /*Vector2 dir = PlayerPunchHitBox.GetAttackDirection();
+
+            bool isFacingRight = PlayerOwner.IsFacingRight;
+            if (dir.sqrMagnitude < 0.01f)
+            {
+                dir = isFacingRight ? Vector2.right : Vector2.left;
+            }
+            float pivotAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            float finalAngle = pivotAngle;
+
+            PlayerOwner.visualsTransform.localRotation = Quaternion.Euler(0f, 0f, finalAngle);
+            */
+
+            POIAnimInstance.Instance.PlayAnimationIfNotCurrent(_punchAnim, 0, 0,
+                true, true);
         }
 
 
@@ -274,6 +297,7 @@ namespace PathOfTheInfected.Player.Combat
                         OnAnimationAttackMessage(AnimationAttackMessageType.End);
                         break;
                 }
+                PlayerOwner.transform.rotation = PlayerOwner.OriginalRot;
             }
         }
 
