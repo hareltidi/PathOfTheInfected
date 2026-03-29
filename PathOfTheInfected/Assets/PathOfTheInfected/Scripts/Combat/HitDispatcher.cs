@@ -6,7 +6,7 @@ namespace PathOfTheInfected.Combat
     /// <summary>
     /// The Hit Dispatcher is responsible for Telling any GameObject that was
     /// </summary>
-    public class HitDispatcher
+    public static class HitDispatcher
     {
         /// <summary>
         /// Processes combat hit data, calculates damage, and applies effects through
