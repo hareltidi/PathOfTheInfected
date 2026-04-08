@@ -13,11 +13,6 @@ namespace PathOfTheInfected.Player.Combat
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
-        private void Awake()
-        {
-
-        }
-
         private void Start()
         {
             PlayerOwner = PlayerSm.Instance;
@@ -25,7 +20,7 @@ namespace PathOfTheInfected.Player.Combat
             _standingPunchAnim = Animator.StringToHash(standingPunchAnim.name);
             _inAirPunchAnim = Animator.StringToHash(inAirPunchAnim.name);
             InitializeSubsystems();
-            AnimInstance.AnimationEnded += OnAnimationEnded;
+            AnimInstance.OnAnimationEnded += OnAnimationEnded;
         }
 
 
@@ -75,11 +70,9 @@ namespace PathOfTheInfected.Player.Combat
         [Tooltip("Enables the debug mode for the RBC (Reset based combat) subsystem")]
         public bool debugRbcSubsystem;
 
-        [Space]
-
-        [Header("Combo system")]
-        public float maxComboHitMultiplier = 2f;
+        [Space] [Header("Combo system")] public float maxComboHitMultiplier = 2f;
         public float maxComboSpeedMultiplier = 3f;
+
         [Tooltip("The amount of hits in a combo required to grant a full reset in our RBC system. " +
                  "This only applies to aerial combos, grounded combos will NOT get this perk")]
         public int aerialFullResetComboThreshold;
@@ -282,21 +275,11 @@ namespace PathOfTheInfected.Player.Combat
             }
         }
 
-        private void OnAnimationEnded(int hash, int layer, AnimationEndReason reason)
+        private void OnAnimationEnded(AnimationHandle handle, AnimationEndReason reason)
         {
-            if (hash == _punchAnim)
+            if (handle.Hash == _punchAnim)
             {
-                switch (reason)
-                {
-                    case AnimationEndReason.Completed:
-                        break;
-                    case AnimationEndReason.Stopped:
-                        OnAnimationAttackMessage(AnimationAttackMessageType.End);
-                        break;
-                    case AnimationEndReason.Replaced:
-                        OnAnimationAttackMessage(AnimationAttackMessageType.End);
-                        break;
-                }
+                OnAnimationAttackMessage(AnimationAttackMessageType.End);
                 PlayerOwner.transform.rotation = PlayerOwner.OriginalRot;
             }
         }

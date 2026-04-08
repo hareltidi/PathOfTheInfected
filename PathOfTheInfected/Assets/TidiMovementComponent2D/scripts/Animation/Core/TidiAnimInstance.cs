@@ -41,17 +41,19 @@ namespace TidiMovementComponent2D.Animation
         /// </summary>
         protected int CurrentAnimationLayer { get; set; }
 
+        protected AnimationHandle CurrentAnimationHandle { get; set; }
+
         /// <summary>
         /// The state machine for this animation instance.
         /// </summary>
         protected readonly TidiAnimStateMachine StateMachine = new();
 
-        public event Action<int, int, AnimationEndReason> AnimationEnded;
+        public event Action<AnimationHandle, AnimationEndReason> OnAnimationEnded;
 
         private bool _stopRequested;
         private bool _animationWasObserved;
         private bool _isTrackingAnimation;
-        private AnimationEndReason _lastAnimationEndReason = AnimationEndReason.None;
+        private int _nextPlayId = 0;
 
         #endregion
 
@@ -99,23 +101,21 @@ namespace TidiMovementComponent2D.Animation
         /// <param name="layer">The layer of the animation</param>
         /// <param name="isAnimationLocked">If true, the current animation will be locked and cannot be overridden by
         /// other animations unless canOverrideLockedAnimations is true</param>
-        public void PlayAnimationIfNotCurrent(int hash, float crossfadeDuration = 0.2f, int layer = 0, bool isAnimationLocked = false, bool canOverrideLockedAnimations = false)
+        public AnimationHandle PlayAnimationIfNotCurrent(int hash, float crossfadeDuration = 0.2f, int layer = 0, bool isAnimationLocked = false, bool canOverrideLockedAnimations = false)
         {
-            if (IsCurrentAnimationLocked && !canOverrideLockedAnimations && IsCurrentAnimationPlaying()) return;
+            AnimationHandle handle = new AnimationHandle
+            {
+                Hash = hash,
+                Layer = layer,
+                PlayId = _nextPlayId++
+            };
+            CurrentAnimationHandle = handle;
+            if (IsCurrentAnimationLocked && !canOverrideLockedAnimations && IsCurrentAnimationPlaying()) return handle;
             if (hash != CurrentAnimationHash)
             {
                 IsCurrentAnimationLocked = isAnimationLocked;
                 PreviousAnimationHash = CurrentAnimationHash;
                 PreviousAnimationLayer = CurrentAnimationLayer;
-
-                if (PreviousAnimationHash != 0)
-                {
-                    AnimationEnded?.Invoke(
-                        PreviousAnimationHash,
-                        PreviousAnimationLayer,
-                        GetAnimationEndReason(PreviousAnimationHash, PreviousAnimationLayer));
-                }
-
 
                 CurrentAnimationHash = hash;
                 CurrentAnimationLayer = layer;
@@ -128,6 +128,8 @@ namespace TidiMovementComponent2D.Animation
                     Animator?.Play(CurrentAnimationHash, layer, 0);
                 }
             }
+
+            return handle;
         }
 
 
@@ -142,22 +144,21 @@ namespace TidiMovementComponent2D.Animation
         /// <param name="layer">The layer of the animation</param>
         /// <param name="canOverrideLockedAnimations">If true, the current animation will be locked and cannot be overridden by
         /// other animations unless canOverrideLockedAnimations is true</param>
-        public void PlayAnimationForced(int hash, float crossfadeDuration = 0.2f, bool isAnimationLocked = false, int layer = 0,
+        public AnimationHandle PlayAnimationForced(int hash, float crossfadeDuration = 0.2f, bool isAnimationLocked = false, int layer = 0,
             bool canOverrideLockedAnimations = false)
         {
-            if (IsCurrentAnimationLocked && !canOverrideLockedAnimations && IsCurrentAnimationPlaying()) return;
+            AnimationHandle handle = new AnimationHandle
+            {
+                Hash = hash,
+                Layer = layer,
+                PlayId = _nextPlayId++
+            };
+            CurrentAnimationHandle = handle;
+            if (IsCurrentAnimationLocked && !canOverrideLockedAnimations && IsCurrentAnimationPlaying()) return handle;
 
             IsCurrentAnimationLocked = isAnimationLocked;
             PreviousAnimationHash = CurrentAnimationHash;
             PreviousAnimationLayer = CurrentAnimationLayer;
-
-            if (PreviousAnimationHash != 0)
-            {
-                AnimationEnded?.Invoke(
-                    PreviousAnimationHash,
-                    PreviousAnimationLayer,
-                    GetAnimationEndReason(PreviousAnimationHash, PreviousAnimationLayer));
-            }
 
             CurrentAnimationHash = hash;
             CurrentAnimationLayer = layer;
@@ -169,6 +170,8 @@ namespace TidiMovementComponent2D.Animation
             {
                 Animator?.Play(CurrentAnimationHash, layer, 0);
             }
+
+            return handle;
         }
 
 
@@ -238,6 +241,19 @@ namespace TidiMovementComponent2D.Animation
             }
             return AnimationEndReason.Replaced;
         }
+
+        private void UpdateAnimationEndCheck()
+        {
+
+            // Only trigger if the animation is not playing AND it changed
+            if (!IsAnimationPlaying(PreviousAnimationHash, PreviousAnimationLayer) && PreviousAnimationHash != CurrentAnimationHash)
+            {
+                AnimationEndReason reason = GetAnimationEndReason(PreviousAnimationHash, PreviousAnimationLayer);
+
+                // Invoke delegate with stored handle
+                OnAnimationEnded?.Invoke(CurrentAnimationHandle, reason);
+            }
+        }
         #endregion
 
         #region Public Methods
@@ -282,6 +298,7 @@ namespace TidiMovementComponent2D.Animation
         void Update()
         {
             AnimationUpdate();
+            UpdateAnimationEndCheck();
         }
 
         private void FixedUpdate()

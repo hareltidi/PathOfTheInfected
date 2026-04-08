@@ -184,6 +184,8 @@ namespace TidiMovementComponent2D.Core
 
         public float ComboSpeedMultiplier { get; set; } = 1f;
 
+        public float CurrentMovementSpeed { get; private set; }
+
         private void Awake()
         {
             if (Instance == null)
@@ -360,6 +362,7 @@ namespace TidiMovementComponent2D.Core
 
             float num = speedOverride > 0 ? speedOverride : moveStats.MaxWalkSpeed;
             num *= ComboSpeedMultiplier;
+            CurrentMovementSpeed = num;
             if (Mathf.Abs(moveInput.x) >= (double)moveStats.MoveThreshold)
             {
                 TurnCheck(moveInput);

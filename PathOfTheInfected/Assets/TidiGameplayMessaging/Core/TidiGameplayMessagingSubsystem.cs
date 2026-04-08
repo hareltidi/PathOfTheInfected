@@ -71,8 +71,7 @@ namespace TidiGameplayMessaging.Core
 
             return new Subscription(() =>
             {
-                if (!_listeners.TryGetValue(channelType, out var currentList))
-                    return;
+                if (!_listeners.TryGetValue(channelType, out var currentList)) return;
 
                 currentList.Remove(wrapper);
 
