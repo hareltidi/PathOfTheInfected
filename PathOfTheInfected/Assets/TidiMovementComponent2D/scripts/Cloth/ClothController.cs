@@ -11,6 +11,7 @@ namespace ClothPhysicsSystem2D
         [SerializeField] private int pointCount = 8;
         [SerializeField] private float segmentLength = 0.2f;
         [SerializeField] private bool debugMode;
+        public Transform segmentTransformStart;
 
         [Header("Physics")]
         [SerializeField] private float damping = 0.96f;
@@ -40,6 +41,9 @@ namespace ClothPhysicsSystem2D
         [SerializeField] private bool snapToFacingOnTurn = true;
         [SerializeField] private float turnImpulseStrength = 0.3f;
         [SerializeField] private float turnImpulseFalloff = 0.85f;
+        [SerializeField] private float turnUpwardImpulseStrength = 0.22f;
+        [SerializeField] private float turnUpwardImpulseFalloff = 0.9f;
+        [SerializeField] private float turnLiftPosition = 0.35f;
 
         [Header("Turn Stabilization")]
         [SerializeField] private float turnStabilizationDuration = 0.2f;
@@ -47,6 +51,7 @@ namespace ClothPhysicsSystem2D
         [SerializeField] private float turnRecoveryStrength = 18f;
         [SerializeField] private float turnShapeBoost = 1.8f;
         [SerializeField] private float turnBendBoost = 1.35f;
+        [SerializeField] private float turnTransitionSpeed = 10f;
 
         [Header("Rendering")]
         [SerializeField] private GameObject segmentPrefab;
@@ -75,7 +80,12 @@ namespace ClothPhysicsSystem2D
         [SerializeField] private float dashMovementForceMultiplier = 0.45f;
         [SerializeField] private float anchorTransportFollow = 0.82f;
 
-        public Transform segmentTransformStart;
+
+        [Header("Collisions")]
+        [SerializeField] private bool enableCollisions = true;
+        [SerializeField] private LayerMask collisionMask;
+        [SerializeField] private float collisionRadius = 0.05f;
+        [SerializeField] private float bounceFactor = 0.2f;
 
         public List<ClothPoint> points = new();
         private List<Transform> _segmentTransforms = new();
@@ -84,6 +94,7 @@ namespace ClothPhysicsSystem2D
         private Vector2 _smoothedPlayerVelocity;
         private bool _hasPreviousPlayerPosition;
         private float _currentFacingSign = 1f;
+        private float _smoothedFacingSign = 1f;
         private float _simulationAccumulator;
         private float _visualAccumulator;
         private bool _isInitialized;
@@ -91,6 +102,11 @@ namespace ClothPhysicsSystem2D
         private bool _hasLastAnchorPosition;
         private bool _forceVisualRefreshThisFrame;
         private float _turnStabilizeTimer;
+
+        // This array caches our collision results
+        private Collider2D[] _collisionResults = new Collider2D[4];
+        // Modern Unity uses Contact Filters instead of NonAlloc
+        private ContactFilter2D _contactFilter;
 
         private PlayerSm Player => PlayerSm.Instance;
 
@@ -110,8 +126,10 @@ namespace ClothPhysicsSystem2D
             simulationDt = Mathf.Max(0.001f, simulationDt);
 
             ResolvePlayerTransform();
+            SetupContactFilter();
 
             _currentFacingSign = GetFacingSign();
+            _smoothedFacingSign = _currentFacingSign;
             localDirection = new Vector2(_currentFacingSign, localDirection.y).normalized;
 
             InitializePoints();
@@ -149,6 +167,7 @@ namespace ClothPhysicsSystem2D
             SamplePlayerMotion(Time.deltaTime);
             _forceVisualRefreshThisFrame = false;
             DecideLocalDirection();
+            _smoothedFacingSign = Mathf.MoveTowards(_smoothedFacingSign, _currentFacingSign, turnTransitionSpeed * Time.deltaTime);
             TransportWithAnchor();
             _turnStabilizeTimer = Mathf.Max(0f, _turnStabilizeTimer - Time.deltaTime);
 
@@ -204,6 +223,14 @@ namespace ClothPhysicsSystem2D
             }
         }
 
+        private void SetupContactFilter()
+        {
+            _contactFilter = new ContactFilter2D();
+            _contactFilter.useLayerMask = true;
+            _contactFilter.layerMask = collisionMask;
+            _contactFilter.useTriggers = false;
+        }
+
         private void InitializeSegments()
         {
             _segmentTransforms.Clear();
@@ -240,6 +267,7 @@ namespace ClothPhysicsSystem2D
             for (int step = 0; step < substeps; step++)
             {
                 ApplyExternalForces(substepDt);
+                HandleCollisions();
 
                 for (int i = 0; i < constraintIterations; i++)
                 {
@@ -421,7 +449,7 @@ namespace ClothPhysicsSystem2D
             float shapeStrengthNow = shapeStrength * Mathf.Lerp(1f, Mathf.Max(1f, turnShapeBoost), stabilization01);
 
             Vector2 shapeDirection = followPlayerFacing
-                ? new Vector2(_currentFacingSign, localDirection.y).normalized
+                ? new Vector2(_smoothedFacingSign, localDirection.y).normalized
                 : (localDirection.sqrMagnitude > 0.0001f ? localDirection.normalized : Vector2.right);
 
             if (useHierarchyFacingInShape && !followPlayerFacing)
@@ -440,7 +468,7 @@ namespace ClothPhysicsSystem2D
                 shapeDirection = new Vector2(shapeDirection.x * hierarchyFacing, shapeDirection.y);
             }
 
-            Vector2 baseDir = segmentTransformStart.TransformDirection(shapeDirection).normalized;
+            Vector2 baseDir = (segmentTransformStart.rotation * shapeDirection).normalized;
 
             for (int i = 1; i < points.Count; i++)
             {
@@ -470,6 +498,7 @@ namespace ClothPhysicsSystem2D
             if (Mathf.Abs(targetX - _currentFacingSign) > 0.001f)
             {
                 _currentFacingSign = targetX;
+                _smoothedFacingSign = _currentFacingSign;
                 localDirection = new Vector2(_currentFacingSign, localDirection.y).normalized;
                 _forceVisualRefreshThisFrame = true;
                 _turnStabilizeTimer = Mathf.Max(_turnStabilizeTimer, turnStabilizationDuration);
@@ -483,11 +512,13 @@ namespace ClothPhysicsSystem2D
                     MirrorClothAcrossAnchor(_currentFacingSign);
                     ApplyTurnImpulse(_currentFacingSign);
                 }
-             }
-             else
-             {
-                 localDirection = new Vector2(_currentFacingSign, localDirection.y).normalized;
-             }
+
+                ApplyTurnUpwardImpulse();
+            }
+            else
+            {
+                localDirection = new Vector2(_currentFacingSign, localDirection.y).normalized;
+            }
         }
 
         private float GetFacingSign()
@@ -520,7 +551,7 @@ namespace ClothPhysicsSystem2D
 
             if (Player)
             {
-                playerTransform = Player.Rb != null ? Player.Rb.transform : Player.transform;
+                playerTransform = Player.Rb ? Player.Rb.transform : Player.transform;
                 if (playerTransform && !_hasPreviousPlayerPosition)
                 {
                     _previousPlayerPosition = playerTransform.position;
@@ -574,19 +605,42 @@ namespace ClothPhysicsSystem2D
             }
         }
 
+        private void ApplyTurnUpwardImpulse()
+        {
+            if (points == null || points.Count < 2 || turnUpwardImpulseStrength <= 0f)
+                return;
+
+            for (int i = 1; i < points.Count; i++)
+            {
+                float t = (float)i / (points.Count - 1);
+                float tipInfluence = Mathf.Lerp(0.3f, 1f, t);
+                float falloff = Mathf.Lerp(1f, turnUpwardImpulseFalloff, t);
+
+                // 1. Calculate the Velocity Impulse
+                float upwardImpulse = turnUpwardImpulseStrength * tipInfluence * falloff;
+
+                // 2. Calculate the Physical Bump
+                float positionLift = turnLiftPosition * tipInfluence * falloff;
+
+                // Instantly teleport the cloth upwards in world space safely
+                points[i].position += new Vector2(0f, positionLift);
+                points[i].previousPosition += new Vector2(0f, positionLift);
+
+                // Apply the Verlet velocity impulse by pushing the previous position down
+                points[i].previousPosition -= new Vector2(0f, upwardImpulse);
+            }
+        }
+
         private void MirrorClothAcrossAnchor(float directionSign)
         {
             if (points == null || points.Count < 2)
                 return;
 
-            float facingSign = NormalizeSign(directionSign, _currentFacingSign);
-
             for (int i = 0; i < points.Count; i++)
             {
-                Vector3 localPos = segmentTransformStart.InverseTransformPoint(points[i].position);
-                localPos.x = Mathf.Abs(localPos.x) * facingSign;
-
-                Vector2 mirroredPos = segmentTransformStart.TransformPoint(localPos);
+                float offsetX = Mathf.Abs(points[i].position.x - segmentTransformStart.position.x);
+                float facingSign = NormalizeSign(directionSign, _currentFacingSign);
+                Vector2 mirroredPos = new Vector2(segmentTransformStart.position.x + (offsetX * facingSign), points[i].position.y);
                 points[i].position = mirroredPos;
                 points[i].previousPosition = mirroredPos;
             }
@@ -599,7 +653,7 @@ namespace ClothPhysicsSystem2D
 
             float facingSign = NormalizeSign(directionSign, _currentFacingSign);
             Vector2 anchor = segmentTransformStart.position;
-            Vector2 direction = segmentTransformStart.TransformDirection(new Vector2(facingSign, localDirection.y)).normalized;
+            Vector2 direction = segmentTransformStart.rotation * new Vector2(facingSign, localDirection.y).normalized;
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -677,6 +731,52 @@ namespace ClothPhysicsSystem2D
 
         #endregion
 
+        #region Collisions
+        private void HandleCollisions()
+        {
+            if (!enableCollisions || points == null || points.Count < 2) return;
+
+            // Start at 1 so we don't apply collisions to the pinned anchor point
+            for (int i = 1; i < points.Count; i++)
+            {
+                var segment = points[i];
+
+                // 1. Calculate current velocity
+                Vector2 velocity = segment.position - segment.previousPosition;
+                bool hitSomething = false;
+
+                // 2. Find colliders (using NonAlloc to save performance!)
+                int hitCount = Physics2D.OverlapCircle(segment.position, collisionRadius, _contactFilter, _collisionResults);
+
+                for (int j = 0; j < hitCount; j++)
+                {
+                    Collider2D col = _collisionResults[j];
+
+                    Vector2 closestPoint = col.ClosestPoint(segment.position);
+                    float distance = Vector2.Distance(segment.position, closestPoint);
+                    Vector2 normal = (segment.position - closestPoint).normalized;
+
+                    // If within the collision radius, resolve
+                    if (distance < collisionRadius)
+                    {
+                        // Push the point out of the collider
+                        float depth = collisionRadius - distance;
+                        if (normal != Vector2.zero)
+                        {
+                            segment.position += normal * depth;
+                            hitSomething = true;
+                        }
+                    }
+                }
+
+                if (hitSomething)
+                {
+                    segment.previousPosition = segment.position - (velocity * bounceFactor);
+                }
+            }
+        }
+        #endregion
+
         #region Rendering
 
         private void UpdateSegments()
@@ -716,7 +816,7 @@ namespace ClothPhysicsSystem2D
                     finalAngle += endSegmentRotationOffset;
 
                     // Do not stretch the custom end-piece sprite. Stretching causes pixel distortion that looks like a kink.
-                    _segmentTransforms[i].localScale = Vector3.one;
+                    _segmentTransforms[i].localScale = new Vector3(1f, _currentFacingSign, 1f);
                 }
                 else
                 {
@@ -724,7 +824,7 @@ namespace ClothPhysicsSystem2D
 
                     // Only stretch the middle generic repeating bits
                     float length = Mathf.Sqrt(dirSqr);
-                    _segmentTransforms[i].localScale = new Vector3(length / segmentLength, 1, 1);
+                    _segmentTransforms[i].localScale = new Vector3(length / segmentLength, _currentFacingSign, 1f);
                 }
 
                 _segmentTransforms[i].rotation = Quaternion.Euler(0, 0, finalAngle);

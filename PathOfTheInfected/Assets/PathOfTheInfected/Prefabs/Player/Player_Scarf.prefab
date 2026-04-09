@@ -105,10 +105,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5fba1d75f1426281e7788fbbf3b3bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ClothSystem::TidiMovementComponent2D.scripts.Cloth.ClothController
-  pointCount: 8
+  pointCount: 4
   segmentLength: 0.7
   debugMode: 1
-  damping: 0.95
+  segmentTransformStart: {fileID: 8611140077091698920}
+  damping: 0.8
   velocityDrag: 0.04
   constraintIterations: 6
   solverSubsteps: 2
@@ -119,38 +120,54 @@ MonoBehaviour:
   bendIterations: 1
   bendStiffness: 0.22
   shapeStrength: 0.05
-  useHierarchyFacingInShape: 0
-  endSegmentRotationOffset: 180
-  endSegmentPositionYOffset: -0.0467
+  useHierarchyFacingInShape: 1
+  endSegmentRotationOffset: 0
+  endSegmentPositionYOffset: -0.1
   endSegmentPositionXOffset: -0.134
   localDirection: {x: -1, y: 0}
   followPlayerFacing: 1
   invertFacingDirection: 1
-  facingSmoothingSpeed: 12
-  turnSnapSpeed: 40
+  snapToFacingOnTurn: 1
   turnImpulseStrength: 0.3
   turnImpulseFalloff: 0.85
+  turnUpwardImpulseStrength: 0.22
+  turnUpwardImpulseFalloff: 0.9
+  turnLiftPosition: 0.35
+  turnStabilizationDuration: 0.2
+  maxTurnDropFromAnchor: 0.32
+  turnRecoveryStrength: 18
+  turnShapeBoost: 1.8
+  turnBendBoost: 1.35
+  turnTransitionSpeed: 100
   segmentPrefab: {fileID: 748151422270087835, guid: 9624b0c859893a44987c35ae7d03a298, type: 3}
   endSegmentPrefab: {fileID: 748151422270087835, guid: 5d030f20a15c11e4b9a4dd6d457a219b, type: 3}
   quantizeSegmentAngles: 1
   angleStepDegrees: 11.25
   steppedVisualUpdate: 0
-  visualFps: 15
+  visualFps: 60
   externalGravity: {x: 0, y: -1.5}
   windDirectionWorld: {x: 1, y: 0}
-  windStrength: 75
-  windFrequency: 5
+  windStrength: 10
+  windFrequency: 8
   gustStrength: 0.25
-  turbulenceStrength: 30
+  turbulenceStrength: 20
   globalGustFrequency: 0.5
   sineWindWeight: 0.05
-  noiseWindWeight: 0.8
+  noiseWindWeight: 0.6
   segmentPhaseJitter: 0.45
   segmentAmplitudeJitter: 0.3
   playerVelocitySmoothing: 10
   playerTransform: {fileID: 0}
-  playerForceMultiplier: 0.35
-  segmentTransformStart: {fileID: 8611140077091698920}
+  playerForceMultiplier: 0.85
+  maxPlayerVelocityForForce: 14
+  dashMovementForceMultiplier: 0.45
+  anchorTransportFollow: 0.82
+  enableCollisions: 1
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 64
+  collisionRadius: 0.05
+  bounceFactor: 0.2
   points: []
 --- !u!1 &8638685771067860559
 GameObject:

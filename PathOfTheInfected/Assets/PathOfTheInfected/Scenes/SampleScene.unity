@@ -952,49 +952,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: damping
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: visualFps
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: pointCount
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: windStrength
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: windFrequency
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: noiseWindWeight
-      value: 0.6
+      propertyPath: collisionRadius
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 1765067471}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: followPlayerFacing
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: turbulenceStrength
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: steppedVisualUpdate
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
-      propertyPath: playerForceMultiplier
-      value: 0.85
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
