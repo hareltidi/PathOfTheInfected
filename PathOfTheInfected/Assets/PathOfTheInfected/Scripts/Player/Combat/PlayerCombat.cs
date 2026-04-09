@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using PathOfTheInfected.Animation;
+using PathOfTheInfected.Animation.BlendSpaces;
 using PathOfTheInfected.Combat;
 using PathOfTheInfected.Player.Combat.Attacks;
 using TidiMovementComponent2D.Animation;
@@ -17,8 +18,6 @@ namespace PathOfTheInfected.Player.Combat
         {
             PlayerOwner = PlayerSm.Instance;
             AnimInstance = POIAnimInstance.Instance;
-            _standingPunchAnim = Animator.StringToHash(standingPunchAnim.name);
-            _inAirPunchAnim = Animator.StringToHash(inAirPunchAnim.name);
             InitializeSubsystems();
             AnimInstance.OnAnimationEnded += OnAnimationEnded;
         }
@@ -28,7 +27,6 @@ namespace PathOfTheInfected.Player.Combat
         {
             CaptureInput();
             TickTimers();
-            _punchAnim = PlayerOwner.IsGrounded ? _standingPunchAnim : _inAirPunchAnim;
             ResolveAttackIntents();
             CallUpdateOnSubsystems();
         }
@@ -60,9 +58,7 @@ namespace PathOfTheInfected.Player.Combat
         [field: SerializeField] public PlayerPunchHitBox PlayerPunchHitBox { get; private set; }
         public PlayerAttackSoBase punchAttack;
 
-        [Header("Animation")] [SerializeField] private AnimationClip standingPunchAnim;
-
-        [SerializeField] private AnimationClip inAirPunchAnim;
+        [Header("Animation")] [SerializeField] private BlendSpace2DVector2 punchBlendSpace;
 
         [Header("Subsystems - General")] [Tooltip("Enables the debug mode for the combo subsystem")]
         public bool debugComboSubsystem;
@@ -85,8 +81,6 @@ namespace PathOfTheInfected.Player.Combat
 
         private float _recoveryTimer;
         private float _bufferTimer;
-        private int _standingPunchAnim;
-        private int _inAirPunchAnim;
         private int _punchAnim;
         public HitResult LastHitResult;
         public PlayerAttackSoBase CurrentAttack { get; private set; }
@@ -194,26 +188,13 @@ namespace PathOfTheInfected.Player.Combat
             {
                 ClearCombatIntentState(CombatIntentFlags.WantsToPunch);
                 ActivateAttack(punchAttack, CombatFlags.Punching);
-                PlayAnimationAndRotatePlayer();
+                PlayAnimation();
             }
         }
 
-        private void PlayAnimationAndRotatePlayer()
+        private void PlayAnimation()
         {
-            /*Vector2 dir = PlayerPunchHitBox.GetAttackDirection();
-
-            bool isFacingRight = PlayerOwner.IsFacingRight;
-            if (dir.sqrMagnitude < 0.01f)
-            {
-                dir = isFacingRight ? Vector2.right : Vector2.left;
-            }
-            float pivotAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-            float finalAngle = pivotAngle;
-
-            PlayerOwner.visualsTransform.localRotation = Quaternion.Euler(0f, 0f, finalAngle);
-            */
-
+            _punchAnim = punchBlendSpace.Resolve(POIInputManager.Movement);
             POIAnimInstance.Instance.PlayAnimationIfNotCurrent(_punchAnim, 0, 0,
                 true, true);
         }

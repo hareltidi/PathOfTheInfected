@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TidiGC
 {
-    public static class GCArtificialMemoryPressure
+    public static class TidiGCArtificialMemoryPressure
     {
         public static List<byte[]> Allocated1KbChunks = new List<byte[]>();
 

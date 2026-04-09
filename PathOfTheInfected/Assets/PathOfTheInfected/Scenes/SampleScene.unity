@@ -952,13 +952,29 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: windStrength
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
       propertyPath: collisionRadius
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: noiseWindWeight
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 1765067471}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: externalGravity.y
+      value: -9.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: turbulenceStrength
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2484,6 +2500,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7400000, guid: c8c61c439e5e87e41b3d154cb68358a8, type: 2}
     - target: {fileID: 724985943210959047, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: punchBlendSpace
+      value: 
+      objectReference: {fileID: 11400000, guid: d44322628ae842b408e6823a897b052b, type: 2}
+    - target: {fileID: 724985943210959047, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: debugRbcSubsystem
       value: 0
       objectReference: {fileID: 0}
@@ -2493,7 +2513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 724985943210959047, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: aerialFullResetComboThreshold
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1017842869621534978, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: m_LocalPosition.x
