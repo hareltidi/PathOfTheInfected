@@ -15,7 +15,12 @@ MonoBehaviour:
   blendPoints:
   - clip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
     direction: {x: 1, y: 0}
-  - clip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
+  - clip: {fileID: 7400000, guid: bee4ef3077907a94eafca907ae48923d, type: 2}
     direction: {x: 0, y: 1}
+  - clip: {fileID: 7400000, guid: e2e1dff3036b0f34892f2657b2972252, type: 2}
+    direction: {x: 0, y: -1}
   - clip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
-    direction: {x: 1, y: 1}
+    direction: {x: -1, y: 0}
+  maxActiveSamples: 3
+  applicationMode: 0
+  blendWeight: 1

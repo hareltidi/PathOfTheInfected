@@ -4,6 +4,6 @@ namespace TidiMovementComponent2D.Animation.BlendSpaces
 {
     public abstract class TidiBaseBlendSpace<TInput> : ScriptableObject
     {
-        public abstract int Resolve(TInput input);
+        public abstract BlendResult Evaluate(TInput input);
     }
 }

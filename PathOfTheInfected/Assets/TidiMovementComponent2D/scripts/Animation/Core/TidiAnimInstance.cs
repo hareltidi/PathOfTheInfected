@@ -10,6 +10,9 @@ namespace TidiMovementComponent2D.Animation
     public abstract class TidiAnimInstance : MonoBehaviour
     {
         #region InitialProperties
+        [SerializeField] [Tooltip("Rebinds animator when switching clips so partially-keyed clips do not inherit stale pose values.")]
+        private bool resetPoseOnAnimationChange = true;
+
         [field:Tooltip("The Animator component that will be used for animation.")]
         [field: SerializeField] protected Animator Animator { get; private set; }
         /// <summary>
@@ -113,6 +116,11 @@ namespace TidiMovementComponent2D.Animation
             if (IsCurrentAnimationLocked && !canOverrideLockedAnimations && IsCurrentAnimationPlaying()) return handle;
             if (hash != CurrentAnimationHash)
             {
+                if (resetPoseOnAnimationChange)
+                {
+                    ResetAnimatorPose();
+                }
+
                 IsCurrentAnimationLocked = isAnimationLocked;
                 PreviousAnimationHash = CurrentAnimationHash;
                 PreviousAnimationLayer = CurrentAnimationLayer;
@@ -155,6 +163,11 @@ namespace TidiMovementComponent2D.Animation
             };
             CurrentAnimationHandle = handle;
             if (IsCurrentAnimationLocked && !canOverrideLockedAnimations && IsCurrentAnimationPlaying()) return handle;
+
+            if (resetPoseOnAnimationChange && hash != CurrentAnimationHash)
+            {
+                ResetAnimatorPose();
+            }
 
             IsCurrentAnimationLocked = isAnimationLocked;
             PreviousAnimationHash = CurrentAnimationHash;
@@ -227,6 +240,15 @@ namespace TidiMovementComponent2D.Animation
         }
 
         #endregion
+
+        private void ResetAnimatorPose()
+        {
+            if (Animator == null)
+                return;
+
+            Animator.Rebind();
+            Animator.Update(0f);
+        }
 
         #region Animation End Detection
 

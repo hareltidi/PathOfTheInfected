@@ -4,7 +4,10 @@ using PathOfTheInfected.Animation.BlendSpaces;
 using PathOfTheInfected.Combat;
 using PathOfTheInfected.Player.Combat.Attacks;
 using TidiMovementComponent2D.Animation;
+using TidiMovementComponent2D.Animation.BlendSpaces;
+using TidiMovementComponent2D.Animation.BlendSpaces.Playables;
 using TidiMovementComponent2D.Core;
+using TidiMovementComponent2D.Misc;
 using UnityEngine;
 
 namespace PathOfTheInfected.Player.Combat
@@ -14,20 +17,42 @@ namespace PathOfTheInfected.Player.Combat
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
+        [Header("Attack Timeline")]
+        [SerializeField] private bool useTimeBasedAttackWindows = true;
+
         private void Start()
         {
             PlayerOwner = PlayerSm.Instance;
             AnimInstance = POIAnimInstance.Instance;
+
+            if (animationDriver == null)
+                animationDriver = GetComponent<TidiAnimationDriver>();
+
             InitializeSubsystems();
-            AnimInstance.OnAnimationEnded += OnAnimationEnded;
+
+            if (!useTimeBasedAttackWindows)
+            {
+                AnimInstance.OnAnimationEnded += OnAnimationEnded;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (!useTimeBasedAttackWindows && AnimInstance != null)
+            {
+                AnimInstance.OnAnimationEnded -= OnAnimationEnded;
+            }
+
+            ResumeBaseAnimation();
         }
 
 
         private void Update()
         {
             CaptureInput();
-            TickTimers();
             ResolveAttackIntents();
+            TickAttackTimeline();
+            TickTimers();
             CallUpdateOnSubsystems();
         }
 
@@ -46,8 +71,14 @@ namespace PathOfTheInfected.Player.Combat
             // Punch attack Input consumption
             if (POIInputManager.PunchPressed)
             {
+                if (punchAttack == null || punchAttack.attackDef == null)
+                {
+                    Debug.LogWarning("Punch attack or attack definition is missing on PlayerCombat.", this);
+                    return;
+                }
+
                 ActivateCombatIntentState(CombatIntentFlags.WantsToPunch);
-                _bufferTimer = punchAttack.attackDef.attackBufferTime;
+                _bufferTimer = Mathf.Max(_bufferTimer, punchAttack.attackDef.attackBufferTime);
             }
         }
 
@@ -59,6 +90,7 @@ namespace PathOfTheInfected.Player.Combat
         public PlayerAttackSoBase punchAttack;
 
         [Header("Animation")] [SerializeField] private BlendSpace2DVector2 punchBlendSpace;
+        [SerializeField] private TidiAnimationDriver animationDriver;
 
         [Header("Subsystems - General")] [Tooltip("Enables the debug mode for the combo subsystem")]
         public bool debugComboSubsystem;
@@ -82,6 +114,12 @@ namespace PathOfTheInfected.Player.Combat
         private float _recoveryTimer;
         private float _bufferTimer;
         private int _punchAnim;
+        private float _attackStartupTimer;
+        private float _attackActiveTimer;
+        private bool _hasAttackStarted;
+        private bool _attackTimelineRunning;
+        private bool _suspendedAnimInstance;
+        private BlendApplicationMode _activeBlendMode = BlendApplicationMode.Override;
         public HitResult LastHitResult;
         public PlayerAttackSoBase CurrentAttack { get; private set; }
 
@@ -194,9 +232,47 @@ namespace PathOfTheInfected.Player.Combat
 
         private void PlayAnimation()
         {
-            _punchAnim = punchBlendSpace.Resolve(POIInputManager.Movement);
-            POIAnimInstance.Instance.PlayAnimationIfNotCurrent(_punchAnim, 0, 0,
-                true, true);
+            if (animationDriver && punchBlendSpace)
+            {
+                var input = InputManager.Movement;
+
+                // No stick input still needs deterministic directional sampling.
+                if (input.sqrMagnitude <= 0.0001f)
+                {
+                    input = new Vector2(PlayerOwner && PlayerOwner.IsFacingRight ? 1f : -1f, 0f);
+                }
+
+                BlendResult result = punchBlendSpace.Evaluate(input.normalized);
+                animationDriver.Apply(in result);
+                _activeBlendMode = result.Mode;
+
+                if (_activeBlendMode == BlendApplicationMode.Override)
+                {
+                    SuspendBaseAnimation();
+                }
+                else
+                {
+                    ResumeBaseAnimation();
+                }
+            }
+        }
+
+        private void SuspendBaseAnimation()
+        {
+            if (_suspendedAnimInstance || !AnimInstance)
+                return;
+
+            AnimInstance.enabled = false;
+            _suspendedAnimInstance = true;
+        }
+
+        private void ResumeBaseAnimation()
+        {
+            if (!_suspendedAnimInstance || !AnimInstance)
+                return;
+
+            AnimInstance.enabled = true;
+            _suspendedAnimInstance = false;
         }
 
 
@@ -211,6 +287,81 @@ namespace PathOfTheInfected.Player.Combat
             ActivateCombatState(flag);
             CurrentAttack.InitAttack(this, flag);
             _bufferTimer = 0f;
+
+            if (useTimeBasedAttackWindows)
+            {
+                StartAttackTimeline(CurrentAttack);
+            }
+        }
+
+        private void StartAttackTimeline(PlayerAttackSoBase attack)
+        {
+            _attackTimelineRunning = true;
+            _hasAttackStarted = false;
+
+            var attackDef = attack ? attack.attackDef : null;
+            _attackStartupTimer = attackDef ? Mathf.Max(0f, attackDef.startupTime) : 0f;
+            _attackActiveTimer = attackDef
+                ? Mathf.Max(0f, attackDef.activeTime + Mathf.Max(0f, attackDef.animationEndPadding))
+                : 0f;
+
+            if (_attackStartupTimer <= 0f)
+            {
+                BeginAttackActivePhase();
+            }
+        }
+
+        private void TickAttackTimeline()
+        {
+            if (!useTimeBasedAttackWindows || !_attackTimelineRunning || CurrentAttack == null)
+                return;
+
+            if (!_hasAttackStarted)
+            {
+                _attackStartupTimer -= Time.deltaTime;
+                if (_attackStartupTimer <= 0f)
+                {
+                    BeginAttackActivePhase();
+                }
+                return;
+            }
+
+            _attackActiveTimer -= Time.deltaTime;
+            if (_attackActiveTimer <= 0f)
+            {
+                EndCurrentAttackFromTimeline();
+            }
+        }
+
+        private void BeginAttackActivePhase()
+        {
+            if (_hasAttackStarted || !CurrentAttack)
+                return;
+
+            _hasAttackStarted = true;
+            CurrentAttack.StartAttack();
+        }
+
+        private void EndCurrentAttackFromTimeline()
+        {
+            if (!_attackTimelineRunning || !CurrentAttack)
+                return;
+
+            CurrentAttack.EndAttack();
+            CurrentAttack = null;
+            _attackTimelineRunning = false;
+            _hasAttackStarted = false;
+            _attackStartupTimer = 0f;
+            _attackActiveTimer = 0f;
+
+            if (animationDriver)
+            {
+                bool restorePose = _activeBlendMode == BlendApplicationMode.Override;
+                animationDriver.Clear(restorePose);
+            }
+
+            ResumeBaseAnimation();
+            _activeBlendMode = BlendApplicationMode.Override;
         }
 
 
@@ -245,6 +396,8 @@ namespace PathOfTheInfected.Player.Combat
 
         public void OnAnimationAttackMessage(AnimationAttackMessageType messageType)
         {
+            if (useTimeBasedAttackWindows) return;
+            
             switch (messageType)
             {
                 case AnimationAttackMessageType.Start:
@@ -258,6 +411,8 @@ namespace PathOfTheInfected.Player.Combat
 
         private void OnAnimationEnded(AnimationHandle handle, AnimationEndReason reason)
         {
+            if (useTimeBasedAttackWindows) return;
+            
             if (handle.Hash == _punchAnim)
             {
                 OnAnimationAttackMessage(AnimationAttackMessageType.End);
@@ -340,3 +495,5 @@ namespace PathOfTheInfected.Player.Combat
         #endregion
     }
 }
+
+

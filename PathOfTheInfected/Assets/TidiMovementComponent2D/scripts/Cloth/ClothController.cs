@@ -49,6 +49,8 @@ namespace ClothPhysicsSystem2D
         [SerializeField] private float turnStabilizationDuration = 0.2f;
         [SerializeField] private float maxTurnDropFromAnchor = 0.32f;
         [SerializeField] private float turnRecoveryStrength = 18f;
+        [SerializeField] private float maxRiseAboveAnchor = 0.2f;
+        [SerializeField] private float riseRecoveryStrength = 14f;
         [SerializeField] private float turnShapeBoost = 1.8f;
         [SerializeField] private float turnBendBoost = 1.35f;
         [SerializeField] private float turnTransitionSpeed = 10f;
@@ -352,10 +354,20 @@ namespace ClothPhysicsSystem2D
                     }
                 }
 
+                // Counter upward drift from repeated turn lift / partial-keyframe anchor motion.
+                Vector2 riseRecoveryForce = Vector2.zero;
+                float maxRise = Mathf.Max(0.01f, maxRiseAboveAnchor) * tipInfluence;
+                float maxY = points[0].position.y + maxRise;
+                if (p.position.y > maxY)
+                {
+                    float excess = p.position.y - maxY;
+                    riseRecoveryForce = Vector2.down * (excess * Mathf.Max(0f, riseRecoveryStrength));
+                }
+
                 // Standard Verlet Integration
                 Vector2 velocity = p.position - p.previousPosition;
                 Vector2 dragForce = -velocity * velocityDrag;
-                Vector2 totalForce = (externalGravity + baseWindForce + flutterForce + movementForce + turnRecoveryForce + dragForce) * forceMultiplier;
+                Vector2 totalForce = (externalGravity + baseWindForce + flutterForce + movementForce + turnRecoveryForce + riseRecoveryForce + dragForce) * forceMultiplier;
                 Vector2 nextPosition = p.position + velocity + totalForce * (dt * dt);
 
                 nextPosition = p.position + (nextPosition - p.position) * damping;

@@ -17,5 +17,8 @@ MonoBehaviour:
   recoveryTime: 0.15
   attackType: 1
   attackBufferTime: 0.1
+  startupTime: 0.04
+  activeTime: 0.3
+  animationEndPadding: 0.1
   attackRange: 5
   firstHitDamageBoost: 0.5
