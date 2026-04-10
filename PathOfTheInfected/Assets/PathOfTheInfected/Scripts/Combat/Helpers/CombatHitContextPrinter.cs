@@ -11,7 +11,7 @@ namespace PathOfTheInfected.Combat
         /// Logs the given <see cref="CombatHitContext"/> to the console.
         /// </summary>
         /// <param name="context">The <see cref="CombatHitContext"/> to log</param>
-        public static void LogCombatHitContext(CombatHitContext context)
+        public static void LogCombatHitContext(in CombatHitContext context)
         {
             Debug.Log($"=== Combat Hit Context ===\n" +
                       $"Source: {(context.Source != null ? context.Source.name : "None")}\n" +
@@ -19,9 +19,7 @@ namespace PathOfTheInfected.Combat
                       $"Attack Definition: {(context.AttackDefinition != null ? context.AttackDefinition.name : "None")}\n" +
                       $"Outcome: {context.Outcome}\n" +
                       $"Final Damage: {context.FinalDamage}\n" +
-                      $"Combo Scaling Level: {context.ComboScalingLevel}\n" +
-                      $"Attacker Is Airborne: {context.AttackerIsAirborne}\n" +
-                      $"Target Killed: {context.TargetKilled}");
+                      $"Attacker Is Airborne: {context.AttackerIsAirborne}\n");
         }
     }
 }

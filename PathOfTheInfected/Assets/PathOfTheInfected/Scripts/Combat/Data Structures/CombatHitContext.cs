@@ -16,10 +16,7 @@ namespace PathOfTheInfected.Combat
 
         public float FinalDamage;
 
-        public int ComboScalingLevel;
-
         public bool AttackerIsAirborne;
 
-        public bool TargetKilled;
     }
 }

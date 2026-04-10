@@ -43,14 +43,14 @@ namespace PathOfTheInfected.Player.Combat
                 {
                     HitData data = BuildHitData(hit);
 
-                    HitResult result = HitDispatcher.ProcessHit(data);
+                    HitResult result = HitDispatcher.ProcessHit(ref data);
 
                     OnPunchFinished(result);
                 }
             }
         }
 
-        private Vector2 GetAttackDirection()
+        public Vector2 GetAttackDirection()
         {
             Vector2 input = InputManager.Movement;
 
@@ -74,8 +74,8 @@ namespace PathOfTheInfected.Player.Combat
                 source = gameObject,
                 target = target.gameObject,
                 attackDefinition = playerCombat.punchAttack.attackDef,
-                comboDamageScalingLevel = 1,
-                isFirstHit = false,
+                comboDamageScalingLevel = playerCombat.ComboSubsystem.ComboHitMultiplier,
+                isFirstHit = playerCombat.ComboSubsystem.ComboCount + 1 == 1,
                 firstHitDamageBoost = playerCombat.punchAttack.attackDef.firstHitDamageBoost,
                 isPlayerDamage = true,
                 isAttackerInAir = playerCombat.PlayerOwner.IsGrounded,

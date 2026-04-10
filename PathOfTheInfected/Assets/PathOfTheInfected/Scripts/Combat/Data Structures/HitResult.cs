@@ -1,5 +1,10 @@
-﻿namespace PathOfTheInfected.Combat
+﻿using UnityEngine;
+
+namespace PathOfTheInfected.Combat
 {
+    /// <summary>
+    /// A struct That represents The result of our hit attempt
+    /// </summary>
     public struct HitResult
     {
         /// <summary>
@@ -20,7 +25,9 @@
         /// Represents the total amount of damage dealt after all calculations, including modifiers, resistances,
         /// and other adjustments, have been applied to the base damage value.
         /// </summary>
-        public int FinalDamage;
+        public float FinalDamage;
+
+        public GameObject Target;
 
 
         /// <summary>

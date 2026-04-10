@@ -6,7 +6,7 @@ namespace PathOfTheInfected.Combat
     /// <summary>
     /// The Hit Dispatcher is responsible for Telling any GameObject that was
     /// </summary>
-    public class HitDispatcher
+    public static class HitDispatcher
     {
         /// <summary>
         /// Processes combat hit data, calculates damage, and applies effects through
@@ -14,9 +14,9 @@ namespace PathOfTheInfected.Combat
         /// </summary>
         /// <param name="hitData">The <see cref="HitData"/> describing the hit, including source, target, and attack details.</param>
         /// <returns>A HitResult containing information about the result of the hit, such as final damage and outcome.</returns>
-        public static HitResult ProcessHit(HitData hitData)
+        public static HitResult ProcessHit(ref HitData hitData)
         {
-            HitResult hitResult = new HitResult();
+            HitResult hitResult = new();
             if (!hitData.target) return hitResult; // Validate hit data
 
             var responders = hitData.target.GetComponents<IHitResponder>(); // find all our hit responders
@@ -26,9 +26,10 @@ namespace PathOfTheInfected.Combat
 
             foreach (var responder in responders)
             {
-                var response = responder.OnHit(hitData); // process the hit and get the response
+                var response = responder.OnHit(ref hitData); // process the hit and get the response
 
                 hitResult.Merge(response);
+                hitResult.Target = hitData.target;
 
                 if (hitResult.PropagationStopped) break; // make sure we stop if we're stopped.
             }
@@ -42,7 +43,7 @@ namespace PathOfTheInfected.Combat
         /// </summary>
         /// <param name="attackDefinition">The <see cref="AttackDefinition"/> of the attack that includes damage, type, and other properties.</param>
         /// <returns>A HitResult containing the outcome of the hit, including the final damage and whether propagation was stopped.</returns>
-        public static HitResult ProcessHit(AttackDefinition attackDefinition)
+        public static HitResult ProcessHit(ref AttackDefinition attackDefinition)
         {
             HitData hitData = new HitData()
             {
@@ -54,7 +55,7 @@ namespace PathOfTheInfected.Combat
                 timeStamp = Time.timeSinceLevelLoad
             };
 
-            return ProcessHit(hitData);
+            return ProcessHit(ref hitData);
         }
     }
 }

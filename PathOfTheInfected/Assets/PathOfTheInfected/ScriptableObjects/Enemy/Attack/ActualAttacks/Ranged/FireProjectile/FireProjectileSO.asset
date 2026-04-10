@@ -15,8 +15,9 @@ MonoBehaviour:
   attackDef: {fileID: 11400000, guid: 097fb61e07dcf8e4a945e9d787c0eacf, type: 2}
   <RequireDistanceFromEnemyToSpottable>k__BackingField: 1
   <DistanceThreshold>k__BackingField: 15
-  <MaxAttackRange>k__BackingField: 9
+  <MaxAttackRange>k__BackingField: 15
   <PoiseConsumed>k__BackingField: 1
   windupDuration: 0.5
   projectilePrefab: {fileID: 5303159517039868119, guid: a22ad40534731c741b4a5c70fdcfc442, type: 3}
-  spawnMargin: 5
+  spawnMarginX: 5
+  spawnMarginY: 0

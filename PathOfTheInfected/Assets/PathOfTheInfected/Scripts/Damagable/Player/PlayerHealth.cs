@@ -1,5 +1,7 @@
 ﻿using PathOfTheInfected.Combat;
+using PathOfTheInfected.Damagable.Messages;
 using PathOfTheInfected.Enemy;
+using TidiGameplayMessaging.Core;
 using TidiTweening;
 using UnityEngine;
 
@@ -64,9 +66,12 @@ namespace PathOfTheInfected.Damagable
         }
 
 
-        public void TakeDamage(int finalDamage, float hitStopTime)
+        public void TakeDamage(float finalDamage, float hitStopTime)
         {
             if (IsDead) return;
+
+            TidiGameplayMessagingSubsystem.Instance.Broadcast<PlayerHitChannel>();
+
             CurrentHealth -= finalDamage;
             FlashDamage();
             HitStop(hitStopTime);
@@ -120,9 +125,9 @@ namespace PathOfTheInfected.Damagable
             }
         }
 
-        public HitResponse OnHit(HitData damageData)
+        public HitResponse OnHit(ref HitData damageData)
         {
-            int finalDamage = DamageCalculator.CalculateDamage(damageData);
+            float finalDamage = DamageCalculator.CalculateDamage(in damageData);
 
             TakeDamage(finalDamage, damageData.attackDefinition.hitStopTime);
 
@@ -136,9 +141,9 @@ namespace PathOfTheInfected.Damagable
         #region Health members
 
         [field: SerializeField] public bool IsDead { get; set; }
-        [field: SerializeField] public int MaxHealth { get; set; }
+        [field: SerializeField] public float MaxHealth { get; set; }
         public GameObject GameObject { get; set; }
-        public int CurrentHealth { get; set; }
+        public float CurrentHealth { get; set; }
 
         #endregion
 
