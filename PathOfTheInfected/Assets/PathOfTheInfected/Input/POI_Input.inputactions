@@ -204,7 +204,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "2D Vector",
+                    "name": "KBM_Arrows",
                     "id": "3e9f0e42-74f4-475c-82b1-8014d7d156d7",
                     "path": "2DVector",
                     "interactions": "",
@@ -259,7 +259,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "2D Vector",
+                    "name": "KBM_WASD",
                     "id": "beabff6d-33da-424d-8572-f28efca7b2b5",
                     "path": "2DVector",
                     "interactions": "",
@@ -314,9 +314,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "2D Vector",
+                    "name": "Analog Sticks",
                     "id": "a8d52684-f4d2-45b5-b3e0-9ddce4660e2b",
-                    "path": "2DVector",
+                    "path": "2DVector(mode=2)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -369,7 +369,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "2D Vector",
+                    "name": "D-Pad",
                     "id": "e9a36b7e-885f-4293-bae2-898f8f480fbd",
                     "path": "2DVector",
                     "interactions": "",

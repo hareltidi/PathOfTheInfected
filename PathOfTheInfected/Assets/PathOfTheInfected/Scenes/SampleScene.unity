@@ -2475,6 +2475,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1676983456721088425, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: m_PreviewTimeScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1887671414283325526, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: m_LocalPosition.x
       value: -30.34
@@ -2518,6 +2522,14 @@ PrefabInstance:
     - target: {fileID: 3065070694002184037, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: m_Name
       value: player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3729874174354801242, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.153
+      objectReference: {fileID: 0}
+    - target: {fileID: 3908241491582259154, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3944830991871549108, guid: d2036ec0b668cc840aac5cac7a726a85, type: 3}
       propertyPath: bounceFactor
