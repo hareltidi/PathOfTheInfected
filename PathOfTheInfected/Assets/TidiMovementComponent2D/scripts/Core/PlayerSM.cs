@@ -29,6 +29,8 @@ namespace TidiMovementComponent2D.Core
         public Vector2 StandingBoxSize { get; private set; }
         public Vector2 StandingBoxOffset { get; private set; }
 
+        public Quaternion OriginalRot { get; private set; }
+
 
         [FormerlySerializedAs("MoveStats")][Header("References")] public PlayerMovementStatsSm moveStats;
 
@@ -180,6 +182,10 @@ namespace TidiMovementComponent2D.Core
 
         public bool IsTouchingWall => Controller.State.IsAgainstWall;
 
+        public float ComboSpeedMultiplier { get; set; } = 1f;
+
+        public float CurrentMovementSpeed { get; private set; }
+
         private void Awake()
         {
             if (Instance == null)
@@ -205,6 +211,7 @@ namespace TidiMovementComponent2D.Core
             SlideState = new PlayerSlideStateSm(this, StateMachine);
             CrouchState = new PlayerCrouchState(this, StateMachine);
             IsFacingRight = true;
+            OriginalRot = transform.rotation;
         }
 
         private void Start()
@@ -354,6 +361,8 @@ namespace TidiMovementComponent2D.Core
             if (IsDashing) return;
 
             float num = speedOverride > 0 ? speedOverride : moveStats.MaxWalkSpeed;
+            num *= ComboSpeedMultiplier;
+            CurrentMovementSpeed = num;
             if (Mathf.Abs(moveInput.x) >= (double)moveStats.MoveThreshold)
             {
                 TurnCheck(moveInput);
@@ -605,6 +614,11 @@ namespace TidiMovementComponent2D.Core
         public void ResetDashes()
         {
             NumberOfDashesUsed = 0;
+        }
+
+        public void HalfResetDashes()
+        {
+            NumberOfDashesUsed = Mathf.Max(0, NumberOfDashesUsed - 1);
         }
 
         public bool CanUnCrouch()

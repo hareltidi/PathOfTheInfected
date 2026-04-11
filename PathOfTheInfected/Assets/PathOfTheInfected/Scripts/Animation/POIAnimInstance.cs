@@ -6,7 +6,7 @@ using UnityEngine;
 namespace PathOfTheInfected.Animation
 {
     /// <summary>
-    /// The animation instance for the player
+    /// The animation instance for the player. Used to handle animations and playing them.
     /// </summary>
     public class POIAnimInstance : TidiAnimInstance
     {
@@ -14,7 +14,7 @@ namespace PathOfTheInfected.Animation
         public PlayerCombat playerCombat;
 
         /// <summary>
-        ///     The singleton instance of the animation manager.
+        /// The singleton instance of the animation manager.
         /// </summary>
         public static POIAnimInstance Instance;
 
@@ -147,8 +147,8 @@ namespace PathOfTheInfected.Animation
         protected override void SetAnimationFlags()
         {
             // Standing states
-            standingIsRunning = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
-                                OwnerPlayer.IsRunning;
+            standingIsRunning = (Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
+                                 OwnerPlayer.IsRunning) || OwnerPlayer.CurrentMovementSpeed >= OwnerPlayer.moveStats.MaxRunSpeed;
             standingIsWalking = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
                                 !OwnerPlayer.IsRunning && !OwnerPlayer.IsCrouching;
             standingIsWallSliding = OwnerPlayer.IsWallSliding;

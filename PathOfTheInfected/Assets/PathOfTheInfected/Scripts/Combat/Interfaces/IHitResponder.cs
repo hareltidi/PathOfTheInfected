@@ -24,7 +24,7 @@ namespace PathOfTheInfected.Combat
         /// such as the source, attack type, and state of the attacker.
         /// </param>
         /// <returns>A <see cref="HitResponse" /> object encapsulating the outcome or reaction to the hit event.</returns>
-        HitResponse OnHit(HitData damageData);
+        HitResponse OnHit(ref HitData damageData);
     }
 
     ///<summary>
@@ -90,7 +90,7 @@ namespace PathOfTheInfected.Combat
         /// Represents the total amount of damage dealt after all calculations, including modifiers, resistances,
         /// and other adjustments, have been applied to the base damage value.
         /// </summary>
-        public int FinalDamage;
+        public float FinalDamage;
 
         /// <summary>
         ///  Represents a response to a hit event in the combat system.
@@ -102,7 +102,7 @@ namespace PathOfTheInfected.Combat
         /// <param name="consumeCharges">Should the attack "hurt" our resources (health, poise, etc.)?</param>
         /// <param name="finalDamage">The final damage we need to inflict to the target
         /// (Should be calculated using <see cref="DamageCalculator"/>)</param>
-        public HitResponse(Response response, bool consumeCharges, int finalDamage)
+        public HitResponse(Response response, bool consumeCharges, float finalDamage)
         {
             Response = response;
             ConsumeCharges = consumeCharges;

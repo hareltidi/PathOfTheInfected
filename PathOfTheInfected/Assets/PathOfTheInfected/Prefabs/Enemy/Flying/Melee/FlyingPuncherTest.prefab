@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FlyingPuncher
   <IsFacingRight>k__BackingField: 1
-  noSpottableDetectedState: {fileID: 11400000, guid: a58c3d506f9c3b24eaef6b0e5d624b91, type: 2}
+  noSpottableDetectedState: {fileID: 11400000, guid: 0105bd7ddf460954c8a8f357478de7de, type: 2}
   spottableDetectedState: {fileID: 11400000, guid: bd3889502d7fa874a80948dfee3aed6e, type: 2}
   spottableInAttackRangeState: {fileID: 11400000, guid: 0cb5effbe39d87c4f80ee44bac7d3a59, type: 2}
   <CurrentState>k__BackingField: {fileID: 0}
@@ -289,6 +289,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.Health.EnemyHealth
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 3
-  flashColor: {r: 4, g: 0, b: 0, a: 1}
+  flashColor: {r: 5.3403134, g: 5.3403134, b: 5.3403134, a: 1}
   flashTime: 0.25
   damageFlashEaseType: 26

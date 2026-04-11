@@ -18,6 +18,7 @@ namespace PathOfTheInfected.Animation
         public override void StateEnter()
         {
             AnimatorManagerInstance = (POIAnimInstance)animInstance;
+            AnimatorManagerInstance.PlayAnimationIfNotCurrent(AnimatorManagerInstance.StandingLandAnim, 0.25f, 0, true, true);
         }
 
         public override void StateExit()

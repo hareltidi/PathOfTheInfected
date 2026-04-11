@@ -9,8 +9,8 @@ namespace PathOfTheInfected.Enemy.Health
     {
         public bool IsDead { get; set; }
         [Header("Health and damage")]
-        [field: SerializeField] public int CurrentHealth { get; private set; }
-        [field: SerializeField] public int MaxHealth { get; private set; }
+        [field: SerializeField] public float CurrentHealth { get; private set; }
+        [field: SerializeField] public float MaxHealth { get; private set; }
         [ColorUsage(true, true)]
         public Color flashColor = Color.red;
         [SerializeField] public float flashTime = 0.1f;
@@ -34,7 +34,7 @@ namespace PathOfTheInfected.Enemy.Health
             Destroy(gameObject, flashTime + 0.1f);
         }
 
-        public void TakeDamage(int finalDamage, float hitStopTime)
+        public void TakeDamage(float finalDamage, float hitStopTime)
         {
             if (IsDead) return;
             CurrentHealth -= finalDamage;
@@ -49,7 +49,7 @@ namespace PathOfTheInfected.Enemy.Health
 
         private void FlashDamage()
         {
-            SetFlashColor(flashColor);
+            SetFlashColor(in flashColor);
             int i = 0;
             foreach (var t in Materials)
             {
@@ -67,7 +67,7 @@ namespace PathOfTheInfected.Enemy.Health
                     .SetEase(damageFlashEaseType);
                 i++;
             }
-            SetFlashColor(_originalColor);
+            SetFlashColor(in _originalColor);
 
         }
 
@@ -75,7 +75,7 @@ namespace PathOfTheInfected.Enemy.Health
         /// Set the flash color when we need to flash
         ///</summary>
         /// <param name="color">The color the flash should be in</param>
-        private void SetFlashColor(Color color)
+        private void SetFlashColor(in Color color)
         {
             for (int i = 0; i < Materials.Length; i++)
             {
@@ -115,9 +115,9 @@ namespace PathOfTheInfected.Enemy.Health
 
         #endregion
 
-        public HitResponse OnHit(HitData damageData)
+        public HitResponse OnHit(ref HitData damageData)
         {
-            int finalDamage = DamageCalculator.CalculateDamage(damageData);
+            float finalDamage = DamageCalculator.CalculateDamage(in damageData);
 
             TakeDamage(finalDamage, damageData.attackDefinition.hitStopTime);
 

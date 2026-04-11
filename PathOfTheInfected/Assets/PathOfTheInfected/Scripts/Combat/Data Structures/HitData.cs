@@ -34,7 +34,7 @@ namespace PathOfTheInfected.Combat
         /// <summary>
         /// The current combo multiplier in this attack
         /// </summary>
-        public int comboDamageScalingLevel;
+        public float comboDamageScalingLevel;
         /// <summary>
         /// Did the player inflict the damage?
         /// </summary>

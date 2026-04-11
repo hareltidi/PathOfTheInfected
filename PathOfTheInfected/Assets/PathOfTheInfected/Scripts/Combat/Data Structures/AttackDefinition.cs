@@ -12,12 +12,12 @@ namespace PathOfTheInfected.Combat
     /// An attack's characteristics are defined using its base damage, type, and specific
     /// timing properties like hit stop and recovery time. These properties determine how
     /// the attack interacts with the game world and characters during combat.
-    /// </remarks>
     /// <seealso cref="PathOfTheInfected.Combat.AttackType"/>
+    /// </remarks>
     [CreateAssetMenu(fileName = "AttackDefinition", menuName = "Attacks/Base/AttackDefinition", order = 0)]
     public class AttackDefinition : ScriptableObject
     {
-        public int baseDamage = 1;
+        public float baseDamage = 1;
         public float hitStopTime;
         public float recoveryTime;
         public AttackType attackType;

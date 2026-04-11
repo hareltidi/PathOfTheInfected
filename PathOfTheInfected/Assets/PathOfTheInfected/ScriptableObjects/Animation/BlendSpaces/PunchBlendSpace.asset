@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db68c918c95f4aafb7ef8951923ec9f5, type: 3}
+  m_Name: PunchBlendSpace
+  m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Animation.BlendSpaces.BlendSpace2DVector2
+  blendPoints:
+  - clip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
+    direction: {x: 1, y: 0}
+  - clip: {fileID: 7400000, guid: bee4ef3077907a94eafca907ae48923d, type: 2}
+    direction: {x: 0, y: 1}
+  - clip: {fileID: 7400000, guid: e2e1dff3036b0f34892f2657b2972252, type: 2}
+    direction: {x: 0, y: -1}
+  - clip: {fileID: 7400000, guid: 9af17f66a89b572489dfaff12b141b09, type: 2}
+    direction: {x: -1, y: 0}
+  maxActiveSamples: 3
+  applicationMode: 0
+  blendWeight: 1
