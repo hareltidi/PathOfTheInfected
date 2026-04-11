@@ -589,8 +589,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: bounceFactor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
       propertyPath: windStrength
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: windFrequency
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: sineWindWeight
+      value: 0.09
       objectReference: {fileID: 0}
     - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
       propertyPath: collisionRadius
@@ -605,12 +617,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1887671414283325526}
     - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: turnLiftPosition
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
       propertyPath: externalGravity.y
-      value: -9.5
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: maxRiseAboveAnchor
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
       propertyPath: turbulenceStrength
-      value: 15
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4009560152410199013, guid: 4cd800e0ad46334488b6b1b433e8f25f, type: 3}
+      propertyPath: riseRecoveryStrength
+      value: 300
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -812,6 +836,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4981986705210761568}
     m_Modifications:
+    - target: {fileID: 730448840491591116, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.153
+      objectReference: {fileID: 0}
     - target: {fileID: 1143038524904089668, guid: 28a2e1712fec3a14cb8818c86bf716de, type: 3}
       propertyPath: m_Layer
       value: 8
