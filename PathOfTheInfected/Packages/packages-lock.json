@@ -19,6 +19,12 @@
       },
       "hash": "e01289c9d067ddaa8b598bb1ce7575ee648535cc"
     },
+    "com.merry-yellow.code-assist": {
+      "version": "file:com.merry-yellow.code-assist",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.sarpersoher.ide.sublimetext": {
       "version": "https://github.com/ssoher/com.sarpersoher.ide.sublimetext.git",
       "depth": 0,
