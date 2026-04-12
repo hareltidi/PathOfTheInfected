@@ -1,0 +1,16 @@
+{
+    "name": "PathOfTheInfected-UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ee1ae166c3d65324d8e20d51c4bc3771"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
