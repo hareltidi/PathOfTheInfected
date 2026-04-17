@@ -17,8 +17,8 @@ namespace PathOfTheInfected.Player.Combat
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
-        [Header("Attack Timeline")]
-        [SerializeField] private bool useTimeBasedAttackWindows = true;
+        [Header("Attack Timeline")] [SerializeField]
+        private bool useTimeBasedAttackWindows = true;
 
         private void Start()
         {
@@ -323,6 +323,7 @@ namespace PathOfTheInfected.Player.Combat
                 {
                     BeginAttackActivePhase();
                 }
+
                 return;
             }
 
@@ -397,7 +398,7 @@ namespace PathOfTheInfected.Player.Combat
         public void OnAnimationAttackMessage(AnimationAttackMessageType messageType)
         {
             if (useTimeBasedAttackWindows) return;
-            
+
             switch (messageType)
             {
                 case AnimationAttackMessageType.Start:
@@ -412,7 +413,7 @@ namespace PathOfTheInfected.Player.Combat
         private void OnAnimationEnded(AnimationHandle handle, AnimationEndReason reason)
         {
             if (useTimeBasedAttackWindows) return;
-            
+
             if (handle.Hash == _punchAnim)
             {
                 OnAnimationAttackMessage(AnimationAttackMessageType.End);
