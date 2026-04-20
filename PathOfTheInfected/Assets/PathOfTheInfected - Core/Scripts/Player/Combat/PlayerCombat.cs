@@ -17,8 +17,8 @@ namespace PathOfTheInfected.Player.Combat
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
-        [Header("Attack Timeline")]
-        [SerializeField] private bool useTimeBasedAttackWindows = true;
+        [Header("Attack Timeline")] [SerializeField]
+        private bool useTimeBasedAttackWindows = true;
 
         private void Start()
         {
@@ -93,19 +93,17 @@ namespace PathOfTheInfected.Player.Combat
         [SerializeField] private TidiAnimationDriver animationDriver;
 
         [Header("Subsystems - General")] [Tooltip("Enables the debug mode for the combo subsystem")]
-        public bool debugComboSubsystem;
+        public bool debugPerkSubsystem;
 
         [Tooltip("Enables the debug mode for the RBC (Reset based combat) subsystem")]
         public bool debugRbcSubsystem;
 
-        [Space] [Header("Combo system")] public float maxComboHitMultiplier = 2f;
-        public float maxComboSpeedMultiplier = 3f;
-
-        [Tooltip("The amount of hits in a combo required to grant a full reset in our RBC system. " +
-                 "This only applies to aerial combos, grounded combos will NOT get this perk")]
-        public int aerialFullResetComboThreshold;
-
         [Header("RBC system")] public bool grantFullReset = false;
+
+        [Space]
+
+        [Header("Perks")]
+        public PlayerPerkData perkData;
 
         #endregion
 
@@ -130,7 +128,7 @@ namespace PathOfTheInfected.Player.Combat
         public POIAnimInstance AnimInstance { get; private set; }
 
         public PlayerRBCSubsystem RbcSubsystem { get; private set; }
-        public PlayerComboSubsystem ComboSubsystem { get; private set; }
+        public PlayerPerksSubsystem PerkSubsystem { get; private set; }
 
         #region Combat flags
 
@@ -186,12 +184,9 @@ namespace PathOfTheInfected.Player.Combat
             _subsystems.Add(RbcSubsystem);
 
             //Combo
-            ComboSubsystem = new PlayerComboSubsystem();
-            ComboSubsystem.Initialize(this, debugComboSubsystem);
-            ComboSubsystem.MaxComboHitMultiplier = maxComboHitMultiplier;
-            ComboSubsystem.MaxComboSpeedMultiplier = maxComboSpeedMultiplier;
-            ComboSubsystem.FullResetComboThreshold = aerialFullResetComboThreshold;
-            _subsystems.Add(ComboSubsystem);
+            PerkSubsystem = new PlayerPerksSubsystem();
+            PerkSubsystem.Initialize(this, debugPerkSubsystem);
+            _subsystems.Add(PerkSubsystem);
         }
 
 
@@ -323,6 +318,7 @@ namespace PathOfTheInfected.Player.Combat
                 {
                     BeginAttackActivePhase();
                 }
+
                 return;
             }
 
@@ -397,7 +393,7 @@ namespace PathOfTheInfected.Player.Combat
         public void OnAnimationAttackMessage(AnimationAttackMessageType messageType)
         {
             if (useTimeBasedAttackWindows) return;
-            
+
             switch (messageType)
             {
                 case AnimationAttackMessageType.Start:
@@ -412,7 +408,7 @@ namespace PathOfTheInfected.Player.Combat
         private void OnAnimationEnded(AnimationHandle handle, AnimationEndReason reason)
         {
             if (useTimeBasedAttackWindows) return;
-            
+
             if (handle.Hash == _punchAnim)
             {
                 OnAnimationAttackMessage(AnimationAttackMessageType.End);

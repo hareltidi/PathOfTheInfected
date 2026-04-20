@@ -148,7 +148,8 @@ namespace PathOfTheInfected.Animation
         {
             // Standing states
             standingIsRunning = (Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
-                                 OwnerPlayer.IsRunning) || OwnerPlayer.CurrentMovementSpeed >= OwnerPlayer.moveStats.MaxRunSpeed;
+                                 OwnerPlayer.IsRunning) || OwnerPlayer.CurrentMovementSpeed >=
+                OwnerPlayer.moveStats.MaxRunSpeed;
             standingIsWalking = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
                                 !OwnerPlayer.IsRunning && !OwnerPlayer.IsCrouching;
             standingIsWallSliding = OwnerPlayer.IsWallSliding;
