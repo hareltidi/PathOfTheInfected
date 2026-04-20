@@ -33,7 +33,9 @@ namespace PathOfTheInfected.Animation.BlendSpaces
 
             foreach (var point in blendPoints)
                 if (point.clip == null)
+                {
                     Debug.LogWarning("One of the blend points has a null clip reference!", this);
+                }
         }
 
         public override BlendResult Evaluate(float input)
