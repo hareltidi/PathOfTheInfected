@@ -19,7 +19,6 @@ namespace PathOfTheInfected.Animation
         public static POIAnimInstance Instance;
 
         #region States
-
         public POIStandingAnimState StandingState { get; private set; }
         public POIInAirAnimState InAirState { get; private set; }
 

@@ -5,8 +5,6 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Combat
 {
-
-
     public enum PlayerPerks
     {
         SwiftStep,

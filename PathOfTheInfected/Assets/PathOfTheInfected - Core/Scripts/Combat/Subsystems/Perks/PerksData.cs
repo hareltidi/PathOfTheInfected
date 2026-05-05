@@ -6,7 +6,7 @@ namespace PathOfTheInfected.Combat
 {
     public abstract class PerkData : ScriptableObject
     {
-        public string perkName;
+        public PlayerPerks perkType;
         public Sprite icon;
 
         public List<PerkTier> tiers;
