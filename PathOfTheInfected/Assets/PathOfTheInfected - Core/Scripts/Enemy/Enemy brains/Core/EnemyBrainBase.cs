@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using PathOfTheInfected.Combat;
 using PathOfTheInfected.Damagable;
+using PathOfTheInfected.Enemy.Health;
+using TidiGameplayMessaging.Core;
 using TidiPathFinding;
 using TidiTweening;
 using UnityEngine;
@@ -13,6 +15,7 @@ namespace PathOfTheInfected.Enemy
     /// This class manages the enemy's movement, state transitions, health, and interactions with other game entities.
     /// It also includes functionality for detecting targets, handling line-of-sight checks, and managing attack behaviors.
     /// </summary>
+    [RequireComponent(typeof(Rigidbody2D)),  RequireComponent(typeof(EnemyHealth))]
     public class EnemyBrainBase : MonoBehaviour, IEnemyMoveable
     {
         #region Interface Variables
@@ -29,14 +32,18 @@ namespace PathOfTheInfected.Enemy
 
         #region Plug-In States
 
+        [Header("State Machines")]
         public EnemyStateMachine StateMachine;
         public EnemyBaseState noSpottableDetectedState;
         public EnemyBaseState spottableDetectedState;
         public EnemyBaseState spottableInAttackRangeState;
 
+        [Header("State Machines - Damaged state (optional)")]
+        public bool damageSwitchesStates;
+        public EnemyBaseState damagedState;
+
         [Header("State Debugging")]
-        [field: SerializeField]
-        public EnemyBaseState CurrentState { get; protected set; }
+        [field: SerializeField] public EnemyBaseState CurrentState { get; protected set; }
 
         #endregion
 
@@ -46,6 +53,10 @@ namespace PathOfTheInfected.Enemy
         [SerializeField] protected float waypointTolerance = 0.1f;
         [SerializeField] protected float repathInterval = 1f;
         [SerializeField] protected float facingFlipDeadzone = 1;
+
+        [Header("Debugging - Path")]
+        [SerializeField] public bool drawPathGizmos = false;
+        [SerializeField] private float pathSwapImprovementThreshold = 0.5f;
 
 
         [Header("Box cast - general")]
@@ -62,8 +73,10 @@ namespace PathOfTheInfected.Enemy
         [SerializeField] protected LayerMask losBlockMask;
 
 
-        [Header("State switch conditions")] public bool isSpottableDetected;
+        [Header("State switch conditions")]
+        public bool isSpottableDetected;
         public bool isSpottableInAttackRange;
+        public bool isEnemyDamaged;
 
         [Header("Debugging - track ranges")] public bool trackSpotRange;
         public bool trackAttackRange;
@@ -74,6 +87,12 @@ namespace PathOfTheInfected.Enemy
         [field: SerializeField] public float CurrentPoise { get; set; }
         public AttackSOBase attack;
         public float maxPoise = 10f;
+
+        /// <summary>
+        /// Persistent attack context that survives across state transitions.
+        /// This ensures recovery time is maintained even if the enemy temporarily leaves the attack state.
+        /// </summary>
+        public AttackContext AttackContext { get; set; }
         #endregion
 
         #region Protected and non-serialized members
@@ -115,6 +134,12 @@ namespace PathOfTheInfected.Enemy
         protected BoxCollider2D BoxCollider;
 
         protected Vector2 CurrentTargetVelocity;
+
+        protected EnemyHealth EnemyHealth;
+
+        public Vector2 EnemyVel { get; private set; }
+
+        protected IDisposable DamagedSubscription;
         #endregion
 
         #region Virtual logic gate Methods
@@ -153,6 +178,26 @@ namespace PathOfTheInfected.Enemy
             DrawStatesGizmos();
             DrawingSpottingRange();
             DrawAttackRange();
+
+            // Draw current path for debugging
+            if (drawPathGizmos && CurrentPath != null && CurrentPath.Count > 0)
+            {
+                Gizmos.color = Color.magenta;
+                Vector3 prev = transform.position;
+                for (int i = 0; i < CurrentPath.Count; i++)
+                {
+                    Vector3 p = (Vector3)CurrentPath[i];
+                    Gizmos.DrawLine(prev, p);
+                    prev = p;
+                }
+
+                // highlight current index
+                if (CurrentIndex >= 0 && CurrentIndex < CurrentPath.Count)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawSphere((Vector3)CurrentPath[CurrentIndex], 0.12f);
+                }
+            }
         }
 
         /// <summary>
@@ -173,6 +218,15 @@ namespace PathOfTheInfected.Enemy
         protected virtual void EnemyFixedUpdate()
         {
             StateMachine?.CurrentState.StateFixedUpdate();
+            TickRecoveryOutsideAttackState();
+        }
+
+        private void TickRecoveryOutsideAttackState()
+        {
+            if (attack == null || AttackContext == null || AttackContext.IsFinished) return;
+            if (CurrentState == spottableInAttackRangeState) return;
+
+            attack.TickRecovery(AttackContext);
         }
 
         #endregion
@@ -185,6 +239,8 @@ namespace PathOfTheInfected.Enemy
         private void Awake()
         {
             EnemyAwake();
+            DamagedSubscription = TidiGameplayMessagingSubsystem.Instance.Listen<OnEnemyDamaged>(OnEnemyDamaged);
+            EnemyHealth = GetComponent<EnemyHealth>();
         }
 
         private void Start()
@@ -195,6 +251,7 @@ namespace PathOfTheInfected.Enemy
         private void Update()
         {
             EnemyUpdate();
+            EnemyVel = RB ? RB.linearVelocity : Vector2.zero;
         }
 
         private void FixedUpdate()
@@ -205,6 +262,11 @@ namespace PathOfTheInfected.Enemy
         private void OnDrawGizmosSelected()
         {
             DrawGizmosOnSelected();
+        }
+
+        private void OnDestroy()
+        {
+            DamagedSubscription?.Dispose();
         }
 
         #region Detection and drawing detection zones
@@ -488,6 +550,24 @@ namespace PathOfTheInfected.Enemy
         }
 
         /// <summary>
+        /// Compute the total path length from a given start index to the end of the path.
+        /// Returns 0 for null/empty path or if startIndex out of range.
+        /// </summary>
+        protected float PathTotalLength(List<Vector2> path, int startIndex)
+        {
+            if (path == null || path.Count == 0 || startIndex >= path.Count) return 0f;
+            float len = 0f;
+            Vector2 prev = (Vector2)transform.position;
+            // if startIndex > 0 use distance from prev to path[startIndex]
+            for (int i = startIndex; i < path.Count; i++)
+            {
+                len += Vector2.Distance(prev, path[i]);
+                prev = path[i];
+            }
+            return len;
+        }
+
+        /// <summary>
         /// Moves the enemy towards a specified target Transform.
         /// </summary>
         /// <param name="target">The target Transform to move towards. If null, the method exits early.</param>
@@ -513,26 +593,32 @@ namespace PathOfTheInfected.Enemy
         /// <param name="target">The target position as a Vector2.</param>
         public virtual void MoveTo(Vector2 target)
         {
-            if (AStarPathFinder.CurrentGraph == null || !RB) return;
-
-            // --- Recalculate path on timer ---
-            if (Time.timeSinceLevelLoad >= NextRepath)
+            if (AStarPathFinder.CurrentGraph == null || !RB)
             {
-                List<Vector2> newPath =
-                    AStarPathFinder.FindPath_CurrentGraph(transform.position, target);
+                // If no pathfinder is available, fall back to simple directional movement
+                Vector2 fallbackDir = (target - (Vector2)transform.position).normalized;
+                MoveEnemy(new Vector2(Mathf.Sign(fallbackDir.x), 0f));
+                return;
+            }
+
+            bool targetMoved = Vector2.Distance(target, LastTargetPosition) > 0.5f;
+
+            // --- Recalculate path on timer OR if we have no path yet OR if target changed significantly ---
+            if (Time.timeSinceLevelLoad >= NextRepath || CurrentPath == null || targetMoved)
+            {
+                List<Vector2> newPath = AStarPathFinder.FindPath_CurrentGraph(transform.position, target);
 
                 NextRepath = Time.timeSinceLevelLoad + repathInterval;
+                LastTargetPosition = target;
 
                 if (newPath != null && newPath.Count > 0)
                 {
-                    CurrentPath = newPath;
-
+                    // Find best starting index on the new path (closest node)
                     float bestDistance = float.MaxValue;
                     int bestIndex = 0;
-
-                    for (int i = 0; i < CurrentPath.Count; i++)
+                    for (int i = 0; i < newPath.Count; i++)
                     {
-                        float dist = Vector2.Distance(transform.position, CurrentPath[i]);
+                        float dist = Vector2.Distance(transform.position, newPath[i]);
                         if (dist < bestDistance)
                         {
                             bestDistance = dist;
@@ -540,32 +626,72 @@ namespace PathOfTheInfected.Enemy
                         }
                     }
 
-                    CurrentIndex = bestIndex;
+                    float newRemaining = PathTotalLength(newPath, bestIndex);
+                    float currentRemaining = PathTotalLength(CurrentPath, CurrentIndex);
+
+                    // Only swap if the new path offers a clear improvement (prevents jittery swaps)
+                    bool shouldSwap = true;
+                    if (CurrentPath != null && currentRemaining > 0f)
+                    {
+                        if (newRemaining > currentRemaining - pathSwapImprovementThreshold)
+                        {
+                            shouldSwap = false;
+                        }
+                    }
+
+                    if (shouldSwap)
+                    {
+                        CurrentPath = newPath;
+                        CurrentIndex = bestIndex;
+                    }
+                }
+                else
+                {
+                    // Pathfinder failed: as a last resort, set CurrentPath to null so caller can fallback
+                    CurrentPath = null;
                 }
             }
 
             if (CurrentPath == null || CurrentIndex >= CurrentPath.Count)
             {
+                // No valid path right now: attempt a simple horizontal fallback so the enemy keeps moving toward the target
+                Vector2 toTarget = target - (Vector2)transform.position;
+                if (Mathf.Abs(toTarget.x) > waypointTolerance)
+                {
+                    MoveEnemy(new Vector2(Mathf.Sign(toTarget.x), 0f));
+                }
+                else
+                {
+                    MoveEnemy(Vector2.zero);
+                }
+                return;
+            }
+
+            // Advance through small/close nodes to avoid oscillation over nearby waypoints
+            while (CurrentIndex < CurrentPath.Count - 1 &&
+                   Vector2.Distance(transform.position, CurrentPath[CurrentIndex]) <= waypointTolerance)
+            {
+                CurrentIndex++;
+            }
+
+            if (CurrentIndex >= CurrentPath.Count)
+            {
                 MoveEnemy(Vector2.zero);
                 return;
             }
 
-            // --- Look-ahead ---
-            int targetIndex = Mathf.Min(CurrentIndex + 1, CurrentPath.Count - 1);
-            Vector2 waypoint = CurrentPath[targetIndex];
-
+            // Move towards current waypoint (horizontal movement only for grounded enemies)
+            Vector2 waypoint = CurrentPath[CurrentIndex];
             Vector2 toWaypoint = waypoint - (Vector2)transform.position;
 
-            // Ground enemy moves only horizontally
-            Vector2 horizontalDir = new Vector2(Mathf.Sign(toWaypoint.x), 0f);
-
-            MoveEnemy(horizontalDir);
-
-            // Advance waypoint if close enough (horizontal check only because this is a grounded enemy)
-            if (Mathf.Abs(toWaypoint.x) <= waypointTolerance)
+            // Prevent immediate flipping when waypoint is very close horizontally
+            if (Mathf.Abs(toWaypoint.x) <= facingFlipDeadzone)
             {
-                CurrentIndex++;
+                MoveEnemy(Vector2.zero);
+                return;
             }
+
+            MoveEnemy(new Vector2(toWaypoint.x, 0f));
         }
 
         public virtual void CheckForLeftOrRightFacing(Vector2 velocity)
@@ -594,6 +720,21 @@ namespace PathOfTheInfected.Enemy
             Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
             Renderer r = obj.GetComponent<Renderer>();
             return GeometryUtility.TestPlanesAABB(planes, r.bounds);
+        }
+
+        public void OnEnemyDamaged()
+        {
+           ToggleDamaged(true);
+           Invoke(nameof(DamagedToFalse), EnemyHealth.flashTime);
+        }
+
+        private void DamagedToFalse()
+        {
+            ToggleDamaged(false);
+        }
+        private void ToggleDamaged(bool isDamaged)
+        {
+            isEnemyDamaged = isDamaged && damageSwitchesStates;
         }
 
         #endregion

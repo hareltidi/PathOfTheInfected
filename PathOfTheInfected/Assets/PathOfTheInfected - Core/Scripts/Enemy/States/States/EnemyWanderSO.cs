@@ -27,6 +27,13 @@ namespace PathOfTheInfected.Enemy
 
         private float _nextAllowedSwitchTime;
 
+        [Header("Stuck Detection")]
+        [SerializeField, Tooltip("If the enemy doesn't make progress toward its wander target for this many seconds, pick a new target.")]
+        private float stuckTimeout = 1.0f;
+
+        private float _stuckTimer;
+        private float _lastDistanceToTarget = float.MaxValue;
+
         public override void StateEnter()
         {
             Vector2 origin = CurrentEnemyBrain.InitialPosition;
@@ -48,6 +55,9 @@ namespace PathOfTheInfected.Enemy
                 _goingToMax = CurrentEnemyBrain.IsFacingRight;
                 CurrentWanderTarget = _goingToMax ? WanderMaxPosition : WanderMinPosition;
             }
+
+            _stuckTimer = 0f;
+            _lastDistanceToTarget = Vector2.Distance(CurrentEnemyBrain.transform.position, CurrentWanderTarget);
         }
 
         public override void StateFixedUpdate()
@@ -55,6 +65,29 @@ namespace PathOfTheInfected.Enemy
             CalculateEnemyMovement();
 
             if (Time.timeSinceLevelLoad < _nextAllowedSwitchTime) return;
+            // Stuck detection: if we aren't getting closer to our target for a while, force a target switch
+            float dist = Vector2.Distance(CurrentEnemyBrain.transform.position, CurrentWanderTarget);
+            if (dist + 0.01f < _lastDistanceToTarget)
+            {
+                // made progress
+                _stuckTimer = 0f;
+            }
+            else
+            {
+                _stuckTimer += Time.fixedDeltaTime;
+            }
+            _lastDistanceToTarget = dist;
+
+            if (_stuckTimer >= stuckTimeout)
+            {
+                // Force a switch to avoid getting stuck
+                _stuckTimer = 0f;
+                _goingToMax = !_goingToMax;
+                CurrentWanderTarget = _goingToMax ? WanderMaxPosition : WanderMinPosition;
+                _nextAllowedSwitchTime = Time.timeSinceLevelLoad + switchCooldown;
+                return;
+            }
+
             if (HasReachedOrPassedTarget())
             {
                 if (CurrentEnemyBrain.HasLastKnownTarget)
@@ -119,6 +152,11 @@ namespace PathOfTheInfected.Enemy
             if (CurrentEnemyBrain.isSpottableInAttackRange)
             {
                 StateMachine.RequestStateChange(CurrentEnemyBrain.spottableInAttackRangeState);
+            }
+
+            if (CurrentEnemyBrain.isEnemyDamaged)
+            {
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.damagedState);
             }
         }
     }

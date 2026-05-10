@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using TidiPathFinding;
+using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
@@ -67,19 +69,80 @@ namespace PathOfTheInfected.Enemy
             {
                 _offsetTimer = 0f;
 
-                float r = Random.Range(offsetRadiusMin, offsetRadiusMax);
+                // Robust offset sampling: pick several candidate offsets biased toward the
+                // direction from the enemy to the target and validate each candidate with
+                // the pathfinder. Choose the candidate with the shortest valid path.
+                int candidates = 5;
+                float maxAngleDeg = 90f; // sample within +/- 90 degrees around forward
 
-                Vector2 dir = Random.insideUnitCircle;
-                if (dir.sqrMagnitude < 0.0001f)
+                Vector2 enemyPos = CurrentEnemyBrain.transform.position;
+                Vector2 toTarget = ((Vector2)Target.position - enemyPos).normalized;
+
+                float bestPathLength = float.MaxValue;
+                Vector2 bestCandidate = (Vector2)Target.position;
+                bool foundValid = false;
+
+                for (int i = 0; i < candidates; i++)
                 {
-                    dir = Vector2.right;
+                    float r = Random.Range(offsetRadiusMin, offsetRadiusMax);
+                    float angle = Random.Range(-maxAngleDeg, maxAngleDeg);
+                    Vector2 dir = Quaternion.Euler(0f, 0f, angle) * toTarget;
+                    if (dir.sqrMagnitude < 0.0001f) dir = toTarget;
+                    dir.Normalize();
+
+                    Vector2 candidate = (Vector2)Target.position + dir * r;
+
+                    // Validate with pathfinder
+                    List<Vector2> path = AStarPathFinder.FindPath_CurrentGraph(CurrentEnemyBrain.transform.position, candidate);
+                    if (path != null && path.Count > 0)
+                    {
+                        // compute total length from start of path
+                        float len = 0f;
+                        Vector2 prev = CurrentEnemyBrain.transform.position;
+                        foreach (var p in path)
+                        {
+                            len += Vector2.Distance(prev, p);
+                            prev = p;
+                        }
+
+                        if (len < bestPathLength)
+                        {
+                            bestPathLength = len;
+                            bestCandidate = candidate;
+                            foundValid = true;
+                        }
+                    }
                 }
 
-                dir.Normalize();
-                _currentOffsetTarget = (Vector2)Target.position + dir * r;
+                if (foundValid)
+                {
+                    _currentOffsetTarget = bestCandidate;
+                }
+                else
+                {
+                    // fallback to direct target position if no valid offset found
+                    _currentOffsetTarget = Target.position;
+                }
             }
 
             CurrentEnemyBrain.MoveTo(_currentOffsetTarget);
+        }
+
+        public override void DrawGizmosOnSelected(EnemyBrainBase en)
+        {
+            base.DrawGizmosOnSelected(en);
+            if (useOffsetPursuit)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(_currentOffsetTarget, 0.12f);
+                Gizmos.DrawLine(en.transform.position, _currentOffsetTarget);
+            }
+
+            if (Target)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(Target.position, 0.12f);
+            }
         }
 
         public override void TransitionChecks()
@@ -94,6 +157,11 @@ namespace PathOfTheInfected.Enemy
             if (!CurrentEnemyBrain.isSpottableDetected)
             {
                 StateMachine?.RequestStateChange(CurrentEnemyBrain.noSpottableDetectedState);
+            }
+
+            if (CurrentEnemyBrain.isEnemyDamaged)
+            {
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.damagedState);
             }
         }
     }

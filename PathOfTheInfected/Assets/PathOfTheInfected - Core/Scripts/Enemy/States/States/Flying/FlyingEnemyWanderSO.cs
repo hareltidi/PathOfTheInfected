@@ -101,6 +101,11 @@ namespace PathOfTheInfected.Enemy
             {
                 StateMachine.RequestStateChange(CurrentEnemyBrain.spottableInAttackRangeState);
             }
+
+            if (CurrentEnemyBrain.isEnemyDamaged)
+            {
+                StateMachine.RequestStateChange(CurrentEnemyBrain.damagedState);
+            }
         }
 
         #region Enemy target calculation

@@ -20,4 +20,4 @@ MonoBehaviour:
   windupDuration: 0.5
   projectilePrefab: {fileID: 5303159517039868119, guid: a22ad40534731c741b4a5c70fdcfc442, type: 3}
   spawnMarginX: 5
-  spawnMarginY: 0
+  spawnMarginY: -1

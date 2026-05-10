@@ -65,7 +65,10 @@ namespace TidiMovementComponent2D.Animation
         /// <summary>
         ///   <para>In this system, we use hashes using the Animator.StringToHash method and inputting the AnimClip.name. Use this function to set the hashes to the corresponding animClip name</para>
         /// </summary>
-        protected abstract void SetAnimHashes();
+        protected virtual void SetAnimHashes()
+        {
+
+        }
 
 
         /// <summary>
@@ -88,7 +91,10 @@ namespace TidiMovementComponent2D.Animation
         /// <summary>
         ///  <para>Sets the animation boolean flags based on the player states. These flags are then used to determine which animation to play.</para>
         /// </summary>
-        protected abstract void SetAnimationFlags();
+        protected virtual void SetAnimationFlags()
+        {
+
+        }
         #endregion
 
         #region Playing the animation

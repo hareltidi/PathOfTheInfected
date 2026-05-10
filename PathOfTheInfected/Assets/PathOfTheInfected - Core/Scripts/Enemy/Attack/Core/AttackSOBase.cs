@@ -102,6 +102,25 @@ namespace PathOfTheInfected.Enemy
             }
         }
 
+        public virtual void TickRecovery(AttackContext ctx)
+        {
+            if (ctx == null || ctx.IsFinished) return;
+            switch (ctx.Phase)
+            {
+                case AttackPhase.Recovery:
+                    if (!attackDef) return;
+                    ctx.Timer += Time.fixedDeltaTime;
+                    if (ctx.Timer >= attackDef.recoveryTime)
+                    {
+                        ctx.IsFinished = true;
+                    }
+                    break;
+                case AttackPhase.PoiseRecovery:
+                    RecoverPoise(ctx);
+                    break;
+            }
+        }
+
         public virtual void ReactToHitResult(HitResult hitResult)
         {
 

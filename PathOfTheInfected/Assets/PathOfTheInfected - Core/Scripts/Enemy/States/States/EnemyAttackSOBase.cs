@@ -14,14 +14,26 @@ namespace PathOfTheInfected.Enemy
         /// The context containing data and state information for enemy attack behavior.
         /// Used to manage and track the state of an ongoing attack, including the owner performing
         /// the attack, the target being attacked, the timeline of the attack, and the current phase of the attack.
+        ///
+        /// This uses the persistent AttackContext from EnemyBrainBase to maintain recovery state
+        /// across state transitions, preventing recovery timers from being reset when the enemy
+        /// temporarily leaves the attack state.
         /// </summary>
-        private AttackContext _context = new();
 
         public override void StateEnter()
         {
-            if (CurrentEnemyBrain && CurrentEnemyBrain.AttackTarget != null && CurrentEnemyBrain.AttackTarget.Transform)
+            if (!CurrentEnemyBrain || CurrentEnemyBrain.AttackTarget == null || !CurrentEnemyBrain.AttackTarget.Transform) return;
+
+            if (CurrentEnemyBrain.AttackContext == null)
             {
-                CurrentEnemyBrain.attack.InitAttack(_context, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
+                CurrentEnemyBrain.AttackContext = new AttackContext();
+                CurrentEnemyBrain.attack.InitAttack(CurrentEnemyBrain.AttackContext, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
+            }
+
+            // Start fresh attack if the previous one was finished
+            if (CurrentEnemyBrain.AttackContext.IsFinished)
+            {
+                CurrentEnemyBrain.attack.InitAttack(CurrentEnemyBrain.AttackContext, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
             }
         }
 
@@ -29,13 +41,22 @@ namespace PathOfTheInfected.Enemy
         {
             if (!CurrentEnemyBrain || CurrentEnemyBrain.AttackTarget == null || !CurrentEnemyBrain.AttackTarget.Transform) return;
             base.StateFixedUpdate();
-            if (!_context.IsFinished)
+
+            // Ensure AttackContext is initialized
+            if (CurrentEnemyBrain.AttackContext == null)
             {
-                CurrentEnemyBrain.attack.AttackLogic(_context);
+                CurrentEnemyBrain.AttackContext = new AttackContext();
+                CurrentEnemyBrain.attack.InitAttack(CurrentEnemyBrain.AttackContext, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
+                return;
+            }
+
+            if (!CurrentEnemyBrain.AttackContext.IsFinished)
+            {
+                CurrentEnemyBrain.attack.AttackLogic(CurrentEnemyBrain.AttackContext);
             }
             else
             {
-                CurrentEnemyBrain.attack.InitAttack(_context, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
+                CurrentEnemyBrain.attack.InitAttack(CurrentEnemyBrain.AttackContext, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
             }
 
         }
@@ -50,6 +71,11 @@ namespace PathOfTheInfected.Enemy
             if (!CurrentEnemyBrain.isSpottableInAttackRange && !CurrentEnemyBrain.isSpottableDetected)
             {
                 StateMachine.RequestStateChange(CurrentEnemyBrain.noSpottableDetectedState);
+            }
+
+            if (CurrentEnemyBrain.isEnemyDamaged)
+            {
+                StateMachine?.RequestStateChange(CurrentEnemyBrain.damagedState);
             }
         }
     }
