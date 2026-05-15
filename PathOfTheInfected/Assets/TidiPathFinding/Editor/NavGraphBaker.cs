@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace TidiPathFinding
 {
     public class NavGraphBaker : MonoBehaviour
     {
-        [ColorUsage(true, true)]
-        [SerializeField] private Color areaColor;
-        public Vector2 areaSize = new (20, 20);
+        [ColorUsage(true, true)] [SerializeField]
+        private Color areaColor;
+
+        public Vector2 areaSize = new(20, 20);
         public float nodeSpacing = 1.5f;
         public LayerMask obstacleMask;
 
@@ -33,7 +36,7 @@ namespace TidiPathFinding
                 for (float y = 0; y <= areaSize.y; y += nodeSpacing) // Loop through all the y positions
                 {
                     Vector2 worldPos = origin + new Vector2(x, y); // Calculate the world position
-                    worldPos =  new Vector2(
+                    worldPos = new Vector2(
                         Mathf.Round(worldPos.x * 1000f) / 1000f,
                         Mathf.Round(worldPos.y * 1000f) / 1000f
                     ); // Round the world position to avoid floating point errors
@@ -58,14 +61,14 @@ namespace TidiPathFinding
 
             Vector2[] directions =
             {
-                new( nodeSpacing, 0),
+                new(nodeSpacing, 0),
                 new(-nodeSpacing, 0),
-                new(0,  nodeSpacing),
+                new(0, nodeSpacing),
                 new(0, -nodeSpacing),
 
-                new( nodeSpacing,  nodeSpacing),
-                new(-nodeSpacing,  nodeSpacing),
-                new( nodeSpacing, -nodeSpacing),
+                new(nodeSpacing, nodeSpacing),
+                new(-nodeSpacing, nodeSpacing),
+                new(nodeSpacing, -nodeSpacing),
                 new(-nodeSpacing, -nodeSpacing),
             };
 
@@ -77,7 +80,8 @@ namespace TidiPathFinding
                 {
                     Vector2 neighborPos = pos + dir;
                     neighborPos = new Vector2(Mathf.Round(neighborPos.x * 1000f) / 1000f,
-                        Mathf.Round(neighborPos.y * 1000f) / 1000f); // Round the position to avoid floating point errors
+                        Mathf.Round(neighborPos.y * 1000f) /
+                        1000f); // Round the position to avoid floating point errors
 
                     if (positionToIndex.TryGetValue(neighborPos, out int neighborIndex))
                     {
@@ -88,9 +92,9 @@ namespace TidiPathFinding
                     }
                 }
             }
-
-
+#if UNITY_EDITOR
             SaveAsset(data); // Save the data
+#endif
         }
 
         private void OnDrawGizmosSelected()
@@ -131,6 +135,6 @@ namespace TidiPathFinding
                 "OK"
             );
         }
-    }
 #endif
+    }
 }

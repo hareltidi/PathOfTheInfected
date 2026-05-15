@@ -17,8 +17,8 @@ namespace TidiMovementComponent2D.Animation.BlendSpaces.Playables
 
         private Dictionary<AnimationClip, AnimationClipPlayable> _clipMap;
         private AnimationClip[] _slotClips;
-        private readonly List<AnimationClip> _uniqueClips = new();
-        private readonly List<float> _uniqueWeights = new();
+        private readonly Dictionary<AnimationClip, float> _mergedClipWeights = new();
+        private readonly List<AnimationClip> _mergedClipOrder = new();
         private bool _initialized;
         private Animator _animator;
         private bool _hasBaseController;
@@ -57,7 +57,7 @@ namespace TidiMovementComponent2D.Animation.BlendSpaces.Playables
 
             var safeInputCount = Mathf.Max(1, inputCount);
 
-            _graph = PlayableGraph.Create("TD_AnimGraph");
+            _graph = PlayableGraph.Create("Tidi_AnimGraph");
 
             _output = AnimationPlayableOutput.Create(_graph, "AnimOutput", animator);
 
@@ -154,31 +154,30 @@ namespace TidiMovementComponent2D.Animation.BlendSpaces.Playables
             int maxSlotCount = _slotClips.Length;
 
             // Merge duplicate clips so one clip playable output is never connected twice.
-            _uniqueClips.Clear();
-            _uniqueWeights.Clear();
+            _mergedClipWeights.Clear();
+            _mergedClipOrder.Clear();
             for (int i = 0; i < result.Samples.Length; i++)
             {
                 var sample = result.Samples[i];
                 if (!sample.Clip || sample.Weight <= 0f)
                     continue;
 
-                int existingIndex = _uniqueClips.IndexOf(sample.Clip);
-                if (existingIndex >= 0)
+                if (_mergedClipWeights.TryGetValue(sample.Clip, out float accumulatedWeight))
                 {
-                    _uniqueWeights[existingIndex] += sample.Weight;
+                    _mergedClipWeights[sample.Clip] = accumulatedWeight + sample.Weight;
                 }
                 else
                 {
-                    _uniqueClips.Add(sample.Clip);
-                    _uniqueWeights.Add(sample.Weight);
+                    _mergedClipWeights.Add(sample.Clip, sample.Weight);
+                    _mergedClipOrder.Add(sample.Clip);
                 }
             }
 
-            int count = Mathf.Min(_uniqueClips.Count, maxSlotCount);
+            int count = Mathf.Min(_mergedClipOrder.Count, maxSlotCount);
             float totalWeight = 0f;
             for (int i = 0; i < count; i++)
             {
-                totalWeight += _uniqueWeights[i];
+                totalWeight += _mergedClipWeights[_mergedClipOrder[i]];
             }
 
             if (count == 0 || totalWeight <= 0f)
@@ -201,8 +200,8 @@ namespace TidiMovementComponent2D.Animation.BlendSpaces.Playables
 
             for (int i = 0; i < count; i++)
             {
-                var clip = _uniqueClips[i];
-                var weight = _uniqueWeights[i] / totalWeight;
+                var clip = _mergedClipOrder[i];
+                var weight = _mergedClipWeights[clip] / totalWeight;
 
                 var clipPlayable = GetOrCreatePlayable(clip);
                 if (restartClipTimes)
