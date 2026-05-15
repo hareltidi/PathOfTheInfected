@@ -18,6 +18,7 @@ namespace PathOfTheInfected.Enemy
     {
         #region Member Variables
        [SerializeField] protected float obstacleCheckDistance = 5f;
+       [SerializeField] protected float minAirHeight = 2f; // Minimum height above ground to maintain
        #endregion
 
         #region Detection Methods
@@ -155,6 +156,9 @@ namespace PathOfTheInfected.Enemy
         {
             if (AStarPathFinder.CurrentGraph == null || !RB) return;
 
+            // Ensure target maintains minimum air height
+            target = EnsureMinAirHeight(target);
+
             // --- Recalculate path on timer ---
             if (Time.timeSinceLevelLoad >= NextRepath)
             {
@@ -192,7 +196,7 @@ namespace PathOfTheInfected.Enemy
 
             // --- Look-ahead ---
             int targetIndex = Mathf.Min(CurrentIndex + 1, CurrentPath.Count - 1); // Next waypoint
-            Vector2 waypoint = CurrentPath[targetIndex];
+            Vector2 waypoint = EnsureMinAirHeight(CurrentPath[targetIndex]);
 
             Vector2 toWaypoint = waypoint - (Vector2)transform.position;
             Vector2 dir = toWaypoint.normalized;
@@ -239,6 +243,32 @@ namespace PathOfTheInfected.Enemy
         {
             if (!target) return;
             MoveTo(target.position);
+        }
+
+        /// <summary>
+        /// Ensures a waypoint maintains minimum air height by checking ground below it
+        /// and adjusting the Y position upward if necessary.
+        /// </summary>
+        private Vector2 EnsureMinAirHeight(Vector2 waypoint)
+        {
+            // Raycast down to find ground level
+            RaycastHit2D hitDown = Physics2D.Raycast(
+                waypoint,
+                Vector2.down,
+                100f, // Large raycast distance
+                LayerMask.GetMask("ground")
+            );
+
+            float groundLevel = hitDown.collider != null ? hitDown.point.y : waypoint.y - minAirHeight;
+            float minRequiredHeight = groundLevel + minAirHeight;
+
+            // If waypoint is below minimum height, adjust it upward
+            if (waypoint.y < minRequiredHeight)
+            {
+                waypoint.y = minRequiredHeight;
+            }
+
+            return waypoint;
         }
 
         #endregion

@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 3310423329147483098}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.287, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -114,7 +114,7 @@ SpriteRenderer:
   m_MaskInteraction: 0
   m_Sprite: {fileID: 43732648881320874, guid: 08da5d3e7f186394c937e3109e8e3e74, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.3333334, y: 1.8333334}
@@ -277,7 +277,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1230315383472377306
 BoxCollider2D:
@@ -313,7 +313,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.16415298, y: -0.07212758}
+  m_Offset: {x: 0.12757492, y: -0.111517906}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -323,7 +323,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.62163, y: 1.3432281}
+  m_Size: {x: 3.5276337, y: 2.4461918}
   m_EdgeRadius: 0
 --- !u!114 &7044095805999000929
 MonoBehaviour:
@@ -337,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adaa4097c7f7483d871fa6f0e3cf7e8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Enemies.BatEnemyBrain
-  <IsFacingRight>k__BackingField: 0
+  <IsFacingRight>k__BackingField: 1
   noSpottableDetectedState: {fileID: 11400000, guid: b2beb923caf40db4db690fbe696803c3, type: 2}
   spottableDetectedState: {fileID: 11400000, guid: 2710fc8ceb12ce144bbb2252b7a58028, type: 2}
   spottableInAttackRangeState: {fileID: 11400000, guid: 1434b7f898566114db6e750a41f0825a, type: 2}
@@ -345,13 +345,13 @@ MonoBehaviour:
   damagedState: {fileID: 11400000, guid: cf512ea3a9116e2498b1d819180e9cc4, type: 2}
   <CurrentState>k__BackingField: {fileID: 0}
   movementPersonality:
-    maxSpeed: 6
-    acceleration: 5
+    maxSpeed: 8
+    acceleration: 10
     movementEase: 14
   waypointTolerance: 0.1
   repathInterval: 1
   facingFlipDeadzone: 1
-  drawPathGizmos: 0
+  drawPathGizmos: 1
   pathSwapImprovementThreshold: 0.5
   <SpottableMask>k__BackingField:
     serializedVersion: 2
@@ -373,6 +373,7 @@ MonoBehaviour:
   attack: {fileID: 11400000, guid: bb2fbb7b0741d5a489df114aa8ab0afb, type: 2}
   maxPoise: 10
   obstacleCheckDistance: 5
+  minAirHeight: 2
 --- !u!114 &4383823365313979367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,7 +389,7 @@ MonoBehaviour:
   <CurrentHealth>k__BackingField: 1
   <MaxHealth>k__BackingField: 1
   flashColor: {r: 2, g: 2, b: 2, a: 1}
-  flashTime: 0.32
+  flashTime: 0.52
   damageFlashEaseType: 26
   spriteRenderers:
   - {fileID: 5160252528904062748}

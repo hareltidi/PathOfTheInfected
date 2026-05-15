@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a30d68a0cbd449495a563015b2d3dc8, type: 3}
-  m_Name: MeleePunchSO
-  m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.MeleePunchSO
-  attackDef: {fileID: 11400000, guid: bd6639679d44dfd4e8f5cf71e01d3cde, type: 2}
+  m_Script: {fileID: 11500000, guid: 04bcf0acdd7d402d8876a050cd0ed0f4, type: 3}
+  m_Name: PillbugPunch
+  m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Enemies.PillbugPunchSo
+  attackDef: {fileID: 11400000, guid: 8bf2b101303fea74cbba130415b15248, type: 2}
   <RequireDistanceFromEnemyToSpottable>k__BackingField: 1
   <DistanceThreshold>k__BackingField: 5
   <MaxAttackRange>k__BackingField: 2
   <PoiseConsumed>k__BackingField: 0.5
-  windupDuration: 0.5
+  windupDuration: 0.35

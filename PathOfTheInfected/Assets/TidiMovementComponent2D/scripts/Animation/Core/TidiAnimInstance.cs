@@ -154,10 +154,10 @@ namespace TidiMovementComponent2D.Animation
         /// <param name="hash">The animation to play</param>
         /// <param name="crossfadeDuration">The transition time between the current animation that is playing to the new animation we want to play
         /// (if crossfade duration is less or equal to 0, we use <c>Animator.Play()</c>  so we can play the animation right away without waiting)</param>
-        /// <param name="isAnimationLocked">If true, the new animation will override any locked animations</param>
-        /// <param name="layer">The layer of the animation</param>
-        /// <param name="canOverrideLockedAnimations">If true, the current animation will be locked and cannot be overridden by
+        /// <param name="isAnimationLocked">If true, the current animation will be locked and cannot be overridden by
         /// other animations unless canOverrideLockedAnimations is true</param>
+        /// <param name="layer">The layer of the animation</param>
+        /// <param name="canOverrideLockedAnimations">If true, the new animation will override any locked animations</param>
         public AnimationHandle PlayAnimationForced(int hash, float crossfadeDuration = 0.2f, bool isAnimationLocked = false, int layer = 0,
             bool canOverrideLockedAnimations = false)
         {

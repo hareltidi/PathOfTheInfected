@@ -21,7 +21,7 @@ MonoBehaviour:
     canCrouch: 0
     canVault: 1
   MoveThreshold: 0.25
-  MaxWalkSpeed: 20
+  MaxWalkSpeed: 17
   GroundAcceleration: 5
   GroundDeceleration: 20
   AirAcceleration: 5
@@ -83,7 +83,7 @@ MonoBehaviour:
   WallJumpGravityOnReleaseMultiplier: 1
   CancelDashWhenYouHitCeiling: 1
   DashTime: 0.11
-  DashSpeed: 40
+  DashSpeed: 35
   TimeBtwDashesOnGround: 0.167
   ResetDashOnWallSlide: 1
   NumberOfDashes: 2

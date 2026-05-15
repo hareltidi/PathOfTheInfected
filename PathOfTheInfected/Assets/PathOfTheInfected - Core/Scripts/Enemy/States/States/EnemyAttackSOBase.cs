@@ -24,6 +24,8 @@ namespace PathOfTheInfected.Enemy
         {
             if (!CurrentEnemyBrain || CurrentEnemyBrain.AttackTarget == null || !CurrentEnemyBrain.AttackTarget.Transform) return;
 
+            CurrentEnemyBrain.StopAllMovementInstantly(); // Stop movement when entering attack state
+
             if (CurrentEnemyBrain.AttackContext == null)
             {
                 CurrentEnemyBrain.AttackContext = new AttackContext();

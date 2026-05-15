@@ -1,4 +1,5 @@
-﻿using PathOfTheInfected.Combat;
+﻿using System.Collections.Generic;
+using PathOfTheInfected.Combat;
 using PathOfTheInfected.Damagable.Messages;
 using PathOfTheInfected.Enemy;
 using TidiGameplayMessaging.Core;
@@ -9,11 +10,12 @@ namespace PathOfTheInfected.Damagable
 {
     public class PlayerHealth : MonoBehaviour, IHitResponder, IHitStoppable
     {
-        private TidiTween<float> _flashTween;
+        private static readonly int FlashAmountId = Shader.PropertyToID("_FlashAmount");
+        private static readonly int FlashColorId = Shader.PropertyToID("_FlashColor");
+
         private void Awake()
         {
-            _spriteRenderers = visuals.GetComponentsInChildren<SpriteRenderer>();
-            InitMaterials();
+            SyncRuntimeRenderersAndMaterials();
         }
 
         private void Start()
@@ -49,19 +51,41 @@ namespace PathOfTheInfected.Damagable
             HitStopManager.Instance?.HitStop(duration);
         }
 
-        /// <summary>
-        ///     Initiating the materials for our player to make hit flash work only for this object and not all the other
-        ///     objects who have the hit effect material to be affected.
-        /// </summary>
-        private void InitMaterials()
+        // Runtime scarf segments can add SpriteRenderers after Awake, so we sync before flashing.
+        private void SyncRuntimeRenderersAndMaterials()
         {
-            _materials = new Material[_spriteRenderers.Length];
-            _originalColor = _spriteRenderers[0].color;
-            for (var i = 0; i < _spriteRenderers.Length; i++)
+            if (!visuals)
             {
-                var instance = Instantiate(_spriteRenderers[i].sharedMaterial);
-                _spriteRenderers[i].material = instance;
-                _materials[i] = instance;
+                return;
+            }
+
+            var allRenderers = visuals.GetComponentsInChildren<SpriteRenderer>(true);
+            for (var i = 0; i < allRenderers.Length; i++)
+            {
+                var spriteRenderer = allRenderers[i];
+                if (!spriteRenderer || !_registeredRenderers.Add(spriteRenderer))
+                {
+                    continue;
+                }
+
+                var sharedMaterial = spriteRenderer.sharedMaterial;
+                if (!sharedMaterial)
+                {
+                    continue;
+                }
+
+                var instance = Instantiate(sharedMaterial);
+                instance.name = $"{sharedMaterial.name}_RuntimeFlash_{_materials.Count}";
+                spriteRenderer.material = instance;
+
+                _materials.Add(instance);
+                _flashTweens.Add(null);
+
+                if (!_hasOriginalColor)
+                {
+                    _originalColor = spriteRenderer.color;
+                    _hasOriginalColor = true;
+                }
             }
         }
 
@@ -96,22 +120,26 @@ namespace PathOfTheInfected.Damagable
         /// </summary>
         private void FlashDamage()
         {
-            SetFlashColor(flashColor);
-            var i = 0;
-            if (_flashTween != null)
+            SyncRuntimeRenderersAndMaterials();
+            if (_materials.Count == 0)
             {
-                _flashTween.FullKill();
+                return;
             }
-            foreach (var t in _materials)
+
+            SetFlashColor(flashColor);
+            for (var i = 0; i < _materials.Count; i++)
             {
-                var localMat = t;
-                localMat.name += $"Hit Flash Material_{i}";
-                var currentAmount = localMat.GetFloat("_FlashAmount");
-                _flashTween = TidiTweenManager
+                if (_flashTweens[i] != null)
+                {
+                    _flashTweens[i].FullKill();
+                }
+
+                var localMat = _materials[i];
+                var currentAmount = localMat.GetFloat(FlashAmountId);
+                _flashTweens[i] = TidiTweenManager
                     .TweenFloat(localMat, currentAmount, 1, flashTime,
-                        value => { localMat.SetFloat("_FlashAmount", value); }).SetPingPong(2)
+                        value => { localMat.SetFloat(FlashAmountId, value); }).SetPingPong(2)
                     .SetEase(damageFlashEaseType);
-                i++;
             }
             SetFlashColor(_originalColor);
         }
@@ -122,9 +150,17 @@ namespace PathOfTheInfected.Damagable
         /// <param name="color">The color the flash should be in</param>
         private void SetFlashColor(Color color)
         {
-            for (var i = 0; i < _materials.Length; i++)
+            for (var i = 0; i < _materials.Count; i++)
             {
-                _materials[i].SetColor("_FlashColor", color);
+                _materials[i].SetColor(FlashColorId, color);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            for (var i = 0; i < _flashTweens.Count; i++)
+            {
+                _flashTweens[i]?.FullKill();
             }
         }
 
@@ -152,8 +188,9 @@ namespace PathOfTheInfected.Damagable
 
         #region Script members
 
-        private SpriteRenderer[] _spriteRenderers;
-        private Material[] _materials;
+        private readonly List<Material> _materials = new();
+        private readonly List<TidiTween<float>> _flashTweens = new();
+        private readonly HashSet<SpriteRenderer> _registeredRenderers = new();
 
         /// <summary>
         ///     Checks if wer'e hit stopped (meaning the time is currently freezing)
@@ -171,6 +208,7 @@ namespace PathOfTheInfected.Damagable
         [SerializeField] private EaseType damageFlashEaseType;
         [SerializeField] private GameObject visuals;
         private Color _originalColor;
+        private bool _hasOriginalColor;
 
         #endregion
     }

@@ -155,6 +155,7 @@ namespace PathOfTheInfected.Enemy
             noSpottableDetectedState = Instantiate(noSpottableDetectedState);
             spottableDetectedState = Instantiate(spottableDetectedState);
             spottableInAttackRangeState = Instantiate(spottableInAttackRangeState);
+            damagedState = Instantiate(damagedState);
         }
 
         /// <summary>
@@ -165,6 +166,7 @@ namespace PathOfTheInfected.Enemy
             noSpottableDetectedState.StateInit(this, StateMachine);
             spottableDetectedState.StateInit(this, StateMachine);
             spottableInAttackRangeState.StateInit(this, StateMachine);
+            damagedState.StateInit(this, StateMachine);
             CurrentPoise = maxPoise;
             InitialPosition = transform.position;
             StateMachine?.InitializeDefaultState(noSpottableDetectedState);
@@ -593,105 +595,8 @@ namespace PathOfTheInfected.Enemy
         /// <param name="target">The target position as a Vector2.</param>
         public virtual void MoveTo(Vector2 target)
         {
-            if (AStarPathFinder.CurrentGraph == null || !RB)
-            {
-                // If no pathfinder is available, fall back to simple directional movement
-                Vector2 fallbackDir = (target - (Vector2)transform.position).normalized;
-                MoveEnemy(new Vector2(Mathf.Sign(fallbackDir.x), 0f));
-                return;
-            }
-
-            bool targetMoved = Vector2.Distance(target, LastTargetPosition) > 0.5f;
-
-            // --- Recalculate path on timer OR if we have no path yet OR if target changed significantly ---
-            if (Time.timeSinceLevelLoad >= NextRepath || CurrentPath == null || targetMoved)
-            {
-                List<Vector2> newPath = AStarPathFinder.FindPath_CurrentGraph(transform.position, target);
-
-                NextRepath = Time.timeSinceLevelLoad + repathInterval;
-                LastTargetPosition = target;
-
-                if (newPath != null && newPath.Count > 0)
-                {
-                    // Find best starting index on the new path (closest node)
-                    float bestDistance = float.MaxValue;
-                    int bestIndex = 0;
-                    for (int i = 0; i < newPath.Count; i++)
-                    {
-                        float dist = Vector2.Distance(transform.position, newPath[i]);
-                        if (dist < bestDistance)
-                        {
-                            bestDistance = dist;
-                            bestIndex = i;
-                        }
-                    }
-
-                    float newRemaining = PathTotalLength(newPath, bestIndex);
-                    float currentRemaining = PathTotalLength(CurrentPath, CurrentIndex);
-
-                    // Only swap if the new path offers a clear improvement (prevents jittery swaps)
-                    bool shouldSwap = true;
-                    if (CurrentPath != null && currentRemaining > 0f)
-                    {
-                        if (newRemaining > currentRemaining - pathSwapImprovementThreshold)
-                        {
-                            shouldSwap = false;
-                        }
-                    }
-
-                    if (shouldSwap)
-                    {
-                        CurrentPath = newPath;
-                        CurrentIndex = bestIndex;
-                    }
-                }
-                else
-                {
-                    // Pathfinder failed: as a last resort, set CurrentPath to null so caller can fallback
-                    CurrentPath = null;
-                }
-            }
-
-            if (CurrentPath == null || CurrentIndex >= CurrentPath.Count)
-            {
-                // No valid path right now: attempt a simple horizontal fallback so the enemy keeps moving toward the target
-                Vector2 toTarget = target - (Vector2)transform.position;
-                if (Mathf.Abs(toTarget.x) > waypointTolerance)
-                {
-                    MoveEnemy(new Vector2(Mathf.Sign(toTarget.x), 0f));
-                }
-                else
-                {
-                    MoveEnemy(Vector2.zero);
-                }
-                return;
-            }
-
-            // Advance through small/close nodes to avoid oscillation over nearby waypoints
-            while (CurrentIndex < CurrentPath.Count - 1 &&
-                   Vector2.Distance(transform.position, CurrentPath[CurrentIndex]) <= waypointTolerance)
-            {
-                CurrentIndex++;
-            }
-
-            if (CurrentIndex >= CurrentPath.Count)
-            {
-                MoveEnemy(Vector2.zero);
-                return;
-            }
-
-            // Move towards current waypoint (horizontal movement only for grounded enemies)
-            Vector2 waypoint = CurrentPath[CurrentIndex];
-            Vector2 toWaypoint = waypoint - (Vector2)transform.position;
-
-            // Prevent immediate flipping when waypoint is very close horizontally
-            if (Mathf.Abs(toWaypoint.x) <= facingFlipDeadzone)
-            {
-                MoveEnemy(Vector2.zero);
-                return;
-            }
-
-            MoveEnemy(new Vector2(toWaypoint.x, 0f));
+            Vector2 dir = (target - (Vector2)transform.position).normalized;
+            MoveEnemy(new Vector2(Mathf.Sign(dir.x), 0f));
         }
 
         public virtual void CheckForLeftOrRightFacing(Vector2 velocity)
@@ -710,6 +615,13 @@ namespace PathOfTheInfected.Enemy
                 transform.eulerAngles = new Vector3(euler.x, 0f, euler.z);
                 IsFacingRight = true;
             }
+        }
+
+        public virtual void StopAllMovementInstantly ()
+        {
+            if (!RB) return;
+            RB.linearVelocity = Vector2.zero;
+            RB.angularVelocity = 0f;
         }
 
         #endregion

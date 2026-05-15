@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Gameplay.Enemies
 {
+    /// <summary>
+    /// <see cref="TidiAnimInstance"/> for the bat enemy
+    /// </summary>
     public class BatAnimInstance : TidiAnimInstance
     {
         [SerializeField] private BlendSpace1DFloat movementBlendSpace;
