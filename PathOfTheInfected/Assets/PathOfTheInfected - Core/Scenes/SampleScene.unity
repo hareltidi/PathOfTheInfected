@@ -1487,10 +1487,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Eneny_Bat
       objectReference: {fileID: 0}
-    - target: {fileID: 4481479708291687239, guid: 69fb7007a8f38c649950bfc1160e0d08, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
