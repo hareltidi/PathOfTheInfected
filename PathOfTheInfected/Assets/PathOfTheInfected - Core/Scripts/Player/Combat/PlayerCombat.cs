@@ -26,7 +26,9 @@ namespace PathOfTheInfected.Player.Combat
             AnimInstance = POIAnimInstance.Instance;
 
             if (animationDriver == null)
+            {
                 animationDriver = GetComponent<TidiAnimationDriver>();
+            }
 
             InitializeSubsystems();
 
@@ -100,10 +102,7 @@ namespace PathOfTheInfected.Player.Combat
 
         [Header("RBC system")] public bool grantFullReset = false;
 
-        [Space]
-
-        [Header("Perks")]
-        public PlayerPerkData perkData;
+        [Space] [Header("Perks")] public PlayerPerkData perkData;
 
         #endregion
 

@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="UIButtonComponent" src="project://database/Assets/TidiModularUISystem/Components/UIButtonComponent.uxml?fileID=9197481963319205126&amp;guid=034e86004193e8d4f943bf8c91e9e692&amp;type=3#UIButtonComponent"/>
+    <ui:Instance template="UIButtonComponent" style="height: 42px; bottom: -46px;">
+        <AttributeOverrides element-name="UIButton" text="fhbbhbh"/>
+    </ui:Instance>
+</ui:UXML>
