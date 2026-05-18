@@ -1,5 +1,8 @@
 ﻿namespace TidiModularUISystem.Core
 {
+    /// <summary>
+    /// Interface or defining custom UI Toolkit components
+    /// </summary>
     public interface IUIComponent
     {
         void Initialize();   // build internal structure

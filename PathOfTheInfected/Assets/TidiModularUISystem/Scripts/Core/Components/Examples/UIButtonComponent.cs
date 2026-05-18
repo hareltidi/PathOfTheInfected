@@ -5,62 +5,58 @@ using UnityEngine.UIElements;
 namespace TidiModularUISystem.Core.Examples
 {
     [UxmlElement]
-    public partial class UIButtonComponent : UIComponent
+    public partial class UIButtonComponent : Button, IUIComponent
     {
 
-        private Button _button;
+        private UIComponentLifecycle _lifecycle;
+        public event Action OnButtonClicked;
 
-        public Action OnPressed;
-
-
-        protected override void OnInitialize()
+        public UIButtonComponent()
         {
-            _button = this.Q<Button>();
-            if (_button == null)
-            {
-                Debug.LogError("[UIButtonComponent] Button element not found in UXML.");
-            }
-            Debug.Log("[UIButtonComponent] OnInitialize");
+            _lifecycle  = new UIComponentLifecycle(this);
+            Initialize();
+        }
+        ~UIButtonComponent()
+        {
+            Dispose();
         }
 
-        protected override void OnBind()
+        public void Initialize()
         {
-            _button.clicked += HandleClicked;
-            Debug.Log("[UIButtonComponent] OnBind - handler attached");
+            AddToClassList("ui-button");
+            text = "Button";
         }
 
-        protected override void OnUnbind()
+        public void Bind()
         {
-
-            _button.clicked -= HandleClicked;
-            Debug.Log("[UIButtonComponent] OnUnbind - handler removed");
-            base.OnUnbind();
+            clicked += OnClicked;
         }
 
-        private void HandleClicked()
+        public void Unbind()
         {
-            Debug.Log("[UIButtonComponent] Clicked");
-            try
-            {
-                OnPressed?.Invoke();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
+            clicked -= OnClicked;
+            _lifecycle = null;
         }
 
-        // Helper for automated tests - triggers the same internal action as a user click
-        public void SimulateClick()
+        public void Show()
         {
-            // Invoke the same flow as the real click handler
-            HandleClicked();
+            _lifecycle.Show();
         }
 
-        protected override void OnDispose()
+        public void Hide()
         {
-            Debug.Log("[UIButtonComponent] OnDispose");
-            base.OnDispose();
+            _lifecycle.Hide();
+        }
+
+        public void Dispose()
+        {
+            Unbind();
+            RemoveFromHierarchy();
+        }
+
+        protected virtual void OnClicked()
+        {
+            OnButtonClicked?.Invoke();
         }
     }
 }
