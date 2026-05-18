@@ -15,6 +15,6 @@ MonoBehaviour:
   attackDef: {fileID: 11400000, guid: 8bf2b101303fea74cbba130415b15248, type: 2}
   <RequireDistanceFromEnemyToSpottable>k__BackingField: 1
   <DistanceThreshold>k__BackingField: 5
-  <MaxAttackRange>k__BackingField: 2
+  <MaxAttackRange>k__BackingField: 1
   <PoiseConsumed>k__BackingField: 0.5
   windupDuration: 0.35

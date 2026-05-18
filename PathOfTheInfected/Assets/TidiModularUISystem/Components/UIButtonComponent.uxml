@@ -1,5 +1,0 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <TidiModularUISystem.Core.Examples.UIButtonComponent name="UIButtonComponent">
-        <ui:Button text="Button" name="UIButton"/>
-    </TidiModularUISystem.Core.Examples.UIButtonComponent>
-</ui:UXML>

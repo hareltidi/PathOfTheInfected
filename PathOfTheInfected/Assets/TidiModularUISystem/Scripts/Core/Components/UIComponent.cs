@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace TidiModularUISystem.Core
@@ -62,6 +63,8 @@ namespace TidiModularUISystem.Core
         protected virtual void OnHide() { }
 
         protected virtual void OnDispose() { }
+
+
         #endregion
     }
 }

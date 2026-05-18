@@ -7,6 +7,7 @@ namespace TidiModularUISystem.Core.Examples
     [UxmlElement]
     public partial class UIButtonComponent : UIComponent
     {
+
         private Button _button;
 
         public Action OnPressed;
