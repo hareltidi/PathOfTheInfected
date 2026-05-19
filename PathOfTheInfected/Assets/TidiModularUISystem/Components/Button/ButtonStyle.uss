@@ -48,11 +48,7 @@
     align-items: center;
     align-self: center;
     align-content: center;
-<<<<<<< Updated upstream
-    scale: 1.2 1.2;
-=======
     scale: 1.7 1.7;
->>>>>>> Stashed changes
     background-color: var(--backgroundActive);
     transition-duration: 0.15s;
     transition-timing-function: ease-in-out;
