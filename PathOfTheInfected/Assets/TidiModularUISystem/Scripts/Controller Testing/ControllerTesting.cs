@@ -1,35 +1,83 @@
 using TidiModularUISystem.Core.Examples;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.InputSystem;
 
-public class ControllerTesting : MonoBehaviour
+public class ControllerNavigationStressTest : MonoBehaviour
 {
     private UIDocument _uiDocument;
 
+    private VisualElement root;
+
     private void Awake()
     {
+
         _uiDocument = GetComponent<UIDocument>();
+
+        root = _uiDocument.rootVisualElement;
+
+        // DO NOT touch UI structure anymore
+        Debug.Log("Navigation stress test attached to existing UI");
+
+        ForceInitialFocus();
     }
 
-    private void Start()
+    private void Update()
     {
-        var root = _uiDocument.rootVisualElement;
+        Vector2 move = Vector2.zero;
 
-        root.RegisterCallback<KeyDownEvent>(evt =>
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
         {
-            Debug.Log($"KEY DOWN: {evt.keyCode}");
-        });
-
-        root.RegisterCallback<NavigationMoveEvent>(evt =>
+            move = Vector2.up;
+        }
+        if (Keyboard.current.downArrowKey.wasPressedThisFrame)
         {
-            Debug.Log($"NAV MOVE: {evt.direction}");
-        });
-
-        var button = root.Q<UIButtonComponent>("Play");
-
-        root.schedule.Execute(() =>
+            move = Vector2.down;
+        }
+        if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
         {
-            button?.Focus();
-        });
+            move = Vector2.left;
+        }
+        if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
+        {
+            move = Vector2.right;
+        }
+
+        if (move != Vector2.zero)
+        {
+            SimulateNavigation(move);
+        }
+    }
+
+    private void SimulateNavigation(Vector2 direction)
+    {
+        var focused = root.panel.focusController.focusedElement;
+
+        Debug.Log($"MOVE: {direction}");
+        Debug.Log($"BEFORE: {(focused != null ? focused : "NULL")}");
+
+        // Send navigation event into current focused element
+        var evt = NavigationMoveEvent.GetPooled(direction);
+        evt.target = focused;
+        focused?.SendEvent(evt);
+
+        var after = root.panel.focusController.focusedElement;
+        Debug.Log($"AFTER: {(after != null ? after : "NULL")}");
+    }
+
+    private void ForceInitialFocus()
+    {
+        // Try to find your first real button in YOUR UI
+        var first = root.Q<UIButtonComponent>("Play");
+
+        if (first != null)
+        {
+            first.Focus();
+            Debug.Log("Initial focus set to: " + first.name);
+        }
+        else
+        {
+            Debug.LogWarning("No Button found in UI");
+        }
     }
 }

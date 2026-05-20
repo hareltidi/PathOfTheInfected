@@ -1,21 +1,21 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/TidiModularUISystem/Components/Button/ButtonStyle.uss?fileID=7433441132597879392&amp;guid=2d691cccfa088ee4db594821245e3036&amp;type=3#ButtonStyle"/>
-    <ui:VisualElement name="ButtonConatiner" focusable="true" style="flex-grow: 1; align-items: center; align-self: center; justify-content: center; flex-direction: column; align-content: flex-start; width: 299px;">
+    <ui:VisualElement name="ButtonConatiner" focusable="false" style="flex-grow: 1; align-items: center; align-self: center; justify-content: space-around; flex-direction: column; align-content: flex-start; width: 354px;">
         <TidiModularUISystem.Core.Examples.UIButtonComponent name="Play" text="Play" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
         <TidiModularUISystem.Core.Examples.UIButtonComponent text="Settings" name="Settings" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
         <TidiModularUISystem.Core.Examples.UIButtonComponent text="Credits" tooltip="" name="Credits" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
     </ui:VisualElement>
-    <ui:VisualElement name="ButtonConatiner" focusable="true" style="flex-grow: 1; align-items: center; align-self: flex-end; justify-content: center; flex-direction: column; align-content: flex-start; width: 299px;">
+    <ui:VisualElement name="ButtonConatiner" focusable="false" style="flex-grow: 1; align-items: center; align-self: stretch; justify-content: center; flex-direction: column; align-content: flex-start; width: 299px;">
         <TidiModularUISystem.Core.Examples.UIButtonComponent name="Play" text="Play" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
         <TidiModularUISystem.Core.Examples.UIButtonComponent text="Settings" name="Settings" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
         <TidiModularUISystem.Core.Examples.UIButtonComponent text="Credits" tooltip="" name="Credits" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
     </ui:VisualElement>
-    <ui:VisualElement name="ButtonConatiner" focusable="true" style="flex-grow: 1; align-items: center; align-self: flex-end; justify-content: center; flex-direction: column; align-content: flex-start; width: 299px;">
+    <ui:VisualElement name="ButtonConatiner" focusable="false" style="flex-grow: 1; align-items: center; align-self: flex-end; justify-content: center; flex-direction: column; align-content: flex-start; width: 299px;">
         <TidiModularUISystem.Core.Examples.UIButtonComponent name="Play" text="Play" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
         <TidiModularUISystem.Core.Examples.UIButtonComponent text="Settings" name="Settings" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
         <TidiModularUISystem.Core.Examples.UIButtonComponent text="Credits" tooltip="" name="Credits" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
     </ui:VisualElement>
-    <ui:VisualElement name="ButtonConatiner" focusable="true" style="flex-grow: 1; align-items: center; align-self: center; justify-content: center; flex-direction: column; align-content: flex-start; width: 299px;">
+    <ui:VisualElement name="ButtonConatiner" focusable="false" style="flex-grow: 1; align-items: center; align-self: center; justify-content: center; flex-direction: column; align-content: flex-start; width: 299px;">
         <TidiModularUISystem.Core.Examples.UIButtonComponent name="Play" text="Play" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
         <TidiModularUISystem.Core.Examples.UIButtonComponent text="Settings" name="Settings" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>
         <TidiModularUISystem.Core.Examples.UIButtonComponent text="Credits" tooltip="" name="Credits" class="ui-button" style="transition-duration: 0.1s; visibility: visible;"/>

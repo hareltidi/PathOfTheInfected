@@ -55,6 +55,7 @@
 }
 
 .ui-button:focus {
+    scale: 1.7 1.7;
     --border-color: rgba(0, 0, 0, 0);
     border-left-color: var(--border-color);
     border-right-color: var(--border-color);
