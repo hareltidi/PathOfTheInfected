@@ -16,10 +16,20 @@ namespace PathOfTheInfected.Enemy
     /// It also includes functionality for detecting targets, handling line-of-sight checks, and managing attack behaviors.
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D)),  RequireComponent(typeof(EnemyHealth))]
-    public class EnemyBrainBase : MonoBehaviour, IEnemyMoveable
+    public class EnemyBrainBase : MonoBehaviour, IEnemyMoveable, IAttackOwnerable
     {
         #region Interface Variables
 
+        #region IAttackOwnerable
+        public GameObject GameObject { get; set; }
+        public Transform Transform { get; set; }
+
+        public bool IsGrounded => Physics2D.OverlapCircle(feetPos.position, 0.2f, groundLayer);
+
+        [field: Header("Poise settings")]
+        [field: SerializeField] public float MaxPoise { get; set; } = 10;
+        [field: SerializeField] public float CurrentPoise { get; set; }
+        #endregion
 
 
         #region IEnemyMoveable
@@ -56,14 +66,14 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Debugging - Path")]
         [SerializeField] public bool drawPathGizmos = false;
-        [SerializeField] private float pathSwapImprovementThreshold = 0.5f;
-
 
         [Header("Box cast - general")]
         [field: SerializeField]
         public LayerMask SpottableMask { get; protected set; }
         public Transform max;
         public Transform min;
+        public Transform feetPos;
+        public LayerMask groundLayer;
         public bool requireObjectsToBeInCameraView = true;
 
         [Header("Line of sight")]
@@ -83,11 +93,8 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Spottable Detection")] public float maxSpotRange = 10f;
 
-        [Header("Attack")]
-        [field: SerializeField] public float CurrentPoise { get; set; }
+        [Header("CurrentAttack")]
         public AttackSOBase attack;
-        public float maxPoise = 10f;
-
         /// <summary>
         /// Persistent attack context that survives across state transitions.
         /// This ensures recovery time is maintained even if the enemy temporarily leaves the attack state.
@@ -145,7 +152,7 @@ namespace PathOfTheInfected.Enemy
         #region Virtual logic gate Methods
 
         /// <summary>
-        /// Awake method for our enemy (can be overridden so use the base.EnemyAwake at the start of each override)
+        /// Awake method for our enemy (can be overridden so use the base.BossAwake at the start of each override)
         /// </summary>
         protected virtual void EnemyAwake()
         {
@@ -156,10 +163,13 @@ namespace PathOfTheInfected.Enemy
             spottableDetectedState = Instantiate(spottableDetectedState);
             spottableInAttackRangeState = Instantiate(spottableInAttackRangeState);
             damagedState = Instantiate(damagedState);
+
+            GameObject = gameObject;
+            Transform = transform;
         }
 
         /// <summary>
-        /// Start method for our enemy (can be overridden, so use the base.EnemyStart at the start of each override)
+        /// Start method for our enemy (can be overridden, so use the base.BossStart at the start of each override)
         /// </summary>
         protected virtual void EnemyStart()
         {
@@ -167,7 +177,7 @@ namespace PathOfTheInfected.Enemy
             spottableDetectedState.StateInit(this, StateMachine);
             spottableInAttackRangeState.StateInit(this, StateMachine);
             damagedState.StateInit(this, StateMachine);
-            CurrentPoise = maxPoise;
+            CurrentPoise = MaxPoise;
             InitialPosition = transform.position;
             StateMachine?.InitializeDefaultState(noSpottableDetectedState);
         }
@@ -203,7 +213,7 @@ namespace PathOfTheInfected.Enemy
         }
 
         /// <summary>
-        /// Update method for our enemy (can be overridden so use the base.EnemyUpdate at the start of each override)
+        /// Update method for our enemy (can be overridden so use the base.BossUpdate at the start of each override)
         /// </summary>
         protected virtual void EnemyUpdate()
         {
@@ -215,7 +225,7 @@ namespace PathOfTheInfected.Enemy
         }
 
         /// <summary>
-        /// FixedUpdate method for our enemy (can be overridden so use the base.EnemyFixedUpdate at the start of each override)
+        /// FixedUpdate method for our enemy (can be overridden so use the base.BossFixedUpdate at the start of each override)
         /// </summary>
         protected virtual void EnemyFixedUpdate()
         {
@@ -223,9 +233,9 @@ namespace PathOfTheInfected.Enemy
             TickRecoveryOutsideAttackState();
         }
 
-        private void TickRecoveryOutsideAttackState()
+        protected void TickRecoveryOutsideAttackState()
         {
-            if (attack == null || AttackContext == null || AttackContext.IsFinished) return;
+            if (!attack || AttackContext == null || AttackContext.IsFinished) return;
             if (CurrentState == spottableInAttackRangeState) return;
 
             attack.TickRecovery(AttackContext);
@@ -517,7 +527,7 @@ namespace PathOfTheInfected.Enemy
 
         #region EnemyMovement
 
-        public virtual void MoveEnemy(Vector2 dir, bool instant = false)
+        public virtual void MoveBoss(Vector2 dir, bool instant = false)
         {
             if (!RB) return;
 
@@ -596,7 +606,7 @@ namespace PathOfTheInfected.Enemy
         public virtual void MoveTo(Vector2 target)
         {
             Vector2 dir = (target - (Vector2)transform.position).normalized;
-            MoveEnemy(new Vector2(Mathf.Sign(dir.x), 0f));
+            MoveBoss(new Vector2(Mathf.Sign(dir.x), 0f));
         }
 
         public virtual void CheckForLeftOrRightFacing(Vector2 velocity)

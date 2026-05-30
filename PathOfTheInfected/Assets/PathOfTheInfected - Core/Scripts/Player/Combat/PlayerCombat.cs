@@ -17,7 +17,7 @@ namespace PathOfTheInfected.Player.Combat
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
-        [Header("Attack Timeline")] [SerializeField]
+        [Header("CurrentAttack Timeline")] [SerializeField]
         private bool useTimeBasedAttackWindows = true;
 
         private void Start()
@@ -208,7 +208,7 @@ namespace PathOfTheInfected.Player.Combat
 
         #endregion
 
-        #region Attack Loop
+        #region CurrentAttack Loop
 
         private void ResolveAttackIntents()
         {

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8200444534188434754}
   - component: {fileID: 888153367734181305}
   - component: {fileID: 7457005831045610432}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Coll_Cave - BigRocks1_7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,13 +131,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.47, y: 3.89}
+    oldSize: {x: 5.421875, y: 6.078125}
     newSize: {x: 3.47, y: 3.89}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.47, y: 3.89}
+  m_Size: {x: 5.421875, y: 6.078125}
   m_EdgeRadius: 0
 --- !u!50 &7457005831045610432
 Rigidbody2D:

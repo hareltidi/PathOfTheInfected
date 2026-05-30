@@ -13,7 +13,7 @@ namespace TidiModularUISystem.Core.Examples
 
         public UIButtonComponent()
         {
-            _lifecycle  = new UIComponentLifecycle(this);
+            _lifecycle = new UIComponentLifecycle(this);
             Initialize();
         }
         ~UIButtonComponent()

@@ -15,7 +15,7 @@ namespace PathOfTheInfected.Enemy
     [CreateAssetMenu(fileName =  "EnemyStateBase", menuName = "Enemy/States/Core/EnemyStateBase")]
     public class EnemyBaseState : ScriptableObject
     {
-       #region protected Fields
+        #region protected Fields
        /// <summary>
        /// The enemy that owns this state
        /// </summary>

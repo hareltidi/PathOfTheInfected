@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
-    [CreateAssetMenu(fileName = "MeleePunchSO", menuName = "Enemy/Attack/Melee/MeleePunchSO", order = 0)]
+    [CreateAssetMenu(fileName = "MeleePunchSO", menuName = "Enemy/CurrentAttack/Melee/MeleePunchSO", order = 0)]
     public class MeleePunchSO : AttackSOBase
     {
         public override void PerformAttack(AttackContext ctx)
         {
             base.PerformAttack(ctx);
-            EnemyBrainBase enemyBrainBase = ctx.Owner;
+            EnemyBrainBase enemyBrainBase = (EnemyBrainBase) ctx.Owner;
             // Box cast and if we hit an IDamageable, damage his ass up
             Vector2 baseCenter = (enemyBrainBase.min.position + enemyBrainBase.max.position) * 0.5f;
             Vector2 baseSize = new Vector2(
@@ -40,7 +40,7 @@ namespace PathOfTheInfected.Enemy
                 isFirstHit = false,
                 isPlayerDamage = false,
                 isAttackerInAir = false,
-                source = ctx.Owner.gameObject,
+                source = ctx.Owner.GameObject,
                 timeStamp = Time.timeSinceLevelLoad,
                 target = hit.gameObject,
                 firstHitDamageBoost = 0,

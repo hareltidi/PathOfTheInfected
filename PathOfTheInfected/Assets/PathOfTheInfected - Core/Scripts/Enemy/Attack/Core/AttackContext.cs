@@ -11,7 +11,7 @@ namespace PathOfTheInfected.Enemy
         /// <summary>
         /// Who is performing the attack
         /// </summary>
-        public EnemyBrainBase Owner;
+        public IAttackOwnerable Owner;
 
         /// <summary>
         /// Who is being attacked
@@ -53,5 +53,18 @@ namespace PathOfTheInfected.Enemy
         Active = 1,
         Recovery = 2,
         PoiseRecovery = 3
+    }
+
+    public interface IAttackOwnerable
+    {
+        GameObject GameObject { get; set; }
+        bool IsFacingRight { get; set; }
+        bool IsGrounded { get;}
+        Transform Transform { get; set;}
+
+        float CurrentPoise { get; set; }
+
+        float MaxPoise { get; set; }
+
     }
 }

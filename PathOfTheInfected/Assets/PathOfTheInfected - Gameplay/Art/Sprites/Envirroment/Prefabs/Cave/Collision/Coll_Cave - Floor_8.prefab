@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7200875987567020036}
   - component: {fileID: 701444671526393901}
   - component: {fileID: 8332106892506434800}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Coll_Cave - Floor_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,13 +131,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 9.93, y: 0.83}
+    oldSize: {x: 15.515625, y: 1.296875}
     newSize: {x: 9.93, y: 0.83}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 9.93, y: 0.83}
+  m_Size: {x: 15.515625, y: 1.296875}
   m_EdgeRadius: 0
 --- !u!50 &8332106892506434800
 Rigidbody2D:

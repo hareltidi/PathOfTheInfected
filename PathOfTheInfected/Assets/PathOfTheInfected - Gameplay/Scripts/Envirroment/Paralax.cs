@@ -1,20 +1,29 @@
 using UnityEngine;
+
 namespace PathOfTheInfected.Gameplay.Scripts.Envirroment
 {
     public class Paralax : MonoBehaviour
     {
         private Camera _targetCamera;
 
-        [Header("Parallax")] [SerializeField, Range(0f, 1f)]
+        [Header("Parallax")] 
+        [SerializeField, Range(0f, 1f)]
         private float parallaxX = 0.5f;
 
-        [SerializeField, Range(0f, 1f)] private float parallaxY = 0.5f;
+        [SerializeField, Range(0f, 1f)] 
+        private float parallaxY = 0.5f;
         [SerializeField] private bool followX = true;
         [SerializeField] private bool followY = true;
 
         private Vector3 _startObjectPosition;
         private Vector3 _startCameraPosition;
         private bool _initialized;
+        private Camera _camera;
+
+        private void Start()
+        {
+            _camera = Camera.main;
+        }
 
         private void Awake()
         {
@@ -58,8 +67,8 @@ namespace PathOfTheInfected.Gameplay.Scripts.Envirroment
         private bool InitializeIfNeeded()
         {
             if (!_targetCamera)
-            { 
-                _targetCamera = Camera.main;
+            {
+                _targetCamera = _camera;
             }
 
             if (!_targetCamera)
@@ -72,6 +81,7 @@ namespace PathOfTheInfected.Gameplay.Scripts.Envirroment
             {
                 return true;
             }
+
             _startObjectPosition = transform.position;
             _startCameraPosition = _targetCamera.transform.position;
             _initialized = true;

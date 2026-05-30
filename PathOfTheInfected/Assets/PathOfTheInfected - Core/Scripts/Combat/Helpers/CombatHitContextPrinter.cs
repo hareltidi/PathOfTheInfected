@@ -16,7 +16,7 @@ namespace PathOfTheInfected.Combat
             Debug.Log($"=== Combat Hit Context ===\n" +
                       $"Source: {(context.Source != null ? context.Source.name : "None")}\n" +
                       $"Target: {(context.Target != null ? context.Target.name : "None")}\n" +
-                      $"Attack Definition: {(context.AttackDefinition != null ? context.AttackDefinition.name : "None")}\n" +
+                      $"CurrentAttack Definition: {(context.AttackDefinition != null ? context.AttackDefinition.name : "None")}\n" +
                       $"Outcome: {context.Outcome}\n" +
                       $"Final Damage: {context.FinalDamage}\n" +
                       $"Attacker Is Airborne: {context.AttackerIsAirborne}\n");

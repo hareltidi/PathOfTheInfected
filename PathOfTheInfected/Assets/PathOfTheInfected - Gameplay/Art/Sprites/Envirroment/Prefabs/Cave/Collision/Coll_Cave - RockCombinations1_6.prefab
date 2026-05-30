@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2451081551131383543}
   - component: {fileID: 5256163668165915078}
   - component: {fileID: 6943419985646790199}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Coll_Cave - RockCombinations1_6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,13 +131,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.37, y: 4.03}
+    oldSize: {x: 6.828125, y: 6.296875}
     newSize: {x: 4.37, y: 4.03}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 4.37, y: 4.03}
+  m_Size: {x: 6.828125, y: 6.296875}
   m_EdgeRadius: 0
 --- !u!50 &6943419985646790199
 Rigidbody2D:

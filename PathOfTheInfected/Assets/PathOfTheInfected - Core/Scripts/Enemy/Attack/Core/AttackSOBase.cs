@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
-    [CreateAssetMenu(fileName = "AttackSOBase", menuName = "Enemy/Attack/Core/AttackSOBase", order = 0)]
+    [CreateAssetMenu(fileName = "AttackSOBase", menuName = "Enemy/CurrentAttack/Core/AttackSOBase", order = 0)]
     public class AttackSOBase : ScriptableObject
     {
         private AttackContext _context;
 
-        [Header("Attack stats")] [SerializeField]
+        [Header("CurrentAttack stats")] [SerializeField]
         protected AttackDefinition attackDef;
 
         [Tooltip("Should we check if the distance between the enemy and the spottable are under a certain threshold for us to attack?")]
@@ -24,7 +24,7 @@ namespace PathOfTheInfected.Enemy
 
 
 
-        public virtual void InitAttack(AttackContext ctx, EnemyBrainBase owner, Transform target)
+        public virtual void InitAttack(AttackContext ctx, IAttackOwnerable owner, Transform target)
         {
             ctx.Phase = AttackPhase.WindUp;
             ctx.HasHit = false;
@@ -32,6 +32,7 @@ namespace PathOfTheInfected.Enemy
             ctx.Owner = owner;
             ctx.Timer = 0f;
             _context = ctx;
+            ctx.Target = target;
         }
 
 
@@ -82,9 +83,10 @@ namespace PathOfTheInfected.Enemy
         /// <param name="ctx">The attack context we have on this specific attack</param>
         public virtual void PerformAttack(AttackContext ctx)
         {
+
             if (ctx.Owner.CurrentPoise > 0)
             {
-                ctx.Owner.CurrentPoise = Mathf.Clamp(ctx.Owner.CurrentPoise - PoiseConsumed, 0f, ctx.Owner.maxPoise);
+                ctx.Owner.CurrentPoise = Mathf.Clamp(ctx.Owner.CurrentPoise - PoiseConsumed, 0f, ctx.Owner.MaxPoise);
             }
             else
             {
@@ -95,8 +97,8 @@ namespace PathOfTheInfected.Enemy
 
         public virtual void RecoverPoise(AttackContext ctx)
         {
-            ctx.Owner.CurrentPoise = Mathf.MoveTowards(ctx.Owner.CurrentPoise, ctx.Owner.maxPoise, Time.fixedDeltaTime * PoiseConsumed);
-            if (ctx.Owner.CurrentPoise >= ctx.Owner.maxPoise)
+            ctx.Owner.CurrentPoise = Mathf.MoveTowards(ctx.Owner.CurrentPoise, ctx.Owner.MaxPoise, Time.fixedDeltaTime * PoiseConsumed);
+            if (ctx.Owner.CurrentPoise >= ctx.Owner.MaxPoise)
             {
                 ctx.Phase = AttackPhase.WindUp;
             }

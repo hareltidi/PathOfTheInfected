@@ -8,7 +8,7 @@ namespace PathOfTheInfected.Enemy
         public override void StateEnter()
         {
             base.StateEnter();
-            CurrentEnemyBrain.MoveEnemy(Vector2.zero);
+            CurrentEnemyBrain.MoveBoss(Vector2.zero);
         }
 
         public override void TransitionChecks()

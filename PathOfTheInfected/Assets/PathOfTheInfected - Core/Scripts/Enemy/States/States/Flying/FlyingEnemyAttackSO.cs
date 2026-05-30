@@ -36,7 +36,7 @@ namespace PathOfTheInfected.Enemy
         {
             if (!CurrentEnemyBrain || CurrentEnemyBrain.AttackTarget == null || !CurrentEnemyBrain.AttackTarget.Transform) return;
             base.StateFixedUpdate();
-            CurrentEnemyBrain.MoveEnemy(Vector2.zero, true);
+            CurrentEnemyBrain.MoveBoss(Vector2.zero, true);
 
             // Ensure AttackContext is initialized
             if (CurrentEnemyBrain.AttackContext == null)
