@@ -39,6 +39,9 @@ namespace PathOfTheInfected.Gameplay.Bosses.BigPillbug
                             attackDefinition = attackDef,
                             source = ctx.Owner.GameObject,
                             target = hit.gameObject,
+                            isPlayerDamage = false,
+                            isAttackerInAir = !ctx.Owner.IsGrounded,
+                            timeStamp = Time.timeSinceLevelLoad
                         };
                         HitDispatcher.ProcessHit(ref data);
                         ctx.HasHit = true;

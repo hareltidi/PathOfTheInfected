@@ -176,6 +176,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         {
             bossState.StateExit();
             CurrentPhase.PhaseExit();
+            Debug.Log("Boss Destroyed");
         }
 
         #endregion

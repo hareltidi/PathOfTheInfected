@@ -15,6 +15,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         [Header("Health and damage")]
         [field: SerializeField] public float CurrentHealth { get; private set; }
         [field: SerializeField] public float MaxHealth { get; private set; }
+
         [ColorUsage(true, true)]
         public Color flashColor = Color.red;
         [SerializeField] public float flashTime = 0.1f;
@@ -24,22 +25,30 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         private TidiTween<float>[] _flashTweens;
         [SerializeField] protected SpriteRenderer[] spriteRenderers;
 
-        private void Awake()
+        protected BossBrain Owner;
+
+        protected virtual void Awake()
         {
             InitMaterials();
+            Owner = GetComponent<BossBrain>();
             CurrentHealth = MaxHealth;
         }
 
+        private void Update()
+        {
+
+        }
 
         #region Damage
 
-        public void Die()
+        public virtual void Die()
         {
+            Debug.Log("Boss KIA");
             IsDead = true;
             Destroy(gameObject, flashTime + 0.1f);
         }
 
-        public void TakeDamage(float finalDamage, float hitStopTime)
+        public virtual void TakeDamage(float finalDamage, float hitStopTime)
         {
             if (IsDead) return;
             CurrentHealth -= finalDamage;
@@ -53,7 +62,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
             }
         }
 
-        private void FlashDamage()
+        protected virtual void FlashDamage()
         {
             SetFlashColor(in flashColor);
             for (int i = 0; i < Materials.Length; i++)
@@ -78,7 +87,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         /// Set the flash color when we need to flash
         ///</summary>
         /// <param name="color">The color the flash should be in</param>
-        private void SetFlashColor(in Color color)
+        protected virtual void SetFlashColor(in Color color)
         {
             for (int i = 0; i < Materials.Length; i++)
             {
@@ -90,7 +99,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         /// Apply hit stop
         ///</summary>
         ///<param name="duration">How long should we freeze time</param>
-        public void HitStop(float duration)
+        public virtual void HitStop(float duration)
         {
             if (!HitStopManager.Instance)
             {
@@ -119,7 +128,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
 
         #endregion
 
-        public HitResponse OnHit(ref HitData damageData)
+        public virtual HitResponse OnHit(ref HitData damageData)
         {
             float finalDamage = DamageCalculator.CalculateDamage(in damageData);
 

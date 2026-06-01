@@ -11,10 +11,12 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
         [SerializeField] private GameObject projectilePrefab;
         [SerializeField] private float spawnMarginX = 2f;
         [SerializeField] private float spawnMarginY = 0f;
+        [SerializeField] private bool requiresGrounded = true;
         [Header("Warning Box Config")]
         [SerializeField] private float warningBoxWidth = 1f;
         [SerializeField] private float warningBoxLength = 20f;
         [SerializeField] private Color warningColor = new(1f, 0f, 0f, 0.4f);
+        [SerializeField] private float warningBoxTimePercentage = 60;
 
         private Vector2 _targetDir;
         private GameObject _warningInstance;
@@ -29,7 +31,7 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
 
         public override void AttackLogic(AttackContext ctx)
         {
-            if (!ctx.Owner.IsGrounded) return;
+            if (requiresGrounded && !ctx.Owner.IsGrounded) return;
 
             ctx.Timer += Time.fixedDeltaTime;
             switch (ctx.Phase)
@@ -37,8 +39,12 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
                 case AttackPhase.WindUp:
                     if (ctx.Target)
                     {
-                        // Track player direction during windup
-                        _targetDir = (ctx.Target.position - ctx.Owner.Transform.position).normalized;
+                        // Track player direction during windup but only in the percentage of the windup time we specify,
+                        // to give the player some time to react to the attack direction
+                        if (ctx.Timer <= windupDuration * (warningBoxTimePercentage / 100f))
+                        {
+                            _targetDir = (ctx.Target.position - ctx.Owner.Transform.position).normalized;
+                        }
 
                         if (!_warningInstance)
                         {
@@ -56,9 +62,9 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
 
                         bool shouldFaceRight = _targetDir.x >= 0;
 
-                        if (shouldFaceRight && !ctx.Owner.IsFacingRight || !shouldFaceRight && ctx.Owner.IsFacingRight)
+                        if (shouldFaceRight && !ctx.Owner.IsFacingRight || !shouldFaceRight && ctx.Owner.IsFacingRight && _bossBrain)
                         {
-                            _bossBrain?.FlipFacing();
+                            _bossBrain.FlipFacing();
                         }
 
                         float signedMarginX = ctx.Owner.IsFacingRight ? spawnMarginX : -spawnMarginX;

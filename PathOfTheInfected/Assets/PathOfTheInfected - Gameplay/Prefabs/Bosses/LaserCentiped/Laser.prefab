@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1335453524955122285}
   - component: {fileID: 7322737535615263049}
   - component: {fileID: 6263227177709638509}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 5303159517039868119}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.0535, y: 0.5153, z: 0}
-  m_LocalScale: {x: 10.613745, y: 2.8848305, z: 1}
+  m_LocalPosition: {x: 1.0535, y: -0.4755, z: 0}
+  m_LocalScale: {x: 10.613745, y: 1.3064219, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -120,7 +120,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &7322737535615263049
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -179,5 +179,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee5849cdb61441df990d3a507455d4c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.Projectiles.ProjectileBase
-  projectileSpeed: 25
+  projectileSpeed: 30
   projectileLifeTime: 10

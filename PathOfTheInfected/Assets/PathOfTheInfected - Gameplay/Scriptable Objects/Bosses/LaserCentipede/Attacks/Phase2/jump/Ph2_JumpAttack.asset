@@ -16,7 +16,7 @@ MonoBehaviour:
   <RequireDistanceFromEnemyToSpottable>k__BackingField: 0
   <DistanceThreshold>k__BackingField: 5
   <MaxAttackRange>k__BackingField: 10
-  <PoiseConsumed>k__BackingField: 0.3
+  <PoiseConsumed>k__BackingField: 0
   windupDuration: 0.5
   jumpForceX: 6
   jumpForceY: 12

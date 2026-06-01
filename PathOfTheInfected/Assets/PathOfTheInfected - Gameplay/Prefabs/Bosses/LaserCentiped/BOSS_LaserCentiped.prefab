@@ -604,7 +604,7 @@ Transform:
   m_GameObject: {fileID: 6556445833884198724}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5.35, z: 0}
+  m_LocalPosition: {x: 0, y: -5.66, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -803,8 +803,8 @@ GameObject:
   - component: {fileID: 1462992438638889341}
   - component: {fileID: -2323498895828622512}
   - component: {fileID: -4009899542238340970}
-  - component: {fileID: -5887571893278688348}
-  - component: {fileID: -7740341839682942432}
+  - component: {fileID: 1524836965826383555}
+  - component: {fileID: 2552030926405494587}
   m_Layer: 7
   m_Name: BOSS_LaserCentiped
   m_TagString: Untagged
@@ -857,7 +857,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &-4009899542238340970
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -904,7 +904,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 6.735849, y: 7.591195}
   m_EdgeRadius: 0
---- !u!114 &-5887571893278688348
+--- !u!114 &1524836965826383555
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -913,9 +913,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8470438419256664044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46b4be8377b40514aba8c1f27dd83960, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ecd0e782f34434f8e292725ddd23bba, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Core.Scripts.Boss.BossBrain
+  m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Scripts.Bosses.LaserCentipede.LaserCentipedeBrain
   <MaxPoise>k__BackingField: 10
   <CurrentPoise>k__BackingField: 0
   <IsFacingRight>k__BackingField: 1
@@ -935,7 +935,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
---- !u!114 &-7740341839682942432
+  feetCheckRadius: 1
+--- !u!114 &2552030926405494587
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -944,9 +945,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8470438419256664044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89acedf14d8b4b8989963a215a6b3eeb, type: 3}
+  m_Script: {fileID: 11500000, guid: bf97d621f03646809befc08e2ae5c412, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Core.Scripts.Boss.BossHealth
+  m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Scripts.Bosses.LaserCentipede.Health.LaserCentipedeHealth
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 15
   flashColor: {r: 4, g: 4, b: 4, a: 1}
@@ -959,6 +960,8 @@ MonoBehaviour:
   - {fileID: 2834768048915971383}
   - {fileID: 6006855535748251337}
   - {fileID: 1387140184477626826}
+  - {fileID: 3957134999849309340}
+  - {fileID: 3396992007916055421}
 --- !u!1 &8712444099986290000
 GameObject:
   m_ObjectHideFlags: 0

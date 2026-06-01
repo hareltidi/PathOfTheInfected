@@ -47,5 +47,7 @@ namespace PathOfTheInfected.Combat
         /// When the attack occurred.
         /// </summary>
         public float timeStamp;
+
+        publ
     }
 }

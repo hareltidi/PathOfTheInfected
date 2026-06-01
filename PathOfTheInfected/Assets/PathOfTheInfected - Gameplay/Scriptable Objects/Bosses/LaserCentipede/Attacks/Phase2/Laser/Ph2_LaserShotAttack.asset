@@ -16,11 +16,13 @@ MonoBehaviour:
   <RequireDistanceFromEnemyToSpottable>k__BackingField: 0
   <DistanceThreshold>k__BackingField: 5
   <MaxAttackRange>k__BackingField: 10
-  <PoiseConsumed>k__BackingField: 1.767
-  windupDuration: 1.5
+  <PoiseConsumed>k__BackingField: 0
+  windupDuration: 1
   projectilePrefab: {fileID: 5303159517039868119, guid: 5ab98519616efa74c80532131cfc975d, type: 3}
   spawnMarginX: 2
   spawnMarginY: 0
+  requiresGrounded: 1
   warningBoxWidth: 1
   warningBoxLength: 20
   warningColor: {r: 1, g: 0, b: 0, a: 0.4}
+  warningBoxTimePercentage: 85
