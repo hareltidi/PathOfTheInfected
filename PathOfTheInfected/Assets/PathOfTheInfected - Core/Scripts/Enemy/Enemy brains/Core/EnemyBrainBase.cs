@@ -52,7 +52,11 @@ namespace PathOfTheInfected.Enemy
         public bool damageSwitchesStates;
         public EnemyBaseState damagedState;
 
-        [Header("State Debugging")]
+        [Header("State Machines - Touch attack (optional)")]
+        public bool hasTouchAttackState;
+        public EnemyBaseState touchState;
+
+        [field: Header("State Debugging")]
         [field: SerializeField] public EnemyBaseState CurrentState { get; protected set; }
 
         #endregion
@@ -95,8 +99,6 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Attacks")]
         public AttackSOBase attack;
-        public bool hasTouchAttack;
-        public AttackDefinition touchAttackDef;
 
         /// <summary>
         /// Persistent attack context that survives across state transitions.
@@ -165,6 +167,10 @@ namespace PathOfTheInfected.Enemy
             noSpottableDetectedState = Instantiate(noSpottableDetectedState);
             spottableDetectedState = Instantiate(spottableDetectedState);
             spottableInAttackRangeState = Instantiate(spottableInAttackRangeState);
+            if (hasTouchAttackState)
+            {
+                touchState = Instantiate(touchState);
+            }
             damagedState = Instantiate(damagedState);
 
             GameObject = gameObject;
@@ -179,6 +185,10 @@ namespace PathOfTheInfected.Enemy
             noSpottableDetectedState.StateInit(this, StateMachine);
             spottableDetectedState.StateInit(this, StateMachine);
             spottableInAttackRangeState.StateInit(this, StateMachine);
+            if (hasTouchAttackState)
+            {
+                touchState.StateInit(this, StateMachine);
+            }
             damagedState.StateInit(this, StateMachine);
             CurrentPoise = MaxPoise;
             InitialPosition = transform.position;
@@ -222,10 +232,14 @@ namespace PathOfTheInfected.Enemy
         {
             CheckForSpottablesInAttackRange();
             DetectVisibleSpottables();
-            TouchCheck();
+            if (hasTouchAttackState)
+            {
+                touchState?.StateUpdate();
+            }
             StateMachine?.ApplyQueuedStateChange();
             CurrentState = StateMachine?.CurrentState;
             StateMachine?.CurrentState.StateUpdate();
+            damagedState?.StateUpdate();
         }
 
         /// <summary>
@@ -234,6 +248,11 @@ namespace PathOfTheInfected.Enemy
         protected virtual void EnemyFixedUpdate()
         {
             StateMachine?.CurrentState.StateFixedUpdate();
+            damagedState?.StateFixedUpdate();
+            if (hasTouchAttackState)
+            {
+                touchState?.StateFixedUpdate();
+            }
             TickRecoveryOutsideAttackState();
         }
 
@@ -665,32 +684,5 @@ namespace PathOfTheInfected.Enemy
         }
 
         #endregion
-
-        protected void TouchCheck()
-        {
-            if (!hasTouchAttack || !touchAttackDef) return;
-
-             Collider2D hit = Physics2D.OverlapBox(
-                feetPos.position,
-                new Vector2(0.5f, 0.5f),
-                0f,
-                SpottableMask
-            );
-
-            if (hit)
-            {
-                HitData data = new HitData
-                {
-                    attackDefinition = touchAttackDef,
-                    source = gameObject,
-                    target = hit.gameObject,
-                    isPlayerDamage = false,
-                    isAttackerInAir = !IsGrounded,
-                    timeStamp = Time.timeSinceLevelLoad,
-                };
-
-                HitDispatcher.ProcessHit(ref data);
-            }
-        }
     }
 }

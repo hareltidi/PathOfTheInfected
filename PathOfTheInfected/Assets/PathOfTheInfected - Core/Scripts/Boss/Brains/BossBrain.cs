@@ -40,10 +40,9 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         [SerializeField] protected BossState bossState;
 
 
-        [Header("TouchAttack")]
-        public LayerMask spottableMask;
-        public bool hasTouchAttack;
-        public AttackDefinition touchAttackDef;
+        [Header("State Machines - Touch attack (optional)")]
+        public bool hasTouchAttackState;
+        public EnemyBaseState touchState;
 
 
 
@@ -101,6 +100,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
             Health = GetComponent<BossHealth>();
             GameObject = gameObject;
             Transform = transform;
+            touchState = Instantiate(touchState);
 
             for (int i = 0; i < phases.Count; i++)
             {
@@ -109,6 +109,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
             bossState = Instantiate(bossState);
             bossState.StateInit(this);
             CurrentPhase.PhaseInit(this);
+
         }
 
         /// <summary>
@@ -358,33 +359,6 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         private void OnDestroy()
         {
             OnBossDestroyed();
-        }
-
-        protected void TouchCheck()
-        {
-            if (!hasTouchAttack || !touchAttackDef) return;
-
-            Collider2D hit = Physics2D.OverlapBox(
-                feetPos.position,
-                new Vector2(0.5f, 0.5f),
-                0f,
-                spottableMask
-            );
-
-            if (hit)
-            {
-                HitData data = new HitData
-                {
-                    attackDefinition = touchAttackDef,
-                    source = gameObject,
-                    target = hit.gameObject,
-                    isPlayerDamage = false,
-                    isAttackerInAir = !IsGrounded,
-                    timeStamp = Time.timeSinceLevelLoad,
-                };
-
-                HitDispatcher.ProcessHit(ref data);
-            }
         }
     }
 }
