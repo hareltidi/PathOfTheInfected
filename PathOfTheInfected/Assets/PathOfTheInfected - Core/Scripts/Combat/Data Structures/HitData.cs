@@ -48,6 +48,5 @@ namespace PathOfTheInfected.Combat
         /// </summary>
         public float timeStamp;
 
-        publ
     }
 }
