@@ -16390,10 +16390,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pillbug
       objectReference: {fileID: 0}
-    - target: {fileID: 8392446054271526244, guid: 9b51dce8ba5f7ea4f98a7d612a2323a3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &920834324672814089
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2612156785980879954}
+  m_Layer: 7
+  m_Name: FeetPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2612156785980879954
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920834324672814089}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.61, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2648265985126585710}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1281593386885809677
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,6 +750,7 @@ Transform:
   - {fileID: 3657124819914067059}
   - {fileID: 268705233379078153}
   - {fileID: 1724393671273969360}
+  - {fileID: 2612156785980879954}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &869079463999792379
@@ -823,12 +855,15 @@ MonoBehaviour:
   repathInterval: 1
   facingFlipDeadzone: 1
   drawPathGizmos: 0
-  pathSwapImprovementThreshold: 0.5
   <SpottableMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 256
   max: {fileID: 268705233379078153}
   min: {fileID: 1724393671273969360}
+  feetPos: {fileID: 2612156785980879954}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
   requireObjectsToBeInCameraView: 0
   requiresLos: 1
   losBlockMask:
@@ -841,6 +876,8 @@ MonoBehaviour:
   trackAttackRange: 1
   maxSpotRange: 7
   attack: {fileID: 11400000, guid: a7f6f61374fa7764b9556535c29d3d11, type: 2}
+  hasTouchAttack: 1
+  touchAttackDef: {fileID: 11400000, guid: bd6639679d44dfd4e8f5cf71e01d3cde, type: 2}
 --- !u!114 &9061155390559639660
 MonoBehaviour:
   m_ObjectHideFlags: 0

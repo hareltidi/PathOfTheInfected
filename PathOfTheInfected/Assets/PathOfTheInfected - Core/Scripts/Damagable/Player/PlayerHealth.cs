@@ -3,6 +3,7 @@ using PathOfTheInfected.Combat;
 using PathOfTheInfected.Damagable.Messages;
 using PathOfTheInfected.Enemy;
 using TidiGameplayMessaging.Core;
+using TidiMovementComponent2D.Core;
 using TidiTweening;
 using UnityEngine;
 
@@ -12,10 +13,12 @@ namespace PathOfTheInfected.Damagable
     {
         private static readonly int FlashAmountId = Shader.PropertyToID("_FlashAmount");
         private static readonly int FlashColorId = Shader.PropertyToID("_FlashColor");
+        private PlayerSm _playerOwner;
 
         private void Awake()
         {
             SyncRuntimeRenderersAndMaterials();
+            _playerOwner = PlayerSm.Instance;
         }
 
         private void Start()
@@ -169,6 +172,11 @@ namespace PathOfTheInfected.Damagable
             float finalDamage = DamageCalculator.CalculateDamage(in damageData);
 
             TakeDamage(finalDamage, damageData.attackDefinition.hitStopTime);
+
+            if (damageData.attackDir != Vector2.zero)
+            {
+                _playerOwner.IncrementHorizontalVelocity(damageData.knockbackStrength * Mathf.Sign(damageData.attackDir.x));
+            }
 
             return new HitResponse(
                 response: Response.DamagePlayer,

@@ -93,8 +93,11 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Spottable Detection")] public float maxSpotRange = 10f;
 
-        [Header("CurrentAttack")]
+        [Header("Attacks")]
         public AttackSOBase attack;
+        public bool hasTouchAttack;
+        public AttackDefinition touchAttackDef;
+
         /// <summary>
         /// Persistent attack context that survives across state transitions.
         /// This ensures recovery time is maintained even if the enemy temporarily leaves the attack state.
@@ -219,6 +222,7 @@ namespace PathOfTheInfected.Enemy
         {
             CheckForSpottablesInAttackRange();
             DetectVisibleSpottables();
+            TouchCheck();
             StateMachine?.ApplyQueuedStateChange();
             CurrentState = StateMachine?.CurrentState;
             StateMachine?.CurrentState.StateUpdate();
@@ -280,6 +284,7 @@ namespace PathOfTheInfected.Enemy
         {
             DamagedSubscription?.Dispose();
         }
+
 
         #region Detection and drawing detection zones
 
@@ -660,5 +665,32 @@ namespace PathOfTheInfected.Enemy
         }
 
         #endregion
+
+        protected void TouchCheck()
+        {
+            if (!hasTouchAttack || !touchAttackDef) return;
+
+             Collider2D hit = Physics2D.OverlapBox(
+                feetPos.position,
+                new Vector2(0.5f, 0.5f),
+                0f,
+                SpottableMask
+            );
+
+            if (hit)
+            {
+                HitData data = new HitData
+                {
+                    attackDefinition = touchAttackDef,
+                    source = gameObject,
+                    target = hit.gameObject,
+                    isPlayerDamage = false,
+                    isAttackerInAir = !IsGrounded,
+                    timeStamp = Time.timeSinceLevelLoad,
+                };
+
+                HitDispatcher.ProcessHit(ref data);
+            }
+        }
     }
 }

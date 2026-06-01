@@ -48,5 +48,15 @@ namespace PathOfTheInfected.Combat
         /// </summary>
         public float timeStamp;
 
+        /// <summary>
+        /// WHat direction is the attack coming from? (used for knockback and hit reactions)
+        /// </summary>
+        public Vector2 attackDir;
+
+        /// <summary>
+        /// How strong is our knockback?
+        /// </summary>
+        public float knockbackStrength;
+
     }
 }

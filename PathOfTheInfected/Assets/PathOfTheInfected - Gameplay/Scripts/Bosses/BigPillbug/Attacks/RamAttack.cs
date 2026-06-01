@@ -9,6 +9,7 @@ namespace PathOfTheInfected.Gameplay.Bosses.BigPillbug
     {
         [SerializeField] private float chargeSpeed = 10f;
         [SerializeField] private float chargeDuration = 1f;
+        [SerializeField] private float knockbackForce = 10f;
 
         public override void AttackLogic(AttackContext ctx)
         {
@@ -41,7 +42,9 @@ namespace PathOfTheInfected.Gameplay.Bosses.BigPillbug
                             target = hit.gameObject,
                             isPlayerDamage = false,
                             isAttackerInAir = !ctx.Owner.IsGrounded,
-                            timeStamp = Time.timeSinceLevelLoad
+                            timeStamp = Time.timeSinceLevelLoad,
+                            attackDir = ctx.Owner.IsFacingRight ? Vector2.right : Vector2.left,
+                            knockbackStrength = knockbackForce
                         };
                         HitDispatcher.ProcessHit(ref data);
                         ctx.HasHit = true;
