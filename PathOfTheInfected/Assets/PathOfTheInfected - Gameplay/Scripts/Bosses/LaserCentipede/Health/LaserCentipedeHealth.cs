@@ -11,17 +11,5 @@ namespace PathOfTheInfected.Gameplay.Scripts.Bosses.LaserCentipede.Health
             base.Awake();
             _laserCentipedeBrain = (LaserCentipedeBrain) Owner;
         }
-        public override HitResponse OnHit(ref HitData damageData)
-        {
-            if (_laserCentipedeBrain.IsInvisible)
-            {
-                return new HitResponse(
-                    response: Response.Invincible,
-                    consumeCharges: false,
-                    finalDamage: 0
-                );
-            }
-            return base.OnHit(ref damageData);
-        }
     }
 }

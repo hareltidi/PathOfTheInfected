@@ -7,6 +7,7 @@ namespace PathOfTheInfected.Core.Scripts.Enemy.States.Shared
     public class TouchAttackSo : EnemyBaseState
     {
         public AttackSOBase touchAttack;
+        private bool _touched = false;
         public override void StateEnter()
         {
             if (!CurrentEnemyBrain || CurrentEnemyBrain.AttackTarget == null || !CurrentEnemyBrain.AttackTarget.Transform) return;
@@ -28,25 +29,28 @@ namespace PathOfTheInfected.Core.Scripts.Enemy.States.Shared
         {
             if (!CurrentEnemyBrain || CurrentEnemyBrain.AttackTarget == null || !CurrentEnemyBrain.AttackTarget.Transform) return;
             base.StateFixedUpdate();
-            CurrentEnemyBrain.MoveBoss(Vector2.zero, true);
 
-            // Ensure AttackContext is initialized
-            if (CurrentEnemyBrain.AttackContext == null)
-            {
-                CurrentEnemyBrain.AttackContext = new AttackContext();
-                touchAttack.InitAttack(CurrentEnemyBrain.AttackContext, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
-                return;
-            }
+            _touched = Physics2D.OverlapCircle(CurrentEnemyBrain.transform.position, touchAttack.MaxAttackRange, CurrentEnemyBrain.SpottableMask);
 
-            if (!CurrentEnemyBrain.AttackContext.IsFinished)
+            if (_touched)
             {
-                touchAttack.AttackLogic(CurrentEnemyBrain.AttackContext);
-            }
-            else
-            {
-                touchAttack.InitAttack(CurrentEnemyBrain.AttackContext, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
-            }
+                CurrentEnemyBrain.MoveEnemy(Vector2.zero, true);
+                if (CurrentEnemyBrain.AttackContext == null)
+                {
+                    CurrentEnemyBrain.AttackContext = new AttackContext();
+                    touchAttack.InitAttack(CurrentEnemyBrain.AttackContext, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
+                    return;
+                }
 
+                if (!CurrentEnemyBrain.AttackContext.IsFinished)
+                {
+                    touchAttack.AttackLogic(CurrentEnemyBrain.AttackContext);
+                }
+                else
+                {
+                    touchAttack.InitAttack(CurrentEnemyBrain.AttackContext, CurrentEnemyBrain, CurrentEnemyBrain.AttackTarget.Transform);
+                }
+            }
         }
     }
 }

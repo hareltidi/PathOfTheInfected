@@ -10,16 +10,16 @@ namespace PathOfTheInfected.Enemy
         public override void PerformAttack(AttackContext ctx)
         {
             base.PerformAttack(ctx);
-            EnemyBrainBase enemyBrainBase = (EnemyBrainBase)ctx.Owner;
+            IAttackOwnerable enemyBrainBase = ctx.Owner;
             float range = MaxAttackRange;
 
 
-            Collider2D hit = Physics2D.OverlapCircle(enemyBrainBase.transform.position, range,enemyBrainBase.SpottableMask);
+            Collider2D hit = Physics2D.OverlapCircle(enemyBrainBase.Transform.position, range,enemyBrainBase.SpottableMask);
 
             // build the hit data:
             HitData data = new HitData()
             {
-                attackDefinition = attackDef,
+                attackDefinition = AttackDef,
                 isFirstHit = false,
                 isPlayerDamage = false,
                 isAttackerInAir = false,

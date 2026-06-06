@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -5054742196126122138}
   - component: {fileID: 3475331426584833914}
   - component: {fileID: -4351074757237506451}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Coll_TileSet - 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

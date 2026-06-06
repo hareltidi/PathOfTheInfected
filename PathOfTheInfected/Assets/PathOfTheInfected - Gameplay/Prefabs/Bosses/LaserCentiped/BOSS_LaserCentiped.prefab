@@ -376,6 +376,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1621983426451831114}
   - component: {fileID: 6503682295603267893}
+  - component: {fileID: 3364893947711743923}
   m_Layer: 7
   m_Name: VISUALS
   m_TagString: Untagged
@@ -426,6 +427,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3364893947711743923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2869823871401923867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f218fba9ab0b4bdd80f9077087c7e0c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Scripts.Bosses.LaserCentipede.Animation.LaserCentipedeAnimInstance
+  resetPoseOnAnimationChange: 1
+  <Animator>k__BackingField: {fileID: 6503682295603267893}
+  idleAnim: {fileID: 7400000, guid: a97f1d6d876649048bcd1c20871fda58, type: 2}
+  walkAnim: {fileID: 7400000, guid: c73bab3e259fbb04c9c6953620041434, type: 2}
 --- !u!1 &3003666010190777485
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,8 +941,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3202e3f215db2a140b306898cb9955be, type: 2}
   - {fileID: 11400000, guid: 389e08448ef95ab44819f35ec8dc510f, type: 2}
   bossState: {fileID: 11400000, guid: 8fb52d810d8849f4591d20aa94c199a6, type: 2}
+  damageSwitchesStates: 0
+  damageStateDuration: 0.5
+  touchAttackDef: {fileID: 0}
+  touchAttackRadius: 1
+  touchAttackOffset: {x: 0, y: 0}
   hasTouchAttackState: 1
-  touchState: {fileID: 11400000, guid: 2917ac7a66be7354e8c31750c21e7053, type: 2}
+  <SpottableMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 256
   movementPersonality:
     maxSpeed: 7
     acceleration: 7

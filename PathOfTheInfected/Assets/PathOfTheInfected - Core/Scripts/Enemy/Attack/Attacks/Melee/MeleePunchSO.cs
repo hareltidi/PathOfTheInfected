@@ -36,7 +36,7 @@ namespace PathOfTheInfected.Enemy
             // build the hit data:
             HitData data = new HitData()
             {
-                attackDefinition = attackDef,
+                attackDefinition = AttackDef,
                 isFirstHit = false,
                 isPlayerDamage = false,
                 isAttackerInAir = false,

@@ -118,7 +118,7 @@ namespace PathOfTheInfected.Enemy
 
         #region Movement overrides
 
-        public override void MoveBoss(Vector2 dir, bool instant = false)
+        public override void MoveEnemy(Vector2 dir, bool instant = false)
         {
             if (!RB) return;
 
@@ -190,7 +190,7 @@ namespace PathOfTheInfected.Enemy
 
             if (CurrentPath == null || CurrentIndex >= CurrentPath.Count) // If no path found or reached te end
             {
-                MoveBoss(Vector2.zero); // Stop moving
+                MoveEnemy(Vector2.zero); // Stop moving
                 return; // Exit method early
             }
 
@@ -218,11 +218,11 @@ namespace PathOfTheInfected.Enemy
 
             if (pathWantsUp) // If there are obstacles and we want to go up
             {
-                MoveBoss(Vector2.up); // Move the enemy upward
+                MoveEnemy(Vector2.up); // Move the enemy upward
             }
             else
             {
-                MoveBoss(dir); // Move the enemy in the normal direction we calculated
+                MoveEnemy(dir); // Move the enemy in the normal direction we calculated
             }
 
 

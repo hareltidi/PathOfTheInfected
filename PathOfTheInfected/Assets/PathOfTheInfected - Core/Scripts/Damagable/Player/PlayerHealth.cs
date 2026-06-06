@@ -6,6 +6,7 @@ using TidiGameplayMessaging.Core;
 using TidiMovementComponent2D.Core;
 using TidiTweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace PathOfTheInfected.Damagable
 {
@@ -161,6 +162,7 @@ namespace PathOfTheInfected.Damagable
 
         private void OnDestroy()
         {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex );
             for (var i = 0; i < _flashTweens.Count; i++)
             {
                 _flashTweens[i]?.FullKill();
@@ -175,7 +177,7 @@ namespace PathOfTheInfected.Damagable
 
             if (damageData.attackDir != Vector2.zero)
             {
-                _playerOwner.IncrementHorizontalVelocity(damageData.knockbackStrength * Mathf.Sign(damageData.attackDir.x));
+                _playerOwner?.IncrementHorizontalVelocity(damageData.knockbackStrength * Mathf.Sign(damageData.attackDir.x));
             }
 
             return new HitResponse(

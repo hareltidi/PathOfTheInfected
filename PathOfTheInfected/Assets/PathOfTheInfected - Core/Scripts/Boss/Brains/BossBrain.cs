@@ -40,10 +40,17 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         [SerializeField] protected BossState bossState;
 
 
-        [Header("State Machines - Touch attack (optional)")]
-        public bool hasTouchAttackState;
-        public EnemyBaseState touchState;
+        [Header("State Machines - Damaged state (optional)")]
+        public bool damageSwitchesStates;
+        public float damageStateDuration = 0.5f;
 
+
+        [Header("State Machines - Touch attack (optional)")]
+        public AttackDefinition touchAttackDef;
+        public float touchAttackRadius = 1f;
+        public Vector2 touchAttackOffset = Vector2.zero;
+        public bool hasTouchAttackState;
+        [field: SerializeField] public LayerMask SpottableMask { get; set; }
 
 
         [Header("Movement")]
@@ -87,6 +94,12 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         public Vector2 BossVel { get; private set; }
 
         public bool IsGrounded => Physics2D.OverlapCircle(feetPos.position, feetCheckRadius, groundLayer);
+
+        protected bool Touched;
+
+        protected float TouchedRecoveryTimer = 0;
+
+        protected bool IsBossDamaged;
         #endregion
 
         #region Virtual logic gate Methods
@@ -98,9 +111,14 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         {
             RB = GetComponent<Rigidbody2D>();
             Health = GetComponent<BossHealth>();
+            Health.BossDamaged += OnBossDamaged;
             GameObject = gameObject;
             Transform = transform;
-            touchState = Instantiate(touchState);
+
+            if (hasTouchAttackState && touchAttackDef != null)
+            {
+                touchAttackDef = Instantiate(touchAttackDef);
+            }
 
             for (int i = 0; i < phases.Count; i++)
             {
@@ -131,7 +149,11 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         /// </summary>
         protected virtual void DrawGizmosOnSelected()
         {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere((Vector2) transform.position + touchAttackOffset, touchAttackRadius);
 
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(feetPos.position, feetCheckRadius);
         }
 
         protected virtual void EvaluatePhaseTransitions()
@@ -163,7 +185,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         protected virtual void BossFixedUpdate()
         {
             TickRecoveryOutsideAttackState();
-
+            TouchCheck();
             bossState.StateFixedUpdate();
             CurrentPhase.PhaseFixedUpdate();
         }
@@ -182,6 +204,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         /// </summary>
         protected virtual void OnBossDestroyed()
         {
+            Health.BossDamaged -= OnBossDamaged;
             bossState.StateExit();
             CurrentPhase.PhaseExit();
             Debug.Log("Boss Destroyed");
@@ -191,7 +214,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
 
         #region EnemyMovement
 
-        public virtual void MoveBoss(Vector2 dir, bool instant = false)
+        public virtual void MoveEnemy(Vector2 dir, bool instant = false)
         {
             if (!RB) return;
 
@@ -223,6 +246,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
             var newVelocity = new Vector2(newVx, RB.linearVelocity.y);
             CheckForLeftOrRightFacing(newVelocity);
             RB.linearVelocity = newVelocity;
+            Debug.Log($"Moving with targetVx: {targetVx}, velocityDiff: {velocityDiff}, progress: {progress}, eased: {eased}, accelMultiplier: {accelMultiplier}, adjustedAccel: {adjustedAccel}, newVx: {newVx}");
         }
 
         /// <summary>
@@ -252,7 +276,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         public virtual void MoveTo(Vector2 target)
         {
             Vector2 dir = (target - (Vector2)transform.position).normalized;
-            MoveBoss(new Vector2(Mathf.Sign(dir.x), 0f));
+            MoveEnemy(new Vector2(Mathf.Sign(dir.x), 0f));
         }
 
         /// <summary>
@@ -360,5 +384,57 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         {
             OnBossDestroyed();
         }
+
+        protected virtual void TouchCheck()
+        {
+            if (!hasTouchAttackState || !touchAttackDef || AttackContext.HasHit) return;
+
+            bool isRecovering = TouchedRecoveryTimer > 0;
+            if (isRecovering)
+            {
+                TouchedRecoveryTimer -= Time.fixedDeltaTime;
+                Debug.Log("Recovering");
+                return; // Wait for recovery time to finish
+            }
+
+            Collider2D hit = Physics2D.OverlapCircle((Vector2) transform.position + touchAttackOffset, touchAttackRadius, SpottableMask);
+            Touched = hit;
+            if (Touched && !IsBossDamaged)
+            {
+                Debug.Log("Attack Touch Damage");
+                HitData data = new HitData()
+                {
+                    attackDefinition = touchAttackDef,
+                    source = gameObject,
+                    target = hit.gameObject,
+                    isPlayerDamage = false,
+                    isFirstHit = false,
+                    firstHitDamageBoost = 0,
+                    comboDamageScalingLevel = 1,
+                    timeStamp = Time.timeSinceLevelLoad,
+                };
+
+                HitDispatcher.ProcessHit(ref data);
+
+                TouchedRecoveryTimer = touchAttackDef.recoveryTime;
+            }
+
+        }
+
+        public void OnBossDamaged()
+        {
+            ToggleDamaged(true);
+            Invoke(nameof(DamagedToFalse), damageStateDuration);
+        }
+
+        private void DamagedToFalse()
+        {
+            ToggleDamaged(false);
+        }
+        private void ToggleDamaged(bool isDamaged)
+        {
+            IsBossDamaged = isDamaged;
+        }
+
     }
 }

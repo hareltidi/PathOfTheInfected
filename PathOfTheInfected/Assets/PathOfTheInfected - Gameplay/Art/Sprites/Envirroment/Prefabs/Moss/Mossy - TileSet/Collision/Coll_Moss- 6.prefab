@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -5054742196126122138}
   - component: {fileID: 8910992569090196943}
   - component: {fileID: 1323850292583348994}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Coll_Moss- 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}

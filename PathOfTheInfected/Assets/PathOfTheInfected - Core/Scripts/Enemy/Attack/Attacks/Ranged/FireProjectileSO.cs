@@ -28,7 +28,7 @@ namespace PathOfTheInfected.Enemy
             GameObject projectileToSpawn = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
 
             ProjectileBase projectileLogic = projectileToSpawn.GetComponent<ProjectileBase>();
-            projectileLogic?.InitProjectileValuesFromAttack(ctx, attackDef, dir, spawnPos, ctx.Owner.GameObject);
+            projectileLogic?.InitProjectileValuesFromAttack(ctx, AttackDef, dir, spawnPos, ctx.Owner.GameObject);
         }
     }
 }

@@ -66,5 +66,7 @@ namespace PathOfTheInfected.Enemy
 
         float MaxPoise { get; set; }
 
+        LayerMask SpottableMask { get; set; }
+
     }
 }

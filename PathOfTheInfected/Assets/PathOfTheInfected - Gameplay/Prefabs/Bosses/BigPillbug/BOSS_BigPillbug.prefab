@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2276717643831315042}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Min
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 540767894599739225}
   - component: {fileID: 6310424120733344478}
-  m_Layer: 0
+  - component: {fileID: 2760752169564343383}
+  m_Layer: 7
   m_Name: VISUALS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +79,7 @@ Animator:
   m_GameObject: {fileID: 700712204468442832}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 99ce23cabf755954098bc2d93f70735a, type: 2}
+  m_Controller: {fileID: 9100000, guid: a394ecc671726684aa3707465fcf0d14, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -90,6 +91,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2760752169564343383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700712204468442832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 230878cb0f504e1f8d579569452a7649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Scripts.Bosses.BigPillbug.Animation.BigPillbugAnimInstance
+  resetPoseOnAnimationChange: 1
+  <Animator>k__BackingField: {fileID: 6310424120733344478}
+  idleAnim: {fileID: 7400000, guid: a4dd1c3c398e20b46b8534dddafcdadf, type: 2}
+  walkAnim: {fileID: 7400000, guid: bdc367794133e564cb2d948a85858f1d, type: 2}
+  vulnerableAnim: {fileID: 7400000, guid: b6c3f91bc02333b458cd9c649d338c09, type: 2}
 --- !u!1 &2224349668352342638
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +208,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5911341001217787348}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Max
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -495,7 +513,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8061100786367141296}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FeetPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -712,7 +730,7 @@ GameObject:
   - component: {fileID: 7422275624407741506}
   - component: {fileID: 3347980929449057793}
   - component: {fileID: 3427075602280751177}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BOSS_BigPillbug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -750,7 +768,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -761,10 +779,10 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!61 &7422275624407741506
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -799,7 +817,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 1.0876751, y: -0.36868417}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -809,7 +827,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 9.289078, y: 2.6757538}
   m_EdgeRadius: 0
 --- !u!114 &3347980929449057793
 MonoBehaviour:
@@ -825,12 +843,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Core.Scripts.Boss.BossBrain
   <MaxPoise>k__BackingField: 10
   <CurrentPoise>k__BackingField: 0
-  <IsFacingRight>k__BackingField: 1
-  phases: []
+  <IsFacingRight>k__BackingField: 0
+  phases:
+  - {fileID: 11400000, guid: 90504fbb90751254285746d6c1e7fbf0, type: 2}
+  - {fileID: 11400000, guid: fa02e6b9b63ee014f8b61de0724decca, type: 2}
+  - {fileID: 11400000, guid: 6f51cb56b0d7254428d32697818ac724, type: 2}
   bossState: {fileID: 11400000, guid: 8fb52d810d8849f4591d20aa94c199a6, type: 2}
+  damageSwitchesStates: 1
+  damageStateDuration: 0.5
+  touchAttackDef: {fileID: 11400000, guid: d0baef44113e0bd438625e071a5cba98, type: 2}
+  touchAttackRadius: 2
+  touchAttackOffset: {x: -2.24, y: -0.57}
+  hasTouchAttackState: 1
+  <SpottableMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 256
   movementPersonality:
-    maxSpeed: 10
-    acceleration: 9
+    maxSpeed: 20
+    acceleration: 200
     movementEase: 16
   facingFlipDeadzone: 1
   max: {fileID: 5911341001217787348}
@@ -839,6 +869,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  feetCheckRadius: 0.2
 --- !u!114 &3427075602280751177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -852,7 +883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Core.Scripts.Boss.BossHealth
   <CurrentHealth>k__BackingField: 0
-  <MaxHealth>k__BackingField: 15
+  <MaxHealth>k__BackingField: 30
   flashColor: {r: 1, g: 1, b: 1, a: 1}
   flashTime: 0.25
   damageFlashEaseType: 28

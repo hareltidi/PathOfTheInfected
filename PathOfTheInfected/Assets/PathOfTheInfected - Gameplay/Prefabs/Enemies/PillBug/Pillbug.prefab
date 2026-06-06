@@ -779,7 +779,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &3863383414071706641
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -814,7 +814,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.35154152, y: 0.014864445}
+  m_Offset: {x: 0.35154152, y: -0.045493588}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -824,7 +824,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.5657158, y: 1.106677}
+  m_Size: {x: 2.5657158, y: 0.69854355}
   m_EdgeRadius: 0
 --- !u!114 &7297781797337974140
 MonoBehaviour:
@@ -845,6 +845,7 @@ MonoBehaviour:
   spottableDetectedState: {fileID: 11400000, guid: 3cbfd25cbc1585947910ba2991e4fe5d, type: 2}
   spottableInAttackRangeState: {fileID: 11400000, guid: fd0825611c5cee6499d38a53e749d3f8, type: 2}
   damageSwitchesStates: 1
+  damageStateDuration: 0.5
   damagedState: {fileID: 11400000, guid: cf512ea3a9116e2498b1d819180e9cc4, type: 2}
   hasTouchAttackState: 1
   touchState: {fileID: 11400000, guid: 2917ac7a66be7354e8c31750c21e7053, type: 2}

@@ -1,6 +1,6 @@
-using PathOfTheInfected.Core.Scripts.Boss;
 using PathOfTheInfected.Enemy;
 using PathOfTheInfected.Enemy.Projectiles;
+using PathOfTheInfected.Gameplay.Scripts.Bosses.LaserCentipede;
 using UnityEngine;
 
 namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
@@ -12,6 +12,7 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
         [SerializeField] private float spawnMarginX = 2f;
         [SerializeField] private float spawnMarginY = 0f;
         [SerializeField] private bool requiresGrounded = true;
+        [SerializeField] private AnimationClip attackAnim;
         [Header("Warning Box Config")]
         [SerializeField] private float warningBoxWidth = 1f;
         [SerializeField] private float warningBoxLength = 20f;
@@ -21,12 +22,14 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
         private Vector2 _targetDir;
         private GameObject _warningInstance;
         private LineRenderer _warningLine;
-        private BossBrain _bossBrain;
+        private LaserCentipedeBrain _bossBrain;
+        private int _attackAnimHash;
 
         public override void InitAttack(AttackContext ctx, IAttackOwnerable owner, Transform target)
         {
             base.InitAttack(ctx, owner, target);
-            _bossBrain = (BossBrain)ctx.Owner;
+            _bossBrain = (LaserCentipedeBrain)ctx.Owner;
+            _attackAnimHash = Animator.StringToHash(attackAnim.name);
         }
 
         public override void AttackLogic(AttackContext ctx)
@@ -37,8 +40,10 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
             switch (ctx.Phase)
             {
                 case AttackPhase.WindUp:
-                    if (ctx.Target)
+                    if (ctx.Target && _bossBrain)
                     {
+                        _bossBrain.AnimInstance.PlayAnimationIfNotCurrent(_attackAnimHash, 0, 0,
+                            true, true);
                         // Track player direction during windup but only in the percentage of the windup time we specify,
                         // to give the player some time to react to the attack direction
                         if (ctx.Timer <= windupDuration * (warningBoxTimePercentage / 100f))
@@ -98,7 +103,7 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
                     break;
                 case AttackPhase.Recovery:
                     CleanupWarning();
-                    if (ctx.Timer >= attackDef.recoveryTime)
+                    if (ctx.Timer >= AttackDef.recoveryTime)
                     {
                         ctx.IsFinished = true;
                     }
@@ -145,7 +150,7 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
             GameObject projectileToSpawn = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
 
             ProjectileBase projectileLogic = projectileToSpawn.GetComponent<ProjectileBase>();
-            projectileLogic?.InitProjectileValuesFromAttack(ctx, attackDef, _targetDir, spawnPos, ctx.Owner.GameObject);
+            projectileLogic?.InitProjectileValuesFromAttack(ctx, AttackDef, _targetDir, spawnPos, ctx.Owner.GameObject);
         }
     }
 }

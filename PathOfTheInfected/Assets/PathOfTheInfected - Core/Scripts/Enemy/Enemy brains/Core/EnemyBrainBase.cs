@@ -50,6 +50,7 @@ namespace PathOfTheInfected.Enemy
 
         [Header("State Machines - Damaged state (optional)")]
         public bool damageSwitchesStates;
+        public float damageStateDuration = 0.5f;
         public EnemyBaseState damagedState;
 
         [Header("State Machines - Touch attack (optional)")]
@@ -73,7 +74,7 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Box cast - general")]
         [field: SerializeField]
-        public LayerMask SpottableMask { get; protected set; }
+        public LayerMask SpottableMask { get; set; }
         public Transform max;
         public Transform min;
         public Transform feetPos;
@@ -151,7 +152,6 @@ namespace PathOfTheInfected.Enemy
 
         public Vector2 EnemyVel { get; private set; }
 
-        protected IDisposable DamagedSubscription;
         #endregion
 
         #region Virtual logic gate Methods
@@ -203,6 +203,7 @@ namespace PathOfTheInfected.Enemy
             DrawStatesGizmos();
             DrawingSpottingRange();
             DrawAttackRange();
+
 
             // Draw current path for debugging
             if (drawPathGizmos && CurrentPath != null && CurrentPath.Count > 0)
@@ -274,8 +275,8 @@ namespace PathOfTheInfected.Enemy
         private void Awake()
         {
             EnemyAwake();
-            DamagedSubscription = TidiGameplayMessagingSubsystem.Instance.Listen<OnEnemyDamaged>(OnEnemyDamaged);
             EnemyHealth = GetComponent<EnemyHealth>();
+            EnemyHealth.EnemyDamaged += OnEnemyDamaged;
         }
 
         private void Start()
@@ -301,7 +302,7 @@ namespace PathOfTheInfected.Enemy
 
         private void OnDestroy()
         {
-            DamagedSubscription?.Dispose();
+            EnemyHealth.EnemyDamaged -= OnEnemyDamaged;
         }
 
 
@@ -551,7 +552,7 @@ namespace PathOfTheInfected.Enemy
 
         #region EnemyMovement
 
-        public virtual void MoveBoss(Vector2 dir, bool instant = false)
+        public virtual void MoveEnemy(Vector2 dir, bool instant = false)
         {
             if (!RB) return;
 
@@ -630,7 +631,7 @@ namespace PathOfTheInfected.Enemy
         public virtual void MoveTo(Vector2 target)
         {
             Vector2 dir = (target - (Vector2)transform.position).normalized;
-            MoveBoss(new Vector2(Mathf.Sign(dir.x), 0f));
+            MoveEnemy(new Vector2(Mathf.Sign(dir.x), 0f));
         }
 
         public virtual void CheckForLeftOrRightFacing(Vector2 velocity)
@@ -671,7 +672,7 @@ namespace PathOfTheInfected.Enemy
         public void OnEnemyDamaged()
         {
            ToggleDamaged(true);
-           Invoke(nameof(DamagedToFalse), EnemyHealth.flashTime);
+           Invoke(nameof(DamagedToFalse), damageStateDuration);
         }
 
         private void DamagedToFalse()

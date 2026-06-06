@@ -7,8 +7,11 @@ namespace PathOfTheInfected.Gameplay.Bosses.Golem
     [CreateAssetMenu(fileName = "GroundSlamAttack", menuName = "Boss/Attacks/Golem/GroundSlamAttack")]
     public class GroundSlamAttack : AttackSOBase
     {
-        [SerializeField] private Vector2 hitboxSize = new Vector2(4f, 2f);
+        [SerializeField] private Vector2 hitboxSize = new(4f, 2f);
         [SerializeField] private float damageOffsetX = 2f;
+        [SerializeField] private LayerMask spottableMask;
+        [SerializeField] private float knockbackStrength = 10f;
+        [SerializeField] private AnimationClip slamAnim;
 
         public override void PerformAttack(AttackContext ctx)
         {
@@ -20,13 +23,14 @@ namespace PathOfTheInfected.Gameplay.Bosses.Golem
                 ctx.Owner.Transform.position.y
             );
 
-            Collider2D hit = Physics2D.OverlapBox(spawnPos, hitboxSize, 0f);
-
-            if (hit && hit.transform == ctx.Target)
+            Collider2D hit = Physics2D.OverlapBox(spawnPos, hitboxSize, 0f, spottableMask);
+            IHitResponder hitResponder = hit?.GetComponent<IHitResponder>();
+            if (hitResponder  != null)
             {
+                Debug.Log("Ground Slam!");
                 HitData data = new HitData()
                 {
-                    attackDefinition = attackDef,
+                    attackDefinition = AttackDef,
                     isFirstHit = false,
                     isPlayerDamage = false,
                     isAttackerInAir = false,
@@ -35,6 +39,8 @@ namespace PathOfTheInfected.Gameplay.Bosses.Golem
                     target = hit.gameObject,
                     firstHitDamageBoost = 0,
                     comboDamageScalingLevel = 1,
+                    attackDir = dir,
+                    knockbackStrength = knockbackStrength,
                 };
                 var result = HitDispatcher.ProcessHit(ref data);
                 ReactToHitResult(result);

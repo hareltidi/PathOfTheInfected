@@ -9,8 +9,8 @@ namespace PathOfTheInfected.Enemy
     {
         private AttackContext _context;
 
-        [Header("CurrentAttack stats")] [SerializeField]
-        protected AttackDefinition attackDef;
+        [field:Header("CurrentAttack stats")]
+        [field: SerializeField]public AttackDefinition AttackDef { get;  protected set; }
 
         [Tooltip("Should we check if the distance between the enemy and the spottable are under a certain threshold for us to attack?")]
         [field: SerializeField] public bool RequireDistanceFromEnemyToSpottable { get; protected set; } = true;
@@ -66,7 +66,7 @@ namespace PathOfTheInfected.Enemy
                     }
                     break;
                 case AttackPhase.Recovery:
-                    if (ctx.Timer >= attackDef.recoveryTime)
+                    if (ctx.Timer >= AttackDef.recoveryTime)
                     {
                         ctx.IsFinished = true;
                     }
@@ -110,12 +110,13 @@ namespace PathOfTheInfected.Enemy
             switch (ctx.Phase)
             {
                 case AttackPhase.Recovery:
-                    if (!attackDef) return;
+                    if (!AttackDef) return;
                     ctx.Timer += Time.fixedDeltaTime;
-                    if (ctx.Timer >= attackDef.recoveryTime)
+                    if (ctx.Timer >= AttackDef.recoveryTime)
                     {
                         ctx.IsFinished = true;
                     }
+                    Debug.Log("Tick Recovery");
                     break;
                 case AttackPhase.PoiseRecovery:
                     RecoverPoise(ctx);
@@ -123,7 +124,7 @@ namespace PathOfTheInfected.Enemy
             }
         }
 
-        public virtual void ReactToHitResult(HitResult hitResult)
+        public virtual void ReactToHitResult(in HitResult hitResult)
         {
 
         }

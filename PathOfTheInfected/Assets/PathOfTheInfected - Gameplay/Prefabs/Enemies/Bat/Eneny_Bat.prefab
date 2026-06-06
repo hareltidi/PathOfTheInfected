@@ -275,7 +275,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -337,27 +337,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adaa4097c7f7483d871fa6f0e3cf7e8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Enemies.BatEnemyBrain
+  <MaxPoise>k__BackingField: 10
+  <CurrentPoise>k__BackingField: 1
   <IsFacingRight>k__BackingField: 1
-  noSpottableDetectedState: {fileID: 11400000, guid: b2beb923caf40db4db690fbe696803c3, type: 2}
+  noSpottableDetectedState: {fileID: 11400000, guid: 71b14d70c86b86a4cac2e71ac0a7d67c, type: 2}
   spottableDetectedState: {fileID: 11400000, guid: 2710fc8ceb12ce144bbb2252b7a58028, type: 2}
   spottableInAttackRangeState: {fileID: 11400000, guid: 1434b7f898566114db6e750a41f0825a, type: 2}
   damageSwitchesStates: 1
+  damageStateDuration: 0.5
   damagedState: {fileID: 11400000, guid: cf512ea3a9116e2498b1d819180e9cc4, type: 2}
+  hasTouchAttackState: 0
+  touchState: {fileID: 0}
   <CurrentState>k__BackingField: {fileID: 0}
   movementPersonality:
-    maxSpeed: 15
-    acceleration: 10
-    movementEase: 14
+    maxSpeed: 20
+    acceleration: 50
+    movementEase: 17
   waypointTolerance: 0.1
   repathInterval: 1
   facingFlipDeadzone: 1
   drawPathGizmos: 1
-  pathSwapImprovementThreshold: 0.5
   <SpottableMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 256
   max: {fileID: 5673307116618571773}
   min: {fileID: 5392991419121790742}
+  feetPos: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
   requireObjectsToBeInCameraView: 0
   requiresLos: 1
   losBlockMask:
@@ -369,9 +377,7 @@ MonoBehaviour:
   trackSpotRange: 1
   trackAttackRange: 1
   maxSpotRange: 4
-  <CurrentPoise>k__BackingField: 1
   attack: {fileID: 11400000, guid: bb2fbb7b0741d5a489df114aa8ab0afb, type: 2}
-  maxPoise: 10
   obstacleCheckDistance: 5
   minAirHeight: 2
 --- !u!114 &4383823365313979367

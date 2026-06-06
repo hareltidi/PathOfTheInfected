@@ -1,4 +1,5 @@
-﻿using PathOfTheInfected.Combat;
+﻿using System;
+using PathOfTheInfected.Combat;
 using TidiGameplayMessaging.Core;
 using TidiTweening;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace PathOfTheInfected.Enemy.Health
         private Color _originalColor;
         private TidiTween<float>[] _flashTweens;
         [SerializeField] protected SpriteRenderer[] spriteRenderers;
+        public Action EnemyDamaged;
 
         private void Awake()
         {
@@ -43,6 +45,7 @@ namespace PathOfTheInfected.Enemy.Health
             if (IsDead) return;
             CurrentHealth -= finalDamage;
             TidiGameplayMessagingSubsystem.Instance.Broadcast<OnEnemyDamaged>();
+            EnemyDamaged?.Invoke();
             FlashDamage();
             HitStop(hitStopTime);
 

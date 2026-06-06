@@ -303,12 +303,24 @@ MonoBehaviour:
   <MaxPoise>k__BackingField: 10
   <CurrentPoise>k__BackingField: 0
   <IsFacingRight>k__BackingField: 1
-  phases: []
+  phases:
+  - {fileID: 11400000, guid: 2cc64cf357a95944aa91a40d64011c9b, type: 2}
+  - {fileID: 11400000, guid: 371e74cf47fa8464bbc905ced728fefc, type: 2}
+  - {fileID: 11400000, guid: a55b92c6280bb004d82c02188d173d02, type: 2}
   bossState: {fileID: 11400000, guid: 8fb52d810d8849f4591d20aa94c199a6, type: 2}
+  damageSwitchesStates: 0
+  damageStateDuration: 0.5
+  touchAttackDef: {fileID: 11400000, guid: d0baef44113e0bd438625e071a5cba98, type: 2}
+  touchAttackRadius: 2
+  touchAttackOffset: {x: 0, y: -0.44}
+  hasTouchAttackState: 1
+  <SpottableMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 256
   movementPersonality:
     maxSpeed: 5
     acceleration: 5
-    movementEase: 0
+    movementEase: 14
   facingFlipDeadzone: 1
   max: {fileID: 7271131720462426449}
   min: {fileID: 5889390932826011143}
@@ -316,6 +328,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  feetCheckRadius: 1
 --- !u!114 &927810693079820310
 MonoBehaviour:
   m_ObjectHideFlags: 0

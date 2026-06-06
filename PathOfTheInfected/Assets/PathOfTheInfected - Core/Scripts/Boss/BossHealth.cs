@@ -1,8 +1,10 @@
-﻿using PathOfTheInfected.Combat;
+﻿using System;
+using PathOfTheInfected.Combat;
 using PathOfTheInfected.Enemy;
 using TidiGameplayMessaging.Core;
 using TidiTweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace PathOfTheInfected.Core.Scripts.Boss
 {
@@ -20,12 +22,14 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         public Color flashColor = Color.red;
         [SerializeField] public float flashTime = 0.1f;
         [SerializeField] public EaseType damageFlashEaseType = EaseType.Linear;
-        protected Material[] Materials;
+        public Material[] Materials { get; protected set; }
         private Color _originalColor;
         private TidiTween<float>[] _flashTweens;
-        [SerializeField] protected SpriteRenderer[] spriteRenderers;
+        [SerializeField] public SpriteRenderer[] spriteRenderers;
 
         protected BossBrain Owner;
+
+        public Action BossDamaged;
 
         protected virtual void Awake()
         {
@@ -43,8 +47,8 @@ namespace PathOfTheInfected.Core.Scripts.Boss
 
         public virtual void Die()
         {
-            Debug.Log("Boss KIA");
             IsDead = true;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             Destroy(gameObject, flashTime + 0.1f);
         }
 
@@ -52,7 +56,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         {
             if (IsDead) return;
             CurrentHealth -= finalDamage;
-            TidiGameplayMessagingSubsystem.Instance.Broadcast<OnEnemyDamaged>();
+            BossDamaged?.Invoke();
             FlashDamage();
             HitStop(hitStopTime);
 
