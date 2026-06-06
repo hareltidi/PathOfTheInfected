@@ -11,7 +11,7 @@ namespace PathOfTheInfected___UI.Scripts
         private void Start()
         {
             var root = uiDocument.rootVisualElement;
-            var lockOnIcon = root.Q<UIButtonComponent>("Play");
+            var lockOnIcon = root.Q<UIButtonComponent>("BackToMenu");
             lockOnIcon.clicked += () =>
             {
                 // Load the main game scene

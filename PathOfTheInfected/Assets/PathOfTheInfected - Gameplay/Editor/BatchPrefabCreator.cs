@@ -1,10 +1,13 @@
-﻿using UnityEditor;
+﻿
+#if UNITYEDITOR
+using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
-
 public class BatchPrefabCreatorWindow : EditorWindow
 {
+
+
     private List<Sprite> _selectedSprites = new();
     private string _targetFolderPath = "Assets";
     private Vector2 _scrollPosition;
@@ -158,3 +161,4 @@ public class BatchPrefabCreatorWindow : EditorWindow
         _selectedSprites.Clear();
     }
 }
+#endif

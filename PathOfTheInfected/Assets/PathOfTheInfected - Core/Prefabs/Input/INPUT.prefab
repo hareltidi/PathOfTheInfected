@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3203957172449337913}
   - component: {fileID: 6781442584618827419}
   - component: {fileID: 242207716491468925}
+  - component: {fileID: 8784804171595109420}
   m_Layer: 0
   m_Name: INPUT
   m_TagString: Untagged
@@ -88,3 +89,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8570044f43234b8ea35f91c136f96dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected::POIInputManager
+--- !u!114 &8784804171595109420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435939225708217246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30e0bf94d19e492186857abddd8c97ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Core.Scripts.Player.BackToMenuInput

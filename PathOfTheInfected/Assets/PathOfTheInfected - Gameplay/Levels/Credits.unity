@@ -2478,6 +2478,7 @@ GameObject:
   - component: {fileID: 2007422262}
   - component: {fileID: 2007422261}
   - component: {fileID: 2007422263}
+  - component: {fileID: 2007422264}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -2537,6 +2538,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected___UI.Scripts.LockOn
   uiDocument: {fileID: 2007422261}
   buttonToLockOn: BackToMenu
+--- !u!114 &2007422264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007422260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c08403e6a2df443bb466ccff9a4e8c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected___UI.Scripts.BackToMainMenu
+  uiDocument: {fileID: 2007422261}
 --- !u!1 &2017712633
 GameObject:
   m_ObjectHideFlags: 1
@@ -2853,22 +2867,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: INPUT
       objectReference: {fileID: 0}
-    - target: {fileID: 1435939225708217246, guid: b48f7317257ed634188ac6495459fba6, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3203957172449337913, guid: b48f7317257ed634188ac6495459fba6, type: 3}
       propertyPath: m_UIInputModule
       value: 
       objectReference: {fileID: 91140113}
-    - target: {fileID: 3203957172449337913, guid: b48f7317257ed634188ac6495459fba6, type: 3}
-      propertyPath: m_DefaultActionMap
-      value: 4ec36beb-5e99-4459-8fcd-d9d429ddd119
-      objectReference: {fileID: 0}
-    - target: {fileID: 3203957172449337913, guid: b48f7317257ed634188ac6495459fba6, type: 3}
-      propertyPath: m_DefaultControlScheme
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6592437158081056204, guid: b48f7317257ed634188ac6495459fba6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.517728
