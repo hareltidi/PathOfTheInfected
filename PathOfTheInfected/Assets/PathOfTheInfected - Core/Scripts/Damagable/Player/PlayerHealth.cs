@@ -116,6 +116,7 @@ namespace PathOfTheInfected.Damagable
         public void Die()
         {
             IsDead = true;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             Destroy(gameObject);
         }
 
@@ -162,7 +163,6 @@ namespace PathOfTheInfected.Damagable
 
         private void OnDestroy()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex );
             for (var i = 0; i < _flashTweens.Count; i++)
             {
                 _flashTweens[i]?.FullKill();
