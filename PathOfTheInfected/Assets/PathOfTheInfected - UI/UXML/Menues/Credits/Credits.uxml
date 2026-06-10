@@ -1,5 +1,9 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/TidiModularUISystem/Components/Button/ButtonStyle.uss?fileID=7433441132597879392&amp;guid=2d691cccfa088ee4db594821245e3036&amp;type=3#ButtonStyle"/>
-    <ui:Label text="Thank you for playing! A game made by H.T" style="-unity-text-align: middle-center; -unity-font-definition: resource(&quot;FlatSkin/Font/Roboto-Bold&quot;); color: rgb(255, 255, 255); font-size: 64px; align-items: center; align-self: center; justify-content: space-between; white-space: pre; -unity-font-style: bold; translate: 0 341px;"/>
-    <TidiModularUISystem.Core.Examples.UIButtonComponent text="Back To Main Menu" name="BackToMenu" style="font-size: 20px; justify-content: space-between; width: 240px; translate: 0 391px;"/>
+    <ui:VisualElement name="Buttons" style="flex-grow: 1; transition-duration: 0.1s;">
+        <ui:VisualElement name="ButtonConatiner" focusable="false" style="flex-grow: 1; align-items: center; align-self: center; justify-content: space-evenly; flex-direction: column; align-content: flex-start; width: 1007px;">
+            <ui:Label text="Thanks for playing the game!&#10;A game made by H.T" style="height: 183px; width: 877px; -unity-font-definition: resource(&quot;FlatSkin/Font/Roboto-Bold&quot;); font-size: 73px; color: rgb(255, 255, 255);"/>
+            <TidiModularUISystem.Core.Examples.UIButtonComponent name="BackToMenu" text="Back To Main Menu" class="ui-button" style="transition-duration: 0.1s; visibility: visible; translate: 0 -155px; font-size: 20px; width: 254px;"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>

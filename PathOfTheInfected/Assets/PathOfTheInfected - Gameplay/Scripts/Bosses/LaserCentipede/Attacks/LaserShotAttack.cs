@@ -42,6 +42,7 @@ namespace PathOfTheInfected.Gameplay.Bosses.LaserCentipede
                 case AttackPhase.WindUp:
                     if (ctx.Target && _bossBrain)
                     {
+                        CleanupWarning(); //Clean up warnings that didn't get cleaned up for some reason
                         _bossBrain.AnimInstance.PlayAnimationIfNotCurrent(_attackAnimHash, 0, 0,
                             true, true);
                         // Track player direction during windup but only in the percentage of the windup time we specify,

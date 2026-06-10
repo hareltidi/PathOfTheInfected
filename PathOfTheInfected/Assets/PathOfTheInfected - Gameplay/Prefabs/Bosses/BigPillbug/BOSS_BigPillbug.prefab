@@ -852,14 +852,14 @@ MonoBehaviour:
   damageSwitchesStates: 1
   damageStateDuration: 0.5
   touchAttackDef: {fileID: 11400000, guid: d0baef44113e0bd438625e071a5cba98, type: 2}
-  touchAttackRadius: 2
+  touchAttackRadius: 1.5
   touchAttackOffset: {x: -2.24, y: -0.57}
   hasTouchAttackState: 1
   <SpottableMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 256
   movementPersonality:
-    maxSpeed: 20
+    maxSpeed: 15
     acceleration: 200
     movementEase: 16
   facingFlipDeadzone: 1
@@ -883,7 +883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Core.Scripts.Boss.BossHealth
   <CurrentHealth>k__BackingField: 0
-  <MaxHealth>k__BackingField: 30
+  <MaxHealth>k__BackingField: 20
   flashColor: {r: 1, g: 1, b: 1, a: 1}
   flashTime: 0.25
   damageFlashEaseType: 28

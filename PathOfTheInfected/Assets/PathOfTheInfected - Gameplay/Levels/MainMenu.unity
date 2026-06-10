@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 91140115}
   - component: {fileID: 91140114}
   - component: {fileID: 91140113}
+  - component: {fileID: 91140116}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -164,7 +165,7 @@ MonoBehaviour:
   m_ScrollWheelAction: {fileID: 585291467}
   m_TrackedDevicePositionAction: {fileID: 398805854}
   m_TrackedDeviceOrientationAction: {fileID: 347446317}
-  m_DeselectOnBackgroundClick: 0
+  m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
   m_ScrollDeltaPerTick: 6
@@ -198,6 +199,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &91140116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91140112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19106, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.PanelInputConfiguration
+  m_Settings:
+    m_ProcessWorldSpaceInput: 1
+    m_InteractionLayers:
+      serializedVersion: 2
+      m_Bits: 1019
+    m_MaxInteractionDistance: Infinity
+    m_DefaultEventCameraIsMainCamera: 1
+    m_EventCameras: []
+    m_PanelInputRedirection: 1
+    m_AutoCreatePanelComponents: 1
 --- !u!114 &250471562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -821,7 +844,7 @@ PrefabInstance:
       objectReference: {fileID: 91140113}
     - target: {fileID: 3203957172449337913, guid: b48f7317257ed634188ac6495459fba6, type: 3}
       propertyPath: m_DefaultActionMap
-      value: 4ec36beb-5e99-4459-8fcd-d9d429ddd119
+      value: 632b5e21-3b3d-401f-84ed-1dcc50e9a072
       objectReference: {fileID: 0}
     - target: {fileID: 3203957172449337913, guid: b48f7317257ed634188ac6495459fba6, type: 3}
       propertyPath: m_DefaultControlScheme
