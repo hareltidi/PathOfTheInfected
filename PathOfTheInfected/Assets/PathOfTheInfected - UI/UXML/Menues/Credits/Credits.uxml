@@ -2,8 +2,8 @@
     <Style src="project://database/Assets/TidiModularUISystem/Components/Button/ButtonStyle.uss?fileID=7433441132597879392&amp;guid=2d691cccfa088ee4db594821245e3036&amp;type=3#ButtonStyle"/>
     <ui:VisualElement name="Buttons" style="flex-grow: 1; transition-duration: 0.1s;">
         <ui:VisualElement name="ButtonConatiner" focusable="false" style="flex-grow: 1; align-items: center; align-self: center; justify-content: space-evenly; flex-direction: column; align-content: flex-start; width: 1007px;">
-            <ui:Label text="Thanks for playing the game!&#10;A game made by H.T" style="height: 183px; width: 877px; -unity-font-definition: resource(&quot;FlatSkin/Font/Roboto-Bold&quot;); font-size: 73px; color: rgb(255, 255, 255);"/>
-            <TidiModularUISystem.Core.Examples.UIButtonComponent name="BackToMenu" text="Back To Main Menu" class="ui-button" style="transition-duration: 0.1s; visibility: visible; translate: 0 -155px; font-size: 20px; width: 254px;"/>
+            <ui:Label text="Thanks for playing the game!&#10;A game made by H.T" style="height: 183px; width: 877px; -unity-font-definition: url(&quot;project://database/Assets/PathOfTheInfected%20-%20UI/Art/Fonts/FontAssets/Roboto-Black%20SDF.asset?fileID=11400000&amp;guid=3ff0dcbed21338e46aa9fe2ea734cd43&amp;type=2#Roboto-Black SDF&quot;); font-size: 73px; color: rgb(255, 255, 255);"/>
+            <TidiModularUISystem.Core.Examples.UIButtonComponent name="BackToMenu" text="Back To Main Menu" class="ui-button" style="transition-duration: 0.1s; visibility: visible; translate: 0 -155px; font-size: 20px; width: 254px; -unity-font-definition: url(&quot;project://database/Assets/PathOfTheInfected%20-%20UI/Art/Fonts/FontAssets/Roboto-Medium%20SDF.asset?fileID=11400000&amp;guid=9f5a6af04c06e914bacef4e8f9d106ae&amp;type=2#Roboto-Medium SDF&quot;);"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
