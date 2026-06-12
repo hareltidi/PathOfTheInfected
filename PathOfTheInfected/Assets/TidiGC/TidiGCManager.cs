@@ -123,7 +123,7 @@ namespace TidiGC
         private static void HandleGCStutter()
         {
             LastAutoGCTimes.Add(Time.realtimeSinceStartupAsDouble);
-            while (LastAutoGCTimes.Count > 5)
+            while (LastAutoGCTimes.Count > CachedAutoGCTimes)
             {
                 LastAutoGCTimes.RemoveAt(0);
             }
