@@ -535,8 +535,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2007422262}
   - component: {fileID: 2007422261}
+  - component: {fileID: 2007422267}
   - component: {fileID: 2007422263}
   - component: {fileID: 2007422264}
+  - component: {fileID: 2007422265}
+  - component: {fileID: 2007422266}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -609,6 +612,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected.UI.Scripts.Play
   uiDocument: {fileID: 2007422261}
+--- !u!114 &2007422265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007422260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 066b2ead42c76974b8acd75efa331560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!114 &2007422266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007422260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 581f6454ee104efd80c17e2b9dcdbac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected.UI.Scripts.QuitGame
+  uiDocument: {fileID: 2007422261}
+  canQuit: 0
+  chickenSound: {fileID: 8300000, guid: 36f35cfbf0419b743acc1e0366e0262a, type: 3}
+--- !u!114 &2007422267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007422260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9ec06c72aaa40af880b50a1da392cfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected___UI.Scripts.MainMenu.MainMenuRouter
+  document: {fileID: 2007422261}
 --- !u!1 &2017712633
 GameObject:
   m_ObjectHideFlags: 1
@@ -844,7 +887,7 @@ PrefabInstance:
       objectReference: {fileID: 91140113}
     - target: {fileID: 3203957172449337913, guid: b48f7317257ed634188ac6495459fba6, type: 3}
       propertyPath: m_DefaultActionMap
-      value: 632b5e21-3b3d-401f-84ed-1dcc50e9a072
+      value: UI
       objectReference: {fileID: 0}
     - target: {fileID: 3203957172449337913, guid: b48f7317257ed634188ac6495459fba6, type: 3}
       propertyPath: m_DefaultControlScheme

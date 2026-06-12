@@ -1,0 +1,4 @@
+﻿{
+  "name": "GlobalMessages",
+  "references":[ "TidiGameplayMessaging" ]
+}

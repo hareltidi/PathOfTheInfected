@@ -142,11 +142,9 @@ namespace PathOfTheInfected.Enemy
         protected List<Vector2> CurrentPath;
         protected int CurrentIndex;
         protected float NextRepath;
-        protected Vector2 LastTargetPosition;
 
         protected BoxCollider2D BoxCollider;
 
-        protected Vector2 CurrentTargetVelocity;
 
         protected EnemyHealth EnemyHealth;
 

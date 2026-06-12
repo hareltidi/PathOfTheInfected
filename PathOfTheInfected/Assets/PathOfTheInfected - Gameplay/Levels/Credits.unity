@@ -2609,8 +2609,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2007422262}
   - component: {fileID: 2007422261}
+  - component: {fileID: 2007422266}
   - component: {fileID: 2007422263}
   - component: {fileID: 2007422264}
+  - component: {fileID: 2007422265}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -2632,7 +2634,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: 0023b6d49f5682d44a05e26032425326, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 7db5bfc17a9cb7f4289eff98c5b4a365, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: ca96e8d7c6038e247a4c1ff08dca6798, type: 3}
   m_SortingOrder: 0
   m_Position: 0
   m_WorldSpaceSizeMode: 1
@@ -2683,6 +2685,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected___UI.Scripts.BackToMainMenu
   uiDocument: {fileID: 2007422261}
+--- !u!114 &2007422265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007422260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 581f6454ee104efd80c17e2b9dcdbac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected.UI.Scripts.QuitGame
+  uiDocument: {fileID: 2007422261}
+  canQuit: 0
+  chickenSound: {fileID: 8300000, guid: 36f35cfbf0419b743acc1e0366e0262a, type: 3}
+--- !u!114 &2007422266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007422260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 048b94c17ac840ceb77e6ee025f304a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected.UI.Scripts.Credits.CreditsRouter
+  document: {fileID: 2007422261}
 --- !u!1 &2017712633
 GameObject:
   m_ObjectHideFlags: 1

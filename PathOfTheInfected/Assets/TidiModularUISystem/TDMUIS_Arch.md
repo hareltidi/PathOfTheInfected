@@ -1,311 +1,268 @@
-﻿# TIDI Modular UI System — Full Architectural Specification (v3.0)
+﻿UI Architecture Design (Unity – Modular Router/Screen/View System)
+1. Overview
+   This architecture defines a modular UI system built on top of Unity UI Toolkit.
+   It separates responsibilities into four core layers:
 
----
+UI Router (MonoBehaviour entry point)
+UI Screen (logic + message handling layer)
+UI View (visual representation layer)
+Message Bus (decoupled communication layer)
 
-# 🚨 1. Problem Definition
+The goal is:
 
-Modern Unity UI systems (UGUI / naive UI Toolkit usage) suffer from fundamental architectural issues:
-
-## ❌ 1.1 Tight Coupling
-UI logic is often directly tied to gameplay logic:
-- UI reads gameplay objects directly
-- UI modifies gameplay state
-- Systems become interdependent
-
----
-
-## ❌ 1.2 Fragile Event Systems
-Event-driven UI often fails due to:
-- missed subscriptions
-- incorrect initialization timing
-- race conditions between UI spawn and gameplay state
-
----
-
-## ❌ 1.3 No clear separation of responsibility
-UI systems often mix:
-- rendering
-- state management
-- gameplay logic
-- animation control
-
----
-
-## ❌ 1.4 Poor scalability
-Adding new UI features increases dependency graph exponentially.
-
----
-
-## ❌ 1.5 No reusable architecture
-UI systems are:
-- game-specific
-- not portable
-- not reusable across projects
-
----
-
-# 🎯 2. System Goals
-
-We aim to build a system that is:
-
-- fully modular
-- fully reactive
-- completely decoupled from gameplay
-- deterministic in state handling
-- reusable across projects
-- scalable to large UI systems
-
----
-
-# 🧠 3. Core Philosophy
-
-## 🧩 Separation of Concerns
-
-| Layer         | Responsibility              |
-|---------------|-----------------------------|
-| Gameplay      | Authority (truth + rules)   |
-| Runtime State | Snapshot of truth           |
-| Messaging     | Event propagation           |
-| UI System     | Rendering + interaction     |
-| UI Components | Reactive presentation units |
-
----
-
-## 🧠 Key Rule
-
-UI NEVER owns truth  
-UI ONLY reacts to truth
-
----
-
-# 🏗️ 4. High-Level Architecture
-Gameplay Systems ↓ Runtime State Modules ↓ Messaging System ↓ UI System (Core Engine) ↓ Game UI (Screens + Components)
----
-
-# 📦 5. Assembly Structure
-
-## 🔷 5.1 TidiModularUISystem (ENGINE LAYER)
-
-Responsibilities:
-- UI framework
-- lifecycle management
-- binding system
-- layout system
-- messaging integration
-
-Contains:
-- UIScreen
-- UIComponent
-- UILayout
-- UIContext
-- UIService
-
----
-
-## 🔷 5.2 Game UI (CONTENT LAYER)
-
-Responsibilities:
-- game-specific UI implementation
-- screens (HUD, menus)
-- components (KillFeed, HealthBar, Shop)
-- layouts usage
-
----
-
-## 🔷 5.3 Runtime State (TRUTH LAYER)
-
-Responsibilities:
-- runtime snapshot of game state
-- deterministic data source
-- UI initialization source
-
-Contains:
-- PlayerState
-- InventoryState
-- CurrencyState
-- GameSessionState
-
----
-
-# 🗂️ 6. Folder / Architecture Map
-
-```mermaid
-graph TD
-
-A[TidiModularUISystem]
-A1[Core]
-A2[Binding]
-A3[Layout]
-A4[Integration]
-
-B[Game.UI]
-B1[Screens]
-B2[Components]
-B3[Layouts]
-
-C[Runtime.State]
-C1[PlayerState]
-C2[InventoryState]
-C3[CurrencyState]
-
-A --> A1
-A --> A2
-A --> A3
-A --> A4
-
-B --> B1
-B --> B2
-B --> B3
-
-C --> C1
-C --> C2
-C --> C3
-```
----
-🧱 7. Core Concepts
----
-### 📺 Screen
-A Screen is a dumb container layer
-
- Responsibilities:
-
- * organize components
- * define layout structure
- * manage lifecycle
-
- Does NOT:
-
- * contain gameplay logic
- * own state
----
-## 🧠 UI Component
-A UI Component is a **reactive worker**
-Responsibilities:
-
-* subscribe to state/messages
- * render UI
-* emit intents
-* 
-Does NOT:
-* modify gameplay state
-* own authority
-## 🧱 Layout
-Pure structure system:
-* positioning
-* grouping
-* flex behavior (UI Toolkit)
----
-## 🔁 8. Data Flow Model
- **8.1 State Flow (Truth)**
-```mermaid
-flowchart LR
-Gameplay --> State --> UIInit --> UI
-```
-**8.2 Event Flow (Updates)**
-```mermaid
-flowchart LR
-Gameplay --> Messaging --> UIComponent --> UIUpdate
-```
-
-**8.3 Intent Flow (UI → Gameplay)**
-
-```mermaid
-flowchart LR
-UIComponent --> Messaging --> Gameplay
-```
----
-## 🧬 9. Runtime State Modules
-Purpose: Solve initial UI sync problem.
----
-Problem: UI may subscribe too late → misses events
----
-Solution: Always use a state snapshot
----
-### Example: PlayerState
-```csharp
-public class PlayerState
-{
-    public int Health;
-    public int MaxHealth;
-    public int Coins;
-}
-```
----
-Rule: State = truth snapshot
-Messaging = updates
-
----
-## ⚙️ 10. UI Initialization Flow
-
-```mermaid
-flowchart TD
-
-A[Screen Spawns]
-B[Inject UIContext]
-C[Initialize Components]
-D[Pull State Snapshot]
-E[Subscribe to Messaging]
-F[UI Active]
-
-A --> B --> C --> D --> E --> F
-```
----
-## 🧠 11. Namespace Architecture
-
-**Engine Layer**
-
-```csharp
-namespace TidiModularUISystem.Core
-namespace TidiModularUISystem.Binding
-namespace TidiModularUISystem.Layout
-namespace TidiModularUISystem.Integration
-```
----
-**Game UI Layer**
-```csharp
-namespace GAMENAME.UI.Screens
-namespace GAMENAME.UI.Components
-namespace GAMENAME.UI.Layouts
-```
-
----
-**Runtime State Layer**
-```csharp
-namespace GAMENAME.Runtime.State
-```
----
-🔥 12. What This System SOLVES
----
-**✅ 12.1 Eliminates UI ↔ Gameplay coupling:**
-UI never touches gameplay directly.
----
-**✅ 12.2 Fixes timing issues:**
-State snapshot prevents missed updates.
----
-**✅ 12.3 Enables modular UI:**
-Components are independent units.
----
-**✅ 12.4 Enables React-like UI in Unity:**
-* reactive components
-* state-driven updates
----
-**✅ 12.5 Reusable architecture:**
-* portable across projects
-* not game-specific
----
-**✅ 12.6 Clean separation of concerns**
+Fully decoupled UI systems
+No direct dependency between UI and gameplay logic
+Easy replacement of UI frameworks
+Highly reusable architecture across projects
 
 
-| System        | Role                        |
-|---------------|-----------------------------|
-| State         | Truth                       |
-| Messaging     | Updates                     |
-| UI Engine     | Structure                   |
-| Game UI       | Content                     |
----
-## 🚀 13. Final Vision
-A Unity UI Toolkit-based reactive UI engine where:
-- UI is fully decoupled from gameplay
-- state is authoritative snapshot
-- messaging drives updates
-- UI components are reusable, reactive units
+2. Core Principles
+   2.1 Separation of Concerns
+   Each layer has a strict responsibility:
+
+Router → wiring & lifecycle bridging
+Screen → logic & state decisions
+View → rendering only
+Message Bus → communication only
+
+
+2.2 Single Source of Truth
+Gameplay systems own their own state.
+UI does NOT store or duplicate gameplay state.
+UI only:
+
+requests state (initialization)
+listens for updates (runtime)
+
+
+2.3 Event-Driven Communication
+All communication between systems is done via messages:
+
+No direct references between gameplay and UI
+No polling systems
+No shared static state
+
+
+3. System Architecture
+   Unity Scene
+   ↓
+   UI Router (MonoBehaviour)
+   ↓
+   UI Screens (C# logic layer)
+   ↓
+   UI Views (UI Toolkit wrappers)
+   ↓
+   Visual Elements (actual rendering)
+
+
+4. UI Router (MonoBehaviour)
+   4.1 Responsibilities
+   The UI Router is the entry point of the entire UI system.
+   It is responsible for:
+
+Receiving Unity lifecycle callbacks
+Forwarding lifecycle events to screens
+Creating and wiring screens and views
+Managing initialization order
+
+
+4.2 Lifecycle Methods
+RouteAwake()
+RouteStart()
+RouteUpdate()
+RouteFixedUpdate()
+
+These mirror Unity lifecycle methods but exist only to forward execution.
+
+4.3 Responsibilities Summary
+
+Instantiate UI Screens
+Create UI Views
+Inject dependencies into Screens
+Maintain execution order
+No UI logic allowed
+
+
+5. UI Screen (Logic Layer)
+   5.1 Responsibilities
+   UI Screens act as the controller layer of the UI system.
+   They are responsible for:
+
+Receiving messages from the message bus
+Handling UI logic decisions
+Updating UI Views
+Managing screen-specific state
+
+
+5.2 Lifecycle Methods
+Screens use a simplified lifecycle:
+Initialize()
+Tick()
+FixedTick()
+Dispose()
+
+
+5.3 Behavior Rules
+
+Screens do NOT access raw UI Toolkit elements
+Screens do NOT contain rendering logic
+Screens ONLY call methods on Views
+Screens ONLY react to messages or initialization flow
+
+
+5.4 Example Responsibilities
+
+
+HealthBarScreen
+
+listens to HealthChanged messages
+updates HealthView
+
+
+
+MainMenuScreen
+
+listens for navigation events
+updates button states
+
+
+
+
+6. UI View (Presentation Layer)
+   6.1 Responsibilities
+   UI Views are pure rendering wrappers around UI Toolkit.
+   They are responsible for:
+
+Holding references to VisualElements
+Exposing safe UI methods
+Rendering state provided by Screens
+
+
+6.2 Rules
+
+No game logic
+No message subscriptions
+No decisions
+No state ownership
+
+
+6.3 Example API
+SetHealth(int value)
+SetMaxHealth(int value)
+Show()
+Hide()
+SetVisible(bool value)
+
+
+6.4 Internal Structure
+Views may cache UI elements:
+Label healthText;
+VisualElement root;
+
+But must NOT contain logic beyond presentation.
+
+7. Message Bus System
+   7.1 Purpose
+   The Message Bus enables complete decoupling between:
+
+Gameplay systems
+UI screens
+UI initialization flow
+
+
+7.2 Message Types
+State Change Messages
+
+HealthChanged
+StaminaChanged
+AmmoChanged
+
+Initialization Messages
+
+UIReady
+RequestStateSnapshot
+StateSnapshotResponse
+
+
+7.3 Communication Flow
+Runtime updates
+PlayerHealth → Message Bus → UI Screen → UI View
+
+Initialization flow
+UI Screen → RequestStateSnapshot
+PlayerHealth → ResponseSnapshot
+UI Screen → Initialize View
+
+
+8. Initialization Pattern
+   Each system follows this pattern:
+   Step 1: UI signals readiness
+   UI Screen → UIReadyMessage
+
+Step 2: Gameplay system responds
+PlayerHealth → SendCurrentState
+
+Step 3: UI initializes
+Screen → View.SetState()
+
+Step 4: Subscribe to updates
+Screen → Subscribe to HealthChanged
+
+
+9. Dependency Flow Rules
+   Allowed dependencies
+
+Router → Screens, Views
+Screen → Views, Message Bus
+View → UI Toolkit only
+
+
+Forbidden dependencies
+
+View → Screen
+View → Game logic
+Screen → Unity UI tree directly
+Gameplay → UI Screens
+
+
+10. Design Benefits
+    10.1 Modularity
+    UI components can be swapped or replaced without affecting gameplay systems.
+
+10.2 Framework Flexibility
+UI Toolkit can be replaced with:
+
+Nova
+IMGUI
+Custom UI systems
+
+without changing controller logic.
+
+10.3 Reusability
+Screens and Views can be reused across projects.
+
+10.4 Testability
+Screens can be tested without Unity runtime.
+
+11. Summary Model
+    Router (wiring + lifecycle)
+    ↓
+    Screen (logic + message handling)
+    ↓
+    View (rendering only)
+    ↓
+    UI Toolkit (visual output)
+
+Communication:
+Message Bus = only communication layer
+No direct references allowed between systems
+
+
+12. Final Architecture Rule
+    If uncertain about responsibility:
+
+If it decides → Screen
+If it shows → View
+If it wires → Router
+If it communicates → Message Bus
+

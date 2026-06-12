@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace PathOfTheInfected.Core.Scripts.Player
@@ -11,6 +10,8 @@ namespace PathOfTheInfected.Core.Scripts.Player
             if (POIInputManager.GameplayPausePressed && SceneManager.GetActiveScene().buildIndex != 0)
             {
                 SceneManager.LoadScene(0);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
             }
         }
     }

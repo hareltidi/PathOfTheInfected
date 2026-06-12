@@ -9,7 +9,7 @@ namespace TidiGC
     public class TidiGCManager : MonoBehaviour
     {
         private const int CachedAutoGCTimes = 5;
-        private const double StutterThresholdTime = 120.0;
+        private const double StutterThresholdTime = 10.0;
         private static double _lastGCTime;
         private static readonly List<double> LastAutoGCTimes = new();
         private bool _pauseGCAttempts;
@@ -53,6 +53,15 @@ namespace TidiGC
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
+            if (GarbageCollector.isIncremental)
+            {
+                Debug.LogError(
+                    "TidiGCManager Initialization Failed: Incremental GC is enabled in Project Settings. " +
+                    "TidiGC requires Manual GC Control to prevent performance stutters. " +
+                    "Please go to Project Settings > Player and UNCHECK 'Incremental GC' to enable this manager.");
+                return;
+            }
+
             var num = 0.12102111566341002 * SystemInfo.systemMemorySize;
             if (num < 384.0)
             {
@@ -79,6 +88,7 @@ namespace TidiGC
         {
             var gcMode = (int)GarbageCollector.GCMode;
             GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
+            Resources.UnloadUnusedAssets();
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking, compacting);
             GarbageCollector.GCMode = (GarbageCollector.Mode)gcMode;
             _lastGCTime = Time.realtimeSinceStartupAsDouble;
@@ -127,7 +137,7 @@ namespace TidiGC
 
         private static bool IsGCStutterDetected()
         {
-            if (LastAutoGCTimes.Count < 5)
+            if (LastAutoGCTimes.Count < CachedAutoGCTimes)
             {
                 return false;
             }
@@ -136,7 +146,9 @@ namespace TidiGC
             {
                 num += Math.Abs(LastAutoGCTimes[index] - LastAutoGCTimes[index + 1]);
             }
-            return num / (LastAutoGCTimes.Count - 1) < 120.0;
+
+            // CHANGED: Checks if collections are happening on average less than 10 seconds apart
+            return (num / (LastAutoGCTimes.Count - 1)) < StutterThresholdTime;
         }
     }
 }

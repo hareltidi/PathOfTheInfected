@@ -11,6 +11,10 @@ namespace TidiModularUISystem.Core.Examples
         private UIComponentLifecycle _lifecycle;
         public event Action OnButtonClicked;
 
+        private ControllerIconDecorator _iconDecorator;
+
+        [UxmlAttribute]
+        private Texture2D _buttonIconImage;
         public UIButtonComponent()
         {
             _lifecycle = new UIComponentLifecycle(this);
@@ -25,6 +29,12 @@ namespace TidiModularUISystem.Core.Examples
         {
             AddToClassList("ui-button");
             text = "Button";
+            _iconDecorator = new ControllerIconDecorator();
+            Add(_iconDecorator);
+            _iconDecorator.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                _iconDecorator.image = _buttonIconImage;
+            });
         }
 
         public void Bind()

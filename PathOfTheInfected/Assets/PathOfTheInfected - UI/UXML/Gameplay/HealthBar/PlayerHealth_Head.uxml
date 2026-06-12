@@ -1,0 +1,3 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Image source="project://database/Assets/PathOfTheInfected%20-%20Core/Art/Sprites/Player/Initial%20Player.aseprite?fileID=-6731913047703200946&amp;guid=4ad31ee4413d2d14bb28b80b38803036&amp;type=3#Player_Head"/>
+</ui:UXML>

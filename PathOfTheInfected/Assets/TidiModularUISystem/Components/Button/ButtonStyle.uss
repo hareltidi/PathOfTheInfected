@@ -66,3 +66,28 @@
     transition-timing-function: ease-in-back;
     transition-duration: 0.5s;
 }
+
+.ui-root__controller-mode .ui-button:focus .controller__icon {
+    opacity: 1;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out-cubic;
+}
+
+
+.ui-root__keyboard-mode .controller__icon{
+    opacity: 0;
+}
+
+.controller__icon {
+    --height: 15px;
+    --width: 24px;
+    opacity: 0;
+    width: var(--width);
+    height: var(--height);
+    align-self: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-direction: row;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out-cubic;
+}
