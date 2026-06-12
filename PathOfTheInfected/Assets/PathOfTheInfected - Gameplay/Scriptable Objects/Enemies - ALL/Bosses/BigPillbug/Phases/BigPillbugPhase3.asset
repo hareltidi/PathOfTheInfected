@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84ffc9f9d84e4024893f15a3cc6d0bfc, type: 3}
+  m_Name: BigPillbugPhase3
+  m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Bosses.BigPillbug.BigPillbugPhase
+  <AllowedAttacks>k__BackingField:
+  - {fileID: 11400000, guid: b19c5580075bb5b4684b16fbe8117551, type: 2}
+  - {fileID: 11400000, guid: a22751f50b438684da38d4b34198526e, type: 2}
+  attackSelectionMode: 1
+  transitionHealthPercentThreshold: 0
+  aggressionWeight: 1

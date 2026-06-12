@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a412f370c8a54853a1912e51154d482f, type: 3}
+  m_Name: FireProjectileSO
+  m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Enemy.FireProjectileSO
+  attackDef: {fileID: 11400000, guid: 097fb61e07dcf8e4a945e9d787c0eacf, type: 2}
+  <RequireDistanceFromEnemyToSpottable>k__BackingField: 1
+  <DistanceThreshold>k__BackingField: 15
+  <MaxAttackRange>k__BackingField: 15
+  <PoiseConsumed>k__BackingField: 1
+  windupDuration: 0.5
+  projectilePrefab: {fileID: 5303159517039868119, guid: a22ad40534731c741b4a5c70fdcfc442, type: 3}
+  spawnMarginX: 5
+  spawnMarginY: -1

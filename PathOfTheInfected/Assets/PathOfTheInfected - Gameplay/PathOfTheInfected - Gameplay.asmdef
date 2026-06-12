@@ -1,0 +1,18 @@
+{
+    "name": "PathOfTheInfected-Gameplay",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3b6257f84980fdc428a1d48db325deb5",
+        "GUID:f5cdf24af6a043b897086d4de2582826",
+        "GUID:ee1ae166c3d65324d8e20d51c4bc3771"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

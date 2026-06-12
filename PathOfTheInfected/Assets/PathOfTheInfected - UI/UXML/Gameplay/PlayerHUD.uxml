@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="PlayerHealth" src="project://database/Assets/PathOfTheInfected%20-%20UI/UXML/Gameplay/HealthBar/PlayerHealth.uxml?fileID=9197481963319205126&amp;guid=ec94a6ad5aebd6649b7a94de2778871e&amp;type=3#PlayerHealth"/>
+    <ui:Instance template="PlayerHealth" style="width: 792px;">
+        <AttributeOverrides element-name="HealthBar" value="0"/>
+        <AttributeOverrides element-name="HealthBar-Container" tween-type="EaseOutExpo" focusable="true" tween-duration="0.1"/>
+    </ui:Instance>
+</ui:UXML>

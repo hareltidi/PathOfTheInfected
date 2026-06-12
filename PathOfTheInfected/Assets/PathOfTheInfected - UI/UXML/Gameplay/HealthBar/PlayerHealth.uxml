@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="PlayerHealth_Head" src="project://database/Assets/PathOfTheInfected%20-%20UI/UXML/Gameplay/HealthBar/PlayerHealth_Head.uxml?fileID=9197481963319205126&amp;guid=5572010f67302a340b245ef07e3ebbf7&amp;type=3#PlayerHealth_Head"/>
+    <Style src="project://database/Assets/PathOfTheInfected%20-%20UI/UXML/Gameplay/HealthBar/HealthBarStyle.uss?fileID=7433441132597879392&amp;guid=f489e806da4cd47459d8f3929dea5735&amp;type=3#HealthBarStyle"/>
+    <PathOfTheInfected.UI.PlayerUI.HealthBar.HealthBar.HealthBarView name="HealthBar-Container" tween-type="BounceEaseOut" tween-duration="0.2" style="flex-direction: row;">
+        <ui:Instance template="PlayerHealth_Head" style="height: 82px; width: 139px;"/>
+        <ui:ProgressBar value="0" title="0" name="HealthBar" style="width: 638px; align-self: center; height: 26px; -unity-font-definition: url(&quot;project://database/Assets/PathOfTheInfected%20-%20UI/Art/Fonts/FontAssets/Roboto-Black%20SDF.asset?fileID=11400000&amp;guid=3ff0dcbed21338e46aa9fe2ea734cd43&amp;type=2#Roboto-Black SDF&quot;);"/>
+    </PathOfTheInfected.UI.PlayerUI.HealthBar.HealthBar.HealthBarView>
+</ui:UXML>
