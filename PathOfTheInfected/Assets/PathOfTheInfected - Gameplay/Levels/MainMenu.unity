@@ -637,7 +637,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected-UI::PathOfTheInfected.UI.Scripts.QuitGame
   uiDocument: {fileID: 2007422261}
-  canQuit: 1
+  canQuit: 0
   chickenSound: {fileID: 8300000, guid: 36f35cfbf0419b743acc1e0366e0262a, type: 3}
 --- !u!114 &2007422267
 MonoBehaviour:

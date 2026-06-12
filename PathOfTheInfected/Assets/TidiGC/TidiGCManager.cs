@@ -30,8 +30,7 @@ namespace TidiGC
             var num = GetMonoHeapUsage() / 1024.0 / 1024.0;
             if (num > HeapUsageThreshold)
             {
-                if (_pauseGCAttempts)
-                    return;
+                if (_pauseGCAttempts) return;
                 ForceCollect();
                 HandleGCStutter();
                 if (num <= HeapUsageThreshold) return;
@@ -53,6 +52,7 @@ namespace TidiGC
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
+            if (Application.isEditor) return;
             if (GarbageCollector.isIncremental)
             {
                 Debug.LogError(
@@ -61,6 +61,8 @@ namespace TidiGC
                     "Please go to Project Settings > Player and UNCHECK 'Incremental GC' to enable this manager.");
                 return;
             }
+
+            UnityEngine.SceneManagement.SceneManager.sceneUnloaded += _ => CleanMemoryOnTransition();
 
             var num = 0.12102111566341002 * SystemInfo.systemMemorySize;
             if (num < 384.0)
@@ -72,7 +74,6 @@ namespace TidiGC
                 num = 1024.0;
             }
             HeapUsageThreshold = num;
-            if (Application.isEditor || GarbageCollector.isIncremental) return;
             var target = new GameObject(nameof(TidiGCManager), typeof(TidiGCManager));
             target.hideFlags |= HideFlags.HideAndDontSave;
             DontDestroyOnLoad(target);
@@ -88,10 +89,15 @@ namespace TidiGC
         {
             var gcMode = (int)GarbageCollector.GCMode;
             GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
-            Resources.UnloadUnusedAssets();
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking, compacting);
             GarbageCollector.GCMode = (GarbageCollector.Mode)gcMode;
             _lastGCTime = Time.realtimeSinceStartupAsDouble;
+        }
+
+        public static void CleanMemoryOnTransition()
+        {
+            Resources.UnloadUnusedAssets();
+            ForceCollect(true, true);
         }
 
         public static long GetMemoryUsage()
