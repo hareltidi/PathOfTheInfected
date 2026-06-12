@@ -418,7 +418,7 @@ This project was developed as part of a **Game Development class**. It demonstra
 
 ## 📝 Development Workflow
 
-- ** branching:** Feature branches follow `Feat_<FeatureName>` convention
+- **branching:** Feature branches follow `Feat_<FeatureName>` convention
   - Example: `Feat_ModularUIFramework`, `Feat_ExtendingAttacksAndWeaponSystem`
 - **Main branch:** `main`
 - **Development environment:** Unity Editor (no CLI build scripts)
