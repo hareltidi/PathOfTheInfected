@@ -50,6 +50,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
         public float touchAttackRadius = 1f;
         public Vector2 touchAttackOffset = Vector2.zero;
         public bool hasTouchAttackState;
+        public float knockbackStrength = 10f;
         [field: SerializeField] public LayerMask SpottableMask { get; set; }
 
 
@@ -162,6 +163,7 @@ namespace PathOfTheInfected.Core.Scripts.Boss
             {
                 CurrentPhase?.PhaseExit();
                 CurrentPhaseIndex++;
+                Debug.Log($"Transitioning to phase {CurrentPhaseIndex + 1}");
                 CurrentPhase?.PhaseInit(this);
             }
         }
@@ -246,7 +248,6 @@ namespace PathOfTheInfected.Core.Scripts.Boss
             var newVelocity = new Vector2(newVx, RB.linearVelocity.y);
             CheckForLeftOrRightFacing(newVelocity);
             RB.linearVelocity = newVelocity;
-            Debug.Log($"Moving with targetVx: {targetVx}, velocityDiff: {velocityDiff}, progress: {progress}, eased: {eased}, accelMultiplier: {accelMultiplier}, adjustedAccel: {adjustedAccel}, newVx: {newVx}");
         }
 
         /// <summary>
@@ -393,7 +394,6 @@ namespace PathOfTheInfected.Core.Scripts.Boss
             if (isRecovering)
             {
                 TouchedRecoveryTimer -= Time.fixedDeltaTime;
-                Debug.Log("Recovering");
                 return; // Wait for recovery time to finish
             }
 
@@ -401,7 +401,6 @@ namespace PathOfTheInfected.Core.Scripts.Boss
             Touched = hit;
             if (Touched && !IsBossDamaged)
             {
-                Debug.Log("Attack Touch Damage");
                 HitData data = new HitData()
                 {
                     attackDefinition = touchAttackDef,
@@ -412,6 +411,8 @@ namespace PathOfTheInfected.Core.Scripts.Boss
                     firstHitDamageBoost = 0,
                     comboDamageScalingLevel = 1,
                     timeStamp = Time.timeSinceLevelLoad,
+                    knockbackStrength = knockbackStrength,
+                    attackDir = IsFacingRight ? Vector2.right : Vector2.left,
                 };
 
                 HitDispatcher.ProcessHit(ref data);

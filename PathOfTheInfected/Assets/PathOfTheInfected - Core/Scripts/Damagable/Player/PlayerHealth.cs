@@ -23,7 +23,7 @@ namespace PathOfTheInfected.Damagable
         private void Awake()
         {
             SyncRuntimeRenderersAndMaterials();
-            _playerOwner = PlayerSm.Instance;
+            _playerOwner = GetComponent<PlayerSm>();
             _uiReadySubscription = TidiGameplayMessagingSubsystem.Instance.Listen<UIReady_PlayerHealth>(OnUiReady);
         }
 
@@ -190,14 +190,15 @@ namespace PathOfTheInfected.Damagable
 
         public HitResponse OnHit(ref HitData damageData)
         {
+            if (damageData.attackDir != Vector2.zero && damageData.knockbackStrength > 0)
+            {
+                Vector2 knockback = (damageData.attackDir).normalized * damageData.knockbackStrength;
+                _playerOwner.ApplyForce(knockback, ForceMode2D.Impulse);
+            }
+
             float finalDamage = DamageCalculator.CalculateDamage(in damageData);
 
             TakeDamage(finalDamage, damageData.attackDefinition.hitStopTime);
-
-            if (damageData.attackDir != Vector2.zero)
-            {
-                _playerOwner?.IncrementHorizontalVelocity(damageData.knockbackStrength * Mathf.Sign(damageData.attackDir.x));
-            }
 
             return new HitResponse(
                 response: Response.DamagePlayer,

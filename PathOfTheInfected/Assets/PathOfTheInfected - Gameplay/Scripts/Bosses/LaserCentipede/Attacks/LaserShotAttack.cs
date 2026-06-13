@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PathOfTheInfected.Enemy;
 using PathOfTheInfected.Enemy.Projectiles;
 using PathOfTheInfected.Gameplay.Scripts.Bosses.LaserCentipede;

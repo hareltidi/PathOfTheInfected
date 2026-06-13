@@ -19,7 +19,8 @@ MonoBehaviour:
   <PoiseConsumed>k__BackingField: 0
   windupDuration: 0.5
   chargeDuration: 10
-  knockbackForce: 10
+  knockbackForce: 100
   spottableMask:
     serializedVersion: 2
     m_Bits: 256
+  offsetX: 10

@@ -849,17 +849,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fa02e6b9b63ee014f8b61de0724decca, type: 2}
   - {fileID: 11400000, guid: 6f51cb56b0d7254428d32697818ac724, type: 2}
   bossState: {fileID: 11400000, guid: 8fb52d810d8849f4591d20aa94c199a6, type: 2}
-  damageSwitchesStates: 1
+  damageSwitchesStates: 0
   damageStateDuration: 0.5
   touchAttackDef: {fileID: 11400000, guid: d0baef44113e0bd438625e071a5cba98, type: 2}
-  touchAttackRadius: 1.5
-  touchAttackOffset: {x: -2.24, y: -0.57}
+  touchAttackRadius: 5.88
+  touchAttackOffset: {x: -0.8, y: -4.54}
   hasTouchAttackState: 1
+  knockbackStrength: 500
   <SpottableMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 256
   movementPersonality:
-    maxSpeed: 15
+    maxSpeed: 20
     acceleration: 200
     movementEase: 16
   facingFlipDeadzone: 1
@@ -869,7 +870,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  feetCheckRadius: 0.2
+  feetCheckRadius: 2.42
 --- !u!114 &3427075602280751177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -883,7 +884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Core.Scripts.Boss.BossHealth
   <CurrentHealth>k__BackingField: 0
-  <MaxHealth>k__BackingField: 20
+  <MaxHealth>k__BackingField: 21
   flashColor: {r: 1, g: 1, b: 1, a: 1}
   flashTime: 0.25
   damageFlashEaseType: 28

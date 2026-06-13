@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: BigPillbugPhase2
   m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Bosses.BigPillbug.BigPillbugPhase
   <AllowedAttacks>k__BackingField:
-  - {fileID: 11400000, guid: faf02f3af8ef3a54fa63873bbd1f2a30, type: 2}
   - {fileID: 11400000, guid: 5d226fe05c4820048b5efdd0e7dd7266, type: 2}
+  - {fileID: 11400000, guid: faf02f3af8ef3a54fa63873bbd1f2a30, type: 2}
   attackSelectionMode: 1
   transitionHealthPercentThreshold: 0.33
   aggressionWeight: 1
