@@ -69,6 +69,8 @@ namespace PathOfTheInfected.Gameplay.Bosses.BigPillbug
                             attackDir = ctx.Owner.IsFacingRight ? Vector2.right : Vector2.left,
                             knockbackStrength = knockbackForce
                         };
+                        Debug.Log(data.attackDir);
+                        Debug.Log(data.knockbackStrength);
                         HitDispatcher.ProcessHit(ref data);
                         ctx.HasHit = true;
                     }

@@ -16,9 +16,9 @@ namespace TidiMovementComponent2D.Animation
         [field:Tooltip("The Animator component that will be used for animation.")]
         [field: SerializeField] protected Animator Animator { get; private set; }
         /// <summary>
-        /// The player that owns this animation instance.
+        /// The player that owns this animation instance. When creating a mono behavior, Make sure to set owner!
         /// </summary>
-        public PlayerSm OwnerPlayer { get; private set; }
+        public IAnimationOwnerable Owner { get; private set; }
 
         /// <summary>
         /// Is the current animation locked?
@@ -249,9 +249,7 @@ namespace TidiMovementComponent2D.Animation
 
         private void ResetAnimatorPose()
         {
-            if (Animator == null)
-                return;
-
+            if (!Animator) return;
             Animator.Rebind();
             Animator.Update(0f);
         }
@@ -320,7 +318,6 @@ namespace TidiMovementComponent2D.Animation
         {
             AnimationStart();
             SetAnimHashes();
-            OwnerPlayer = PlayerSm.Instance;
         }
 
         void Update()
