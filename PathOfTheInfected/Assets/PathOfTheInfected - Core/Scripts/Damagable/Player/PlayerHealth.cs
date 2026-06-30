@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using GlobalMessages;
 using PathOfTheInfected.Combat;
 using PathOfTheInfected.Damagable.Messages;
 using PathOfTheInfected.Enemy;
 using TidiGameplayMessaging.Core;
+using TidiMovementComponent2D.Core;
 using TidiTweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using PlayerHealthChangedPayload = PathOfTheInfected.Damagable.Messages.PlayerHealthChangedPayload;
 
 namespace PathOfTheInfected.Damagable
 {
@@ -12,10 +17,14 @@ namespace PathOfTheInfected.Damagable
     {
         private static readonly int FlashAmountId = Shader.PropertyToID("_FlashAmount");
         private static readonly int FlashColorId = Shader.PropertyToID("_FlashColor");
+        private PlayerSm _playerOwner;
+        private IDisposable _uiReadySubscription;
 
         private void Awake()
         {
             SyncRuntimeRenderersAndMaterials();
+            _playerOwner = GetComponent<PlayerSm>();
+            _uiReadySubscription = TidiGameplayMessagingSubsystem.Instance.Listen<UIReady_PlayerHealth>(OnUiReady);
         }
 
         private void Start()
@@ -95,11 +104,20 @@ namespace PathOfTheInfected.Damagable
             if (IsDead) return;
 
             CurrentHealth -= finalDamage;
+
+            TidiGameplayMessagingSubsystem.Instance.Broadcast<OnPlayerHealthChangedUI, PlayerHealthChangedPayloadUI>(new PlayerHealthChangedPayloadUI
+            {
+                NewHealth = CurrentHealth,
+                MaxHealth = MaxHealth
+            });
+
             TidiGameplayMessagingSubsystem.Instance.Broadcast<PlayerHitChannel, PlayerHealthChangedPayload>(new PlayerHealthChangedPayload
             {
                 NewHealth = CurrentHealth,
                 Type = HealthChangeType.Damage
             });
+
+
             FlashDamage();
             HitStop(hitStopTime);
 
@@ -112,7 +130,13 @@ namespace PathOfTheInfected.Damagable
         public void Die()
         {
             IsDead = true;
-            Destroy(gameObject);
+            Invoke(nameof(RestartAfterDeath), flashTime);
+            Destroy(gameObject, flashTime);
+        }
+
+        private void RestartAfterDeath()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         /// <summary>
@@ -166,6 +190,12 @@ namespace PathOfTheInfected.Damagable
 
         public HitResponse OnHit(ref HitData damageData)
         {
+            if (damageData.attackDir != Vector2.zero && damageData.knockbackStrength > 0)
+            {
+                Vector2 knockback = (damageData.attackDir).normalized * damageData.knockbackStrength;
+                _playerOwner.ApplyForce(knockback, ForceMode2D.Impulse);
+            }
+
             float finalDamage = DamageCalculator.CalculateDamage(in damageData);
 
             TakeDamage(finalDamage, damageData.attackDefinition.hitStopTime);
@@ -210,6 +240,19 @@ namespace PathOfTheInfected.Damagable
         private Color _originalColor;
         private bool _hasOriginalColor;
 
+        #endregion
+
+        #region UI Ready - callback
+
+        private void OnUiReady()
+        {
+            PlayerHealthChangedPayloadUI payload = new PlayerHealthChangedPayloadUI
+            {
+                NewHealth = MaxHealth,
+                MaxHealth = MaxHealth,
+            };
+            TidiGameplayMessagingSubsystem.Instance.Broadcast<OnPlayerHealthChangedUI, PlayerHealthChangedPayloadUI>(payload);
+        }
         #endregion
     }
 }

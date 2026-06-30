@@ -7,5 +7,7 @@ namespace TidiMovementComponent2D.Misc
         DashPressed = 2,
         CrouchPressed = 3,
         PunchPressed = 4,
+        GameplayPausePressed = 5,
+        UiPausePressed = 6,
     }
 }

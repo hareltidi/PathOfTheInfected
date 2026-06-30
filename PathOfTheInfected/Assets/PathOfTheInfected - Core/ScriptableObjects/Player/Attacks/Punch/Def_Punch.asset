@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Def_Punch
   m_EditorClassIdentifier: PathOfTheInfected::PathOfTheInfected.Combat.PlayerAttackDefinition
   baseDamage: 1
-  hitStopTime: 0.1
-  recoveryTime: 0.15
+  hitStopTime: 0.05
+  recoveryTime: 0
   attackType: 1
-  attackBufferTime: 0.1
-  startupTime: 0.04
-  activeTime: 0.4
+  attackBufferTime: 0.15
+  startupTime: 0.02
+  activeTime: 0.3
   animationEndPadding: 0.1
-  attackRange: 5
+  attackRange: 6
   firstHitDamageBoost: 0.5

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
-    [CreateAssetMenu(fileName = "FireProjectileSO", menuName = "Enemy/Attack/Ranged/FireProjectileSO", order = 0)]
+    [CreateAssetMenu(fileName = "FireProjectileSO", menuName = "Enemy/CurrentAttack/Ranged/FireProjectileSO", order = 0)]
     public class FireProjectileSO : AttackSOBase
     {
         [SerializeField] private GameObject projectilePrefab;
@@ -21,14 +21,14 @@ namespace PathOfTheInfected.Enemy
 
 
             Vector2 spawnPos = new Vector2(
-                ctx.Owner.transform.position.x + signedMarginX,
-                ctx.Owner.transform.position.y + signedMarginY
+                ctx.Owner.Transform.position.x + signedMarginX,
+                ctx.Owner.Transform.position.y + signedMarginY
             );
 
             GameObject projectileToSpawn = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
 
             ProjectileBase projectileLogic = projectileToSpawn.GetComponent<ProjectileBase>();
-            projectileLogic?.InitProjectileValuesFromAttack(ctx, attackDef, dir, spawnPos);
+            projectileLogic?.InitProjectileValuesFromAttack(ctx, AttackDef, dir, spawnPos, ctx.Owner.GameObject);
         }
     }
 }

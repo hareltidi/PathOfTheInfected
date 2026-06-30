@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Gameplay.Enemies
 {
-    [CreateAssetMenu(fileName = "PillbugPunchSO", menuName = "Enemy/Attack/Melee/Pillbug/PillbugPunchSO", order = 0)]
+    [CreateAssetMenu(fileName = "PillbugPunchSO", menuName = "Enemy/CurrentAttack/Melee/Pillbug/PillbugPunchSO", order = 0)]
     public class PillbugPunchSo : MeleePunchSO
     {
         private PillbugAnimInstance _animInstance;
 
-        public override void InitAttack(AttackContext ctx, EnemyBrainBase owner, Transform target)
+        public override void InitAttack(AttackContext ctx, IAttackOwnerable owner, Transform target)
         {
             base.InitAttack(ctx, owner, target);
-            _animInstance = ctx.Owner.GetComponent<PillbugAnimInstance>();
+            _animInstance = ctx.Owner.GameObject.GetComponent<PillbugAnimInstance>();
         }
 
 

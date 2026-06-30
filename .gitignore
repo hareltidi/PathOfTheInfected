@@ -80,3 +80,5 @@ crashlytics-build.properties
 *.slnx
 PathOfTheInfected/PathOfTheInfected.sublime-project
 PathOfTheInfected/PathOfTheInfected.sublime-workspace
+UpdateScripts/UpdateGame - macOs.bat
+UpdateScripts/UpdateGame - Windows.bat

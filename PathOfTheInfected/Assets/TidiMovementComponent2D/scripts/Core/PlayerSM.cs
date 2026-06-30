@@ -12,7 +12,7 @@ namespace TidiMovementComponent2D.Core
     [RequireComponent(typeof(Rigidbody2D)), RequireComponent(typeof(BoxCollider2D)),
      RequireComponent(typeof(MovementControllerSm)), RequireComponent(typeof(GhostTrail)),
      RequireComponent(typeof(TidiAnimInstance))]
-    public class PlayerSm : MonoBehaviour
+    public class PlayerSm : MonoBehaviour, IAnimationOwnerable
     {
         public enum BufferedJumpType
         {
@@ -53,6 +53,12 @@ namespace TidiMovementComponent2D.Core
         [FormerlySerializedAs("ShowEnteredStateDebugLog")] public bool showEnteredStateDebugLog;
 
         [HideInInspector] public Vector2 velocity;
+
+        // External impulse accumulator. ApplyForce feeds this instead of Rb.AddForce
+        // because the movement controller moves via MovePosition and ignores Rb.linearVelocity.
+        // TickExternalImpulse decays it each fixed step; ApplyVelocity adds it back into velocity.
+        private Vector2 _externalImpulse;
+        private float _impulseTimer;
 
         private bool _isTrackingDashHeight;
         private bool _isTrackingJumpApex;
@@ -246,6 +252,7 @@ namespace TidiMovementComponent2D.Core
             PreventWallStick();
             PreventCeilingStick();
             CalculateRunOffMomentum();
+            TickExternalImpulse(Time.fixedDeltaTime);
             ApplyVelocity();
             StateMachine.ApplyQueuedStateChange();
             _visuals.UpdatePhysicsState();
@@ -295,6 +302,17 @@ namespace TidiMovementComponent2D.Core
 
         public void ApplyVelocity()
         {
+            if (_impulseTimer > 0f)
+            {
+                // Impulse is authoritative while active. State-machine Move() runs each
+                // fixed step and decelerates velocity.x toward 0 when input is below threshold;
+                // without this override the impulse would be wiped every other frame. Vertical
+                // only overrides when kicking up, so gravity still wins on a downward impulse.
+                velocity.x = _externalImpulse.x;
+                if (_externalImpulse.y > velocity.y)
+                    velocity.y = _externalImpulse.y;
+            }
+
             if (Controller.IsSliding)
             {
                 velocity.y = Mathf.Clamp(velocity.y, -moveStats.SlideSpeed, 50f);
@@ -326,6 +344,29 @@ namespace TidiMovementComponent2D.Core
         public void IncrementHorizontalVelocity(float incrementAmount)
         {
             velocity.x += incrementAmount;
+        }
+        public void ApplyForce(Vector2 force, ForceMode2D  forceMode =  ForceMode2D.Impulse)
+        {
+            // Mass in this setup is the rigidbody default; Impulse treats force as a velocity bump.
+            _externalImpulse += force;
+            _impulseTimer = ImpulseDecayTime;
+        }
+
+        // Window the impulse lasts. The rate inside exp(-rate*dt) here means HIGHER = sharper
+        // (faster bleed per frame). Lower rate + longer window = smoother glide.
+        private const float ImpulseDecayTime = 0.2f;
+        private const float ImpulseDecayRate = 15f;
+
+        private void TickExternalImpulse(float dt)
+        {
+            if (_impulseTimer <= 0f)
+            {
+                _externalImpulse = Vector2.zero;
+                return;
+            }
+
+            _impulseTimer -= dt;
+            _externalImpulse *= Mathf.Exp(-ImpulseDecayRate * dt);
         }
 
         public void ChangeWholeVelocity(Vector2 newVelocity)
@@ -405,9 +446,9 @@ namespace TidiMovementComponent2D.Core
 
         private void PreventCeilingStick()
         {
-            if (!Controller.BumpedHead() || (double)velocity.y <= 0.0)
+            if (!Controller.BumpedHead() || velocity.y <= 0.0)
                 return;
-            bool flag = moveStats.JumpFollowSlopesWhenHeadTouching && (double)Controller.State.CeilingAngle > 0.0;
+            bool flag = moveStats.JumpFollowSlopesWhenHeadTouching && Controller.State.CeilingAngle > 0.0;
             if (IsDashing || flag)
                 return;
             ChangeVerticalVelocity(0.0f);
@@ -415,11 +456,11 @@ namespace TidiMovementComponent2D.Core
 
         private void CalculateRunOffMomentum()
         {
-            if (Controller.IsGrounded() || !Controller.State.WasGroundedLastFrame || IsJumping || IsWallJumping || Controller.PlatformFromLastFrame == null || (double)PlatformMomentumRetentionTimer <= 0.0)
+            if (Controller.IsGrounded() || !Controller.State.WasGroundedLastFrame || IsJumping || IsWallJumping || Controller.PlatformFromLastFrame == null || PlatformMomentumRetentionTimer <= 0.0)
                 return;
             Vector2 platformVelocity = StoredPlatformVelocity;
             velocity.x += platformVelocity.x * moveStats.PlatformHorizontalMomentumMultiplier;
-            if ((double)platformVelocity.y < 0.0)
+            if (platformVelocity.y < 0.0)
             {
                 velocity.y += platformVelocity.y;
             }
@@ -453,13 +494,13 @@ namespace TidiMovementComponent2D.Core
         {
             visualsTransform.rotation = Quaternion.Slerp(visualsTransform.rotation, _targetRotation, moveStats.SlopeRotationSpeed * Time.deltaTime);
             float z = visualsTransform.rotation.eulerAngles.z;
-            if ((double)z > 180.0)
+            if (z > 180.0)
                 z -= 360f;
             float f = Mathf.Abs(z * ((float)Math.PI / 180f));
-            double num1 = (double)coll.bounds.size.x / 2.0;
+            double num1 = coll.bounds.size.x / 2.0;
             float num2 = coll.bounds.size.y / 2f;
-            double num3 = (double)Mathf.Sin(f);
-            _visuals.PivotOffset = new Vector3(0.0f, -((float)(num1 * num3 + (double)num2 * (double)Mathf.Cos(f)) - num2), 0.0f);
+            double num3 = Mathf.Sin(f);
+            _visuals.PivotOffset = new Vector3(0.0f, -((float)(num1 * num3 + num2 * (double)Mathf.Cos(f)) - num2), 0.0f);
         }
 
         public bool HasLanded()
@@ -537,7 +578,7 @@ namespace TidiMovementComponent2D.Core
         {
             if (!IsWallSliding || Controller.State.IsAgainstWall)
                 return false;
-            if ((double)PlatformMomentumRetentionTimer > 0.0)
+            if (PlatformMomentumRetentionTimer > 0.0)
             {
                 IncrementVerticalVelocity(StoredPlatformVelocity.y);
                 velocity.x += StoredPlatformVelocity.x;
@@ -708,17 +749,17 @@ namespace TidiMovementComponent2D.Core
 
         public void ManagePlatformMomentumTimer()
         {
-            if (this.Controller.LastKnownPlatform != null)
+            if (Controller.LastKnownPlatform != null)
             {
-                StoredPlatformVelocity = this.Controller.LastKnownPlatform.GetVelocity();
+                StoredPlatformVelocity = Controller.LastKnownPlatform.GetVelocity();
                 PlatformMomentumRetentionTimer = moveStats.PlatformMomentumRetentionTime;
             }
             else
             {
-                if ((double)PlatformMomentumRetentionTimer <= 0.0)
+                if (PlatformMomentumRetentionTimer <= 0.0)
                     return;
                 PlatformMomentumRetentionTimer -= Time.fixedDeltaTime;
-                if ((double)PlatformMomentumRetentionTimer > 0.0)
+                if (PlatformMomentumRetentionTimer > 0.0)
                     return;
                 StoredPlatformVelocity = Vector2.zero;
             }

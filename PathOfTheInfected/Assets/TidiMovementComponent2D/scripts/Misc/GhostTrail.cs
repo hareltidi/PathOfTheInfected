@@ -6,11 +6,12 @@ namespace TidiMovementComponent2D.Misc
 {
     public class GhostTrail : MonoBehaviour
     {
+        [SerializeField] private bool canShowGhostTrail = true;
         [FormerlySerializedAs("_testGhost")] [SerializeField] private GameObject testGhost;
 
         [FormerlySerializedAs("_numberOfTrails")] [SerializeField] private int numberOfTrails = 3;
 
-        [SerializeField] private bool cabFade = true;
+        [SerializeField] private bool canFade = true;
 
         [FormerlySerializedAs("_fadeTime")] [SerializeField] private float fadeTime = 1f;
 
@@ -36,7 +37,10 @@ namespace TidiMovementComponent2D.Misc
 
         public void LeaveGhostTrail(float time)
         {
-            StartCoroutine(LeaveTrail(time));
+            if (canShowGhostTrail)
+            {
+                StartCoroutine(LeaveTrail(time));
+            }
         }
 
         private IEnumerator LeaveTrail(float time)
@@ -71,7 +75,7 @@ namespace TidiMovementComponent2D.Misc
             }
 
             gameObject.SetActive(true);
-            if (!cabFade) return;
+            if (!canFade) return;
             StartCoroutine(FadeGhost(componentsInChildren, gameObject));
         }
 

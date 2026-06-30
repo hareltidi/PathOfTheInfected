@@ -16,10 +16,20 @@ namespace PathOfTheInfected.Enemy
     /// It also includes functionality for detecting targets, handling line-of-sight checks, and managing attack behaviors.
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D)),  RequireComponent(typeof(EnemyHealth))]
-    public class EnemyBrainBase : MonoBehaviour, IEnemyMoveable
+    public class EnemyBrainBase : MonoBehaviour, IEnemyMoveable, IAttackOwnerable
     {
         #region Interface Variables
 
+        #region IAttackOwnerable
+        public GameObject GameObject { get; set; }
+        public Transform Transform { get; set; }
+
+        public bool IsGrounded => Physics2D.OverlapCircle(feetPos.position, 0.2f, groundLayer);
+
+        [field: Header("Poise settings")]
+        [field: SerializeField] public float MaxPoise { get; set; } = 10;
+        [field: SerializeField] public float CurrentPoise { get; set; }
+        #endregion
 
 
         #region IEnemyMoveable
@@ -40,9 +50,14 @@ namespace PathOfTheInfected.Enemy
 
         [Header("State Machines - Damaged state (optional)")]
         public bool damageSwitchesStates;
+        public float damageStateDuration = 0.5f;
         public EnemyBaseState damagedState;
 
-        [Header("State Debugging")]
+        [Header("State Machines - Touch attack (optional)")]
+        public bool hasTouchAttackState;
+        public EnemyBaseState touchState;
+
+        [field: Header("State Debugging")]
         [field: SerializeField] public EnemyBaseState CurrentState { get; protected set; }
 
         #endregion
@@ -56,14 +71,14 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Debugging - Path")]
         [SerializeField] public bool drawPathGizmos = false;
-        [SerializeField] private float pathSwapImprovementThreshold = 0.5f;
-
 
         [Header("Box cast - general")]
         [field: SerializeField]
-        public LayerMask SpottableMask { get; protected set; }
+        public LayerMask SpottableMask { get; set; }
         public Transform max;
         public Transform min;
+        public Transform feetPos;
+        public LayerMask groundLayer;
         public bool requireObjectsToBeInCameraView = true;
 
         [Header("Line of sight")]
@@ -83,10 +98,8 @@ namespace PathOfTheInfected.Enemy
 
         [Header("Spottable Detection")] public float maxSpotRange = 10f;
 
-        [Header("Attack")]
-        [field: SerializeField] public float CurrentPoise { get; set; }
+        [Header("Attacks")]
         public AttackSOBase attack;
-        public float maxPoise = 10f;
 
         /// <summary>
         /// Persistent attack context that survives across state transitions.
@@ -129,23 +142,20 @@ namespace PathOfTheInfected.Enemy
         protected List<Vector2> CurrentPath;
         protected int CurrentIndex;
         protected float NextRepath;
-        protected Vector2 LastTargetPosition;
 
         protected BoxCollider2D BoxCollider;
 
-        protected Vector2 CurrentTargetVelocity;
 
         protected EnemyHealth EnemyHealth;
 
         public Vector2 EnemyVel { get; private set; }
 
-        protected IDisposable DamagedSubscription;
         #endregion
 
         #region Virtual logic gate Methods
 
         /// <summary>
-        /// Awake method for our enemy (can be overridden so use the base.EnemyAwake at the start of each override)
+        /// Awake method for our enemy (can be overridden so use the base.BossAwake at the start of each override)
         /// </summary>
         protected virtual void EnemyAwake()
         {
@@ -155,19 +165,30 @@ namespace PathOfTheInfected.Enemy
             noSpottableDetectedState = Instantiate(noSpottableDetectedState);
             spottableDetectedState = Instantiate(spottableDetectedState);
             spottableInAttackRangeState = Instantiate(spottableInAttackRangeState);
+            if (hasTouchAttackState)
+            {
+                touchState = Instantiate(touchState);
+            }
             damagedState = Instantiate(damagedState);
+
+            GameObject = gameObject;
+            Transform = transform;
         }
 
         /// <summary>
-        /// Start method for our enemy (can be overridden, so use the base.EnemyStart at the start of each override)
+        /// Start method for our enemy (can be overridden, so use the base.BossStart at the start of each override)
         /// </summary>
         protected virtual void EnemyStart()
         {
             noSpottableDetectedState.StateInit(this, StateMachine);
             spottableDetectedState.StateInit(this, StateMachine);
             spottableInAttackRangeState.StateInit(this, StateMachine);
+            if (hasTouchAttackState)
+            {
+                touchState.StateInit(this, StateMachine);
+            }
             damagedState.StateInit(this, StateMachine);
-            CurrentPoise = maxPoise;
+            CurrentPoise = MaxPoise;
             InitialPosition = transform.position;
             StateMachine?.InitializeDefaultState(noSpottableDetectedState);
         }
@@ -180,6 +201,7 @@ namespace PathOfTheInfected.Enemy
             DrawStatesGizmos();
             DrawingSpottingRange();
             DrawAttackRange();
+
 
             // Draw current path for debugging
             if (drawPathGizmos && CurrentPath != null && CurrentPath.Count > 0)
@@ -203,29 +225,39 @@ namespace PathOfTheInfected.Enemy
         }
 
         /// <summary>
-        /// Update method for our enemy (can be overridden so use the base.EnemyUpdate at the start of each override)
+        /// Update method for our enemy (can be overridden so use the base.BossUpdate at the start of each override)
         /// </summary>
         protected virtual void EnemyUpdate()
         {
             CheckForSpottablesInAttackRange();
             DetectVisibleSpottables();
+            if (hasTouchAttackState)
+            {
+                touchState?.StateUpdate();
+            }
             StateMachine?.ApplyQueuedStateChange();
             CurrentState = StateMachine?.CurrentState;
             StateMachine?.CurrentState.StateUpdate();
+            damagedState?.StateUpdate();
         }
 
         /// <summary>
-        /// FixedUpdate method for our enemy (can be overridden so use the base.EnemyFixedUpdate at the start of each override)
+        /// FixedUpdate method for our enemy (can be overridden so use the base.BossFixedUpdate at the start of each override)
         /// </summary>
         protected virtual void EnemyFixedUpdate()
         {
             StateMachine?.CurrentState.StateFixedUpdate();
+            damagedState?.StateFixedUpdate();
+            if (hasTouchAttackState)
+            {
+                touchState?.StateFixedUpdate();
+            }
             TickRecoveryOutsideAttackState();
         }
 
-        private void TickRecoveryOutsideAttackState()
+        protected void TickRecoveryOutsideAttackState()
         {
-            if (attack == null || AttackContext == null || AttackContext.IsFinished) return;
+            if (!attack || AttackContext == null || AttackContext.IsFinished) return;
             if (CurrentState == spottableInAttackRangeState) return;
 
             attack.TickRecovery(AttackContext);
@@ -241,8 +273,8 @@ namespace PathOfTheInfected.Enemy
         private void Awake()
         {
             EnemyAwake();
-            DamagedSubscription = TidiGameplayMessagingSubsystem.Instance.Listen<OnEnemyDamaged>(OnEnemyDamaged);
             EnemyHealth = GetComponent<EnemyHealth>();
+            EnemyHealth.EnemyDamaged += OnEnemyDamaged;
         }
 
         private void Start()
@@ -268,8 +300,9 @@ namespace PathOfTheInfected.Enemy
 
         private void OnDestroy()
         {
-            DamagedSubscription?.Dispose();
+            EnemyHealth.EnemyDamaged -= OnEnemyDamaged;
         }
+
 
         #region Detection and drawing detection zones
 
@@ -637,7 +670,7 @@ namespace PathOfTheInfected.Enemy
         public void OnEnemyDamaged()
         {
            ToggleDamaged(true);
-           Invoke(nameof(DamagedToFalse), EnemyHealth.flashTime);
+           Invoke(nameof(DamagedToFalse), damageStateDuration);
         }
 
         private void DamagedToFalse()

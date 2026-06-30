@@ -4,26 +4,26 @@ using UnityEngine;
 
 namespace PathOfTheInfected.Enemy
 {
-    [CreateAssetMenu(fileName = "FlyingMeleePunchSO", menuName = "Enemy/Attack/Melee/Flying/FlyingMeleePunchSO", order = 0)]
+    [CreateAssetMenu(fileName = "FlyingMeleePunchSO", menuName = "Enemy/CurrentAttack/Melee/Flying/FlyingMeleePunchSO", order = 0)]
     public class FlyingMeleePunch : AttackSOBase
     {
         public override void PerformAttack(AttackContext ctx)
         {
             base.PerformAttack(ctx);
-            EnemyBrainBase enemyBrainBase = ctx.Owner;
+            IAttackOwnerable enemyBrainBase = ctx.Owner;
             float range = MaxAttackRange;
 
 
-            Collider2D hit = Physics2D.OverlapCircle(enemyBrainBase.transform.position, range,enemyBrainBase.SpottableMask);
+            Collider2D hit = Physics2D.OverlapCircle(enemyBrainBase.Transform.position, range,enemyBrainBase.SpottableMask);
 
             // build the hit data:
             HitData data = new HitData()
             {
-                attackDefinition = attackDef,
+                attackDefinition = AttackDef,
                 isFirstHit = false,
                 isPlayerDamage = false,
                 isAttackerInAir = false,
-                source = ctx.Owner.gameObject,
+                source = ctx.Owner.GameObject,
                 timeStamp = Time.timeSinceLevelLoad,
                 target = hit.gameObject,
                 firstHitDamageBoost = 0,

@@ -17,7 +17,7 @@ namespace PathOfTheInfected.Player.Combat
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
-        [Header("Attack Timeline")] [SerializeField]
+        [Header("CurrentAttack Timeline")] [SerializeField]
         private bool useTimeBasedAttackWindows = true;
 
         private void Start()
@@ -26,7 +26,9 @@ namespace PathOfTheInfected.Player.Combat
             AnimInstance = POIAnimInstance.Instance;
 
             if (animationDriver == null)
+            {
                 animationDriver = GetComponent<TidiAnimationDriver>();
+            }
 
             InitializeSubsystems();
 
@@ -100,10 +102,7 @@ namespace PathOfTheInfected.Player.Combat
 
         [Header("RBC system")] public bool grantFullReset = false;
 
-        [Space]
-
-        [Header("Perks")]
-        public PlayerPerkData perkData;
+        [Space] [Header("Perks")] public PlayerPerkData perkData;
 
         #endregion
 
@@ -209,7 +208,7 @@ namespace PathOfTheInfected.Player.Combat
 
         #endregion
 
-        #region Attack Loop
+        #region CurrentAttack Loop
 
         private void ResolveAttackIntents()
         {

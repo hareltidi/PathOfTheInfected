@@ -5,10 +5,12 @@ public class POIInputManager : InputManager
 {
     #region InputActions
     private InputAction _punchAction;
+    private InputAction _gameplayPauseAction;
     #endregion
 
     #region InputValues
     public static bool PunchPressed;
+    public static bool GameplayPausePressed;
     #endregion
 
 
@@ -16,6 +18,7 @@ public class POIInputManager : InputManager
     {
         base.InputAwake();
         _punchAction = PlayerInput.actions["Punch"];
+        _gameplayPauseAction = PlayerInput.actions["GameplayPause"];
     }
 
 
@@ -23,5 +26,6 @@ public class POIInputManager : InputManager
     {
         base.ConsumeInput();
         PunchPressed = _punchAction.WasPressedThisFrame();
+        GameplayPausePressed = _gameplayPauseAction.WasPressedThisFrame();
     }
 }

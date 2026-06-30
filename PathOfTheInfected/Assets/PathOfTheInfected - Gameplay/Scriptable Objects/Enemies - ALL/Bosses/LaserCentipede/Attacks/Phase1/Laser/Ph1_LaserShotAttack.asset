@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82a1f5847df50a146b00b877f1004791, type: 3}
+  m_Name: Ph1_LaserShotAttack
+  m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Bosses.LaserCentipede.LaserShotAttack
+  <AttackDef>k__BackingField: {fileID: 11400000, guid: 0d0e51ac195527140b84d052c3e88b26, type: 2}
+  <RequireDistanceFromEnemyToSpottable>k__BackingField: 0
+  <DistanceThreshold>k__BackingField: 5
+  <MaxAttackRange>k__BackingField: 10
+  <PoiseConsumed>k__BackingField: 0
+  windupDuration: 1.5
+  projectilePrefab: {fileID: 5303159517039868119, guid: 5ab98519616efa74c80532131cfc975d, type: 3}
+  spawnMarginX: 2
+  spawnMarginY: 0
+  requiresGrounded: 1
+  attackAnim: {fileID: 7400000, guid: bd5f19644ba920749b65e484f2dbdbff, type: 2}
+  warningBoxWidth: 1
+  warningBoxLength: 40
+  warningColor: {r: 1, g: 0, b: 0, a: 0.4}
+  warningBoxTimePercentage: 75

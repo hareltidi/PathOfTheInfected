@@ -15,14 +15,17 @@ namespace PathOfTheInfected.Enemy.Projectiles
         protected AttackContext Context;
         protected Rigidbody2D rb;
         protected Vector2 direction;
+        protected GameObject Owner;
 
-        public virtual void InitProjectileValuesFromAttack(AttackContext ctx,AttackDefinition definition, Vector2 dir, Vector3 position)
+        public virtual void InitProjectileValuesFromAttack(AttackContext ctx,AttackDefinition definition, Vector2 dir, Vector3 position
+        , GameObject owner)
         {
             rb = GetComponent<Rigidbody2D>();
             Context = ctx;
             AttackDefinition = definition;
             direction = dir;
             transform.position = position;
+            Owner = owner;
         }
 
         private void FixedUpdate()
@@ -50,7 +53,9 @@ namespace PathOfTheInfected.Enemy.Projectiles
         private void OnCollisionEnter2D(Collision2D other)
         {
             IHitResponder test = other.gameObject.GetComponent<IHitResponder>();
+            IHitResponder owner = Owner.GetComponent<IHitResponder>();
 
+            if(owner != null && other.gameObject == Owner) return; // if the bullet hits the one who shot, ignore it
             if (test != null)
             {
                 HitData data = new HitData()

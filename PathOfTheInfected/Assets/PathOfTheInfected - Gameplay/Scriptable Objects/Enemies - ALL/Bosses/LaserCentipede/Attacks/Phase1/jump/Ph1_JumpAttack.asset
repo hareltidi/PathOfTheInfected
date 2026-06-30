@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e14c0eaf2e8c2ed479c86abaa8b2e90e, type: 3}
+  m_Name: Ph1_JumpAttack
+  m_EditorClassIdentifier: PathOfTheInfected-Gameplay::PathOfTheInfected.Gameplay.Bosses.LaserCentipede.JumpAttack
+  <AttackDef>k__BackingField: {fileID: 11400000, guid: 582a2ad3091631b42888faf5ff470674, type: 2}
+  <RequireDistanceFromEnemyToSpottable>k__BackingField: 0
+  <DistanceThreshold>k__BackingField: 5
+  <MaxAttackRange>k__BackingField: 10
+  <PoiseConsumed>k__BackingField: 0
+  windupDuration: 0.5
+  jumpForceX: 5
+  jumpForceY: 10
