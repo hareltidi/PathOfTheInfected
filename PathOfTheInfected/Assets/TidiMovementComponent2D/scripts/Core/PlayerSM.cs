@@ -12,7 +12,7 @@ namespace TidiMovementComponent2D.Core
     [RequireComponent(typeof(Rigidbody2D)), RequireComponent(typeof(BoxCollider2D)),
      RequireComponent(typeof(MovementControllerSm)), RequireComponent(typeof(GhostTrail)),
      RequireComponent(typeof(TidiAnimInstance))]
-    public class PlayerSm : MonoBehaviour
+    public class PlayerSm : MonoBehaviour, IAnimationOwnerable
     {
         public enum BufferedJumpType
         {

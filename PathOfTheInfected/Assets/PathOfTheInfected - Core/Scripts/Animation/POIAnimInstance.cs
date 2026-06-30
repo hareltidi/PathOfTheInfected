@@ -1,5 +1,6 @@
 using PathOfTheInfected.Player.Combat;
 using TidiMovementComponent2D.Animation;
+using TidiMovementComponent2D.Core;
 using TidiMovementComponent2D.Misc;
 using UnityEngine;
 
@@ -121,8 +122,10 @@ namespace PathOfTheInfected.Animation
 
         #region AnimHashes - Setter
 
+        public PlayerSm ownerPlayer;
         protected override void SetAnimHashes()
         {
+            ownerPlayer = playerCombat.PlayerOwner;
             // standing state
             StandingJumpAnim = Animator.StringToHash(jumpAnimClip.name);
             StandingDashAnim = Animator.StringToHash(dashAnimClip.name);
@@ -147,21 +150,21 @@ namespace PathOfTheInfected.Animation
         protected override void SetAnimationFlags()
         {
             // Standing states
-            standingIsRunning = (Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
-                                 OwnerPlayer.IsRunning) || OwnerPlayer.CurrentMovementSpeed >=
-                OwnerPlayer.moveStats.MaxRunSpeed;
-            standingIsWalking = Mathf.Abs(InputManager.Movement.x) > OwnerPlayer.moveStats.MoveThreshold &&
-                                !OwnerPlayer.IsRunning && !OwnerPlayer.IsCrouching;
-            standingIsWallSliding = OwnerPlayer.IsWallSliding;
-            standingIsDashing = OwnerPlayer.IsDashing;
-            standingIsSliding = OwnerPlayer.IsSliding;
-            standingIsJumping = OwnerPlayer.IsJumping;
-            standingIsInAir = !OwnerPlayer.IsGrounded && !OwnerPlayer.IsJumping;
+            standingIsRunning = (Mathf.Abs(InputManager.Movement.x) > ownerPlayer.moveStats.MoveThreshold &&
+                                 ownerPlayer.IsRunning) || ownerPlayer.CurrentMovementSpeed >=
+                ownerPlayer.moveStats.MaxRunSpeed;
+            standingIsWalking = Mathf.Abs(InputManager.Movement.x) > ownerPlayer.moveStats.MoveThreshold &&
+                                !ownerPlayer.IsRunning && !ownerPlayer.IsCrouching;
+            standingIsWallSliding = ownerPlayer.IsWallSliding;
+            standingIsDashing = ownerPlayer.IsDashing;
+            standingIsSliding = ownerPlayer.IsSliding;
+            standingIsJumping = ownerPlayer.IsJumping;
+            standingIsInAir = !ownerPlayer.IsGrounded && !ownerPlayer.IsJumping;
             // InAir states
-            inAirIsJumping = OwnerPlayer.IsJumping;
-            inAirIsDashing = OwnerPlayer.IsDashing;
-            inAirIsAirDashFalling = OwnerPlayer.IsDashFastFalling && !OwnerPlayer.IsDashing;
-            inAirIsWallSliding = OwnerPlayer.IsWallSliding;
+            inAirIsJumping = ownerPlayer.IsJumping;
+            inAirIsDashing = ownerPlayer.IsDashing;
+            inAirIsAirDashFalling = ownerPlayer.IsDashFastFalling && !ownerPlayer.IsDashing;
+            inAirIsWallSliding = ownerPlayer.IsWallSliding;
         }
 
         #endregion
