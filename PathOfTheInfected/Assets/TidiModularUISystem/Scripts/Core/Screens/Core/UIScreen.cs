@@ -11,7 +11,7 @@ namespace TidiModularUISystem.Scripts.Core
         public virtual void ScreenInit(TView view)
         {
             AttachedElement = view;
-            AttachedElement.Initialize();
+            AttachedElement?.Initialize();
         }
 
         public virtual void ScreenStart()
