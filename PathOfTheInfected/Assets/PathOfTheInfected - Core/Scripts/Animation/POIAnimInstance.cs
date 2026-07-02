@@ -125,7 +125,6 @@ namespace PathOfTheInfected.Animation
         public PlayerSm ownerPlayer;
         protected override void SetAnimHashes()
         {
-            ownerPlayer = playerCombat.PlayerOwner;
             // standing state
             StandingJumpAnim = Animator.StringToHash(jumpAnimClip.name);
             StandingDashAnim = Animator.StringToHash(dashAnimClip.name);
@@ -149,6 +148,7 @@ namespace PathOfTheInfected.Animation
 
         protected override void SetAnimationFlags()
         {
+            ownerPlayer = playerCombat.PlayerOwner;
             // Standing states
             standingIsRunning = (Mathf.Abs(InputManager.Movement.x) > ownerPlayer.moveStats.MoveThreshold &&
                                  ownerPlayer.IsRunning) || ownerPlayer.CurrentMovementSpeed >=
