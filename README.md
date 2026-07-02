@@ -391,7 +391,7 @@ This project was developed as part of a **Game Development class**. It demonstra
 1. Clone or download this repository
 2. Open **Unity Hub** → **Add** → Select the `PathOfTheInfected` folder
 3. Wait for package restoration and assembly compilation
-4. Open `Assets/PathOfTheInfected - Core/Scenes/SampleScene.unity`
+4. Open `Assets/PathOfTheInfected - Gameplay/Levels/MainMenu.unity`
 5. Press **Play** in the Unity Editor
 
 ### Controls (Keyboard) ⌨️
