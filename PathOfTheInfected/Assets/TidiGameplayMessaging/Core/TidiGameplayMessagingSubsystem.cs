@@ -1,3 +1,4 @@
+//This piece of shit code was made by me
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
