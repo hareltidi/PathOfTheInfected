@@ -1,5 +1,10 @@
 {
   "dependencies": {
+    "com.tidi.systems-core": "https://github.com/hareltidi/TidiSystems-Core.git#v1.0.0",
+    "com.tidi.gameplay-messaging": "https://github.com/hareltidi/TidiGameplayMessaging.git#v1.0.0",
+    "com.tidi.path-finding": "https://github.com/hareltidi/TidiPathFinding.git#v1.0.0",
+    "com.tidi.gc": "https://github.com/hareltidi/TidiGC.git#v1.0.0",
+    "com.tidi.modular-ui-system": "https://github.com/hareltidi/TidiModularUISystem.git#v1.0.0",
     "com.anchorpoint.sourcecontrol": "https://github.com/Anchorpoint-Software/ap-unity.git",
     "com.maligan.unity-zed": "https://github.com/DilaverSerif/unity-zed.git",
     "com.sarpersoher.ide.sublimetext": "https://github.com/ssoher/com.sarpersoher.ide.sublimetext.git",

@@ -1,4 +1,4 @@
-﻿using PathOfTheInfected.Animation.BlendSpaces;
+﻿using TidiMovementComponent2D.Animation.BlendSpaces;
 using TidiMovementComponent2D.Animation;
 using TidiMovementComponent2D.Animation.BlendSpaces;
 using TidiMovementComponent2D.Animation.BlendSpaces.Playables;
@@ -8,9 +8,9 @@ namespace PathOfTheInfected.Gameplay.Enemies
 {
     public class PillbugAnimInstance : TidiAnimInstance
     {
-        [Header("Pillbug Animation - movement")]
-        [Header("Pillbug Animation Settings")]
-        [SerializeField] private AnimationClip attackClip;
+        [Header("Pillbug Animation - movement")] [Header("Pillbug Animation Settings")] [SerializeField]
+        private AnimationClip attackClip;
+
         [SerializeField] private AnimationClip walkClip;
         [SerializeField] private AnimationClip idleClip;
 
@@ -29,7 +29,6 @@ namespace PathOfTheInfected.Gameplay.Enemies
 
         protected override void AnimationStart()
         {
-
         }
 
         protected override void AnimationUpdate()

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d6199ac292a4c75b2f3221047cac652, type: 3}
   m_Name: Blend_BatMoveIdle
-  m_EditorClassIdentifier: PathOfTheInfected - Core::PathOfTheInfected.Animation.BlendSpaces.BlendSpace1DFloat
+  m_EditorClassIdentifier: TidiSystems::TidiMovementComponent2D.Animation.BlendSpaces.BlendSpace1DFloat
   blendPoints:
   - clip: {fileID: 7400000, guid: fe6cbd1afeea0ed438e5b1a8e7b84687, type: 2}
     threshold: 0
