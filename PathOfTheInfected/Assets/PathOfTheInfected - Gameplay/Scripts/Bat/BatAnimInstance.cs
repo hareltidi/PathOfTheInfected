@@ -1,6 +1,6 @@
 ﻿using PathOfTheInfected.Animation.BlendSpaces;
-using TidiMovementComponent2D.Animation.BlendSpaces;
 using TidiMovementComponent2D.Animation;
+using TidiMovementComponent2D.Animation.BlendSpaces;
 using TidiMovementComponent2D.Animation.BlendSpaces.Playables;
 using UnityEngine;
 
@@ -20,9 +20,9 @@ namespace PathOfTheInfected.Gameplay.Enemies
         {
             _brain = GetComponent<BatEnemyBrain>();
         }
-
         protected override void AnimationStart()
         {
+
         }
 
         protected override void AnimationUpdate()
@@ -34,6 +34,7 @@ namespace PathOfTheInfected.Gameplay.Enemies
 
         protected override void AnimationFixedUpdate()
         {
+
         }
     }
 }

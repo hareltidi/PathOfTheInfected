@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using PathOfTheInfected.Animation;
 using PathOfTheInfected.Animation.BlendSpaces;
-using TidiMovementComponent2D.Animation.BlendSpaces;
 using PathOfTheInfected.Combat;
 using PathOfTheInfected.Player.Combat.Attacks;
 using TidiMovementComponent2D.Animation;
@@ -491,3 +490,5 @@ namespace PathOfTheInfected.Player.Combat
         #endregion
     }
 }
+
+

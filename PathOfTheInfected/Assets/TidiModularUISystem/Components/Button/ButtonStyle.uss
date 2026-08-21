@@ -1,0 +1,93 @@
+:root {
+}
+
+.ui-button {
+    --border-color: rgba(0, 0, 0, 0);
+    border-left-color: var(--border-color);
+    border-right-color: var(--border-color);
+    border-top-color: var(--border-color);
+    border-bottom-color: var(--border-color);
+    --background: rgb(243, 16, 16);
+    --font-size: 15px;
+    -unity-font-definition: resource("FlatSkin/Font/Roboto-Medium");
+    font-size: var(--font-size);
+    flex-grow: 0;
+    width: 194px;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    background-color: var(--background);
+    border-radius: 21px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    scale: 3 3;
+}
+
+.ui-button:hover {
+    --font-size: 15px;
+    -unity-font-definition: resource("FlatSkin/Font/Roboto-Medium");
+    font-size: var(--font-size);
+    flex-grow: 0;
+    width: 194px;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    scale: 3.1 3.1;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-in-out;
+    cursor: initial;
+}
+
+.ui-button:active {
+    --backgroundActive: rgb(180, 2, 2);
+    --font-size: 15px;
+    -unity-font-definition: resource("FlatSkin/Font/Roboto-Medium");
+    font-size: var(--font-size);
+    flex-grow: 0;
+    width: 194px;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    scale: 3.2 3.2;
+    background-color: var(--backgroundActive);
+    transition-duration: 0.15s;
+    transition-timing-function: ease-in-out;
+}
+
+.ui-button:focus {
+    scale: 3.2 3.2;
+    --border-color: rgba(0, 0, 0, 0);
+    --button-focus-color: rgb(255, 255, 255);
+    border-left-color: var(--border-color);
+    border-right-color: var(--border-color);
+    border-top-color: var(--border-color);
+    border-bottom-color: var(--border-color);
+    background-color: var(--button-focus-color);
+    transition-timing-function: ease-in-back;
+    transition-duration: 0.5s;
+}
+
+.ui-root__controller-mode .ui-button:focus .controller__icon {
+    opacity: 1;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out-cubic;
+}
+
+
+.ui-root__keyboard-mode .controller__icon{
+    opacity: 0;
+}
+
+.controller__icon {
+    --height: 15px;
+    --width: 24px;
+    opacity: 0;
+    width: var(--width);
+    height: var(--height);
+    align-self: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-direction: row;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out-cubic;
+}

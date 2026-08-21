@@ -1,0 +1,16 @@
+{
+    "name": "ClothSystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3b6257f84980fdc428a1d48db325deb5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
