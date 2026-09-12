@@ -50,17 +50,41 @@ TemporaryDependencyNodeTargetIdentifier=netstandard2.1
 /warnaserror+:NU1605
 
 [sourceFiles]
-Assets/PathOfTheInfected - Gameplay/Scripts/Bat/
- BatAnimInstance.cs
- BatEnemyBrain.cs
-Assets/PathOfTheInfected - Gameplay/Scripts/Pillbug/
- PillbugAnimInstance.cs
- PillbugEnemyBrain.cs
- PillbugPunchSo.cs
+Assets/PathOfTheInfected - Gameplay/
+ Editor/BatchPrefabCreator.cs
+ Scripts/Bat/
+  BatAnimInstance.cs
+  BatEnemyBrain.cs
+ Scripts/Bosses/BigPillbug/
+  Animation/BigPillbugAnimInstance.cs
+  Attacks/
+   RamAttack.cs
+   SummonAttack.cs
+  Phases/BigPillbugPhase.cs
+ Scripts/Bosses/Golem/
+  Attacks/GroundSlamAttack.cs
+  Phases/GolemPhase.cs
+ Scripts/Bosses/LaserCentipede/
+  Animation/LaserCentipedeAnimInstance.cs
+  Attacks/
+   JumpAttack.cs
+   LaserShotAttack.cs
+  Health/LaserCentipedeHealth.cs
+  LaserCentipedeBrain.cs
+  Phases/LaserCentipedePhase.cs
+ Scripts/
+  Envirroment/Paralax.cs
+  GOEnabler.cs
+  Killzone/killzone.cs
+  MoveToNectLvl.cs
+  Pillbug/
+   PillbugAnimInstance.cs
+   PillbugEnemyBrain.cs
+   PillbugPunchSo.cs
 Temp/obj/PathOfTheInfected-Gameplay/.NETStandard,Version=v2.1.AssemblyAttributes.cs
 
 [metadataReferences]
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/Managed/
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/Managed/
  UnityEditor.Graphs.dll
  UnityEngine/
   UnityEditor.AccessibilityModule.dll
@@ -197,7 +221,7 @@ C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/Managed/
   UnityEngine.VRModule.dll
   UnityEngine.WindModule.dll
   UnityEngine.XRModule.dll
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/NetStandard/compat/2.1.0/shims/netfx/
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/NetStandard/compat/2.1.0/shims/netfx/
  mscorlib.dll
  System.ComponentModel.Composition.dll
  System.Core.dll
@@ -215,7 +239,7 @@ C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/NetStandard/compat/2.1.
  System.Xml.dll
  System.Xml.Linq.dll
  System.Xml.Serialization.dll
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/NetStandard/compat/2.1.0/shims/netstandard/
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/NetStandard/compat/2.1.0/shims/netstandard/
  Microsoft.Win32.Primitives.dll
  System.AppContext.dll
  System.Buffers.dll
@@ -319,14 +343,10 @@ C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/NetStandard/compat/2.1.
  System.Xml.XmlSerializer.dll
  System.Xml.XPath.dll
  System.Xml.XPath.XDocument.dll
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/NetStandard/
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/NetStandard/
  Extensions/2.0.0/System.Runtime.InteropServices.WindowsRuntime.dll
  ref/2.1.0/netstandard.dll
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/PlaybackEngines/
- LinuxStandaloneSupport/UnityEditor.LinuxStandalone.Extensions.dll
- MacStandaloneSupport/
-  UnityEditor.iOS.Extensions.Xcode.dll
-  UnityEditor.OSXStandalone.Extensions.dll
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/PlaybackEngines/
  WebGLSupport/UnityEditor.WebGL.Extensions.dll
  WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
 Library/PackageCache/com.unity.collab-proxy@a5329f833fa8/Lib/Editor/
@@ -362,17 +382,18 @@ Packages/com.merry-yellow.code-assist/Editor/ExternalReferences/
  Meryel.UnityCodeAssist.SynchronizerModel.dll
  Meryel.UnityCodeAssist.YamlDotNet.dll
 Temp/bin/Debug/
+ GlobalMessages.dll
  PathOfTheInfected - Core.dll
  TidiGameplayMessaging.dll
  TidiPathFinding.dll
  TidiSystems.dll
 
 [analyzerReferences]
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/
+../../Users/Tidha/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.3.1/Analyzers/Microsoft.Unity.Analyzers.dll
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/
  Unity.Properties.SourceGenerator.dll
  Unity.SourceGenerators.dll
  Unity.UIToolkit.SourceGenerator.dll
-C:/Users/harel/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll
 Packages/com.merry-yellow.code-assist/Editor/ExternalReferences/
  Meryel.UnityCodeAssist.AnalyzersLite.dll
  Meryel.UnityCodeAssist.Common.dll
@@ -389,4 +410,5 @@ Packages/com.merry-yellow.code-assist/Editor/ExternalReferences/
  Meryel.UnityCodeAssist.VSIXLibrary.dll
 
 [analyzerConfigFiles]
+.editorconfig
 Temp/obj/PathOfTheInfected-Gameplay/PathOfTheInfected-Gameplay.GeneratedMSBuildEditorConfig.editorconfig

@@ -90,7 +90,7 @@ Packages/com.merry-yellow.code-assist/Editor/
 Temp/obj/MerryYellow.CodeAssist.Editor/.NETStandard,Version=v2.1.AssemblyAttributes.cs
 
 [metadataReferences]
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/Managed/
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/Managed/
  UnityEditor.Graphs.dll
  UnityEngine/
   UnityEditor.AccessibilityModule.dll
@@ -230,14 +230,10 @@ C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/Managed/
   UnityEngine.VRModule.dll
   UnityEngine.WindModule.dll
   UnityEngine.XRModule.dll
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/PlaybackEngines/
- LinuxStandaloneSupport/UnityEditor.LinuxStandalone.Extensions.dll
- MacStandaloneSupport/
-  UnityEditor.iOS.Extensions.Xcode.dll
-  UnityEditor.OSXStandalone.Extensions.dll
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/PlaybackEngines/
  WebGLSupport/UnityEditor.WebGL.Extensions.dll
  WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/
  Microsoft.Win32.Primitives.dll
  netstandard.dll
  System.AppContext.dll
@@ -346,7 +342,7 @@ C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/UnityReferenceAssemblie
  System.Xml.XmlSerializer.dll
  System.Xml.XPath.dll
  System.Xml.XPath.XDocument.dll
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/
  Microsoft.CSharp.dll
  mscorlib.dll
  System.ComponentModel.Composition.dll
@@ -400,11 +396,11 @@ Packages/com.merry-yellow.code-assist/Editor/ExternalReferences/
  Meryel.UnityCodeAssist.YamlDotNet.dll
 
 [analyzerReferences]
-C:/Program Files/Unity/Hub/Editor/6000.3.6f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/
+../../Users/Tidha/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.3.1/Analyzers/Microsoft.Unity.Analyzers.dll
+D:/UnityHub/Editor/6000.3.6f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/
  Unity.Properties.SourceGenerator.dll
  Unity.SourceGenerators.dll
  Unity.UIToolkit.SourceGenerator.dll
-C:/Users/harel/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll
 Packages/com.merry-yellow.code-assist/Editor/ExternalReferences/
  Meryel.UnityCodeAssist.AnalyzersLite.dll
  Meryel.UnityCodeAssist.Common.dll
@@ -421,4 +417,5 @@ Packages/com.merry-yellow.code-assist/Editor/ExternalReferences/
  Meryel.UnityCodeAssist.VSIXLibrary.dll
 
 [analyzerConfigFiles]
+.editorconfig
 Temp/obj/MerryYellow.CodeAssist.Editor/MerryYellow.CodeAssist.Editor.GeneratedMSBuildEditorConfig.editorconfig
